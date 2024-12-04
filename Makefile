@@ -5,6 +5,6 @@ down:
 up:
 	docker-compose up -d
 node:
-	docker exec -it shop-node bash
+	docker exec -it vat-node bash
 dev: 
 	docker exec  vat-node npm run dev
