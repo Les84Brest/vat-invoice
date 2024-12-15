@@ -10,3 +10,4 @@ Route::get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/get', App\Http\Controllers\GetController::class);
 });
+
