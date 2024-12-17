@@ -1,5 +1,7 @@
 <?php
 
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 $getVueTemplate = function () {
@@ -15,10 +17,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/', App\Http\Controllers\Admin\MainController::class)->name('admin.dashboard');
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
     Route::get('/register', [App\Http\Controllers\Admin\AuthController::class, 'register'])->name('admin.register');
-    
+
     Route::resource('/user', App\Http\Controllers\Admin\UserController::class);
 });
 
 Route::get('/welcome', $getVueTemplate);
 
 Auth::routes();
+
+
+Route::get('/service', [App\Http\Controllers\ServiceStudyController::class, 'index']);
