@@ -17,6 +17,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/register', [App\Http\Controllers\Admin\AuthController::class, 'register'])->name('admin.register');
     
     Route::resource('/user', App\Http\Controllers\Admin\UserController::class);
+    Route::resource('/company', App\Http\Controllers\Admin\CompanyController::class);
 });
 
 Route::get('/welcome', $getVueTemplate);
