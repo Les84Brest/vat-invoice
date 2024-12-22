@@ -1,5 +1,11 @@
 @extends('admin.layouts.admin')
 
+@section('page-styles')
+    <!-- jsGrid -->
+    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid-theme.min.css') }}">
+@endsection
+
 @section('content')
     @include('admin.components.content-header', ['title' => 'Пользователь'])
     @csrf
@@ -18,9 +24,7 @@
                             @endif
                             <button type="button" class="btn btn-danger ml-2" data-toggle="modal"
                                 data-target="#modal-user-delete">Удалить</button>
-
                         </div>
-
                         <ul class="nav nav-pills ml-auto p-2">
                             <li class="nav-item">
                                 <a class="nav-link active" href="#tab_invoices" data-toggle="tab">
@@ -32,7 +36,6 @@
                                     Настройки
                                 </a>
                             </li>
-
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -48,8 +51,6 @@
                                 @else
                                     <span class="h2">Нет счетов для показа</span>
                                 @endif
-
-
                             </div>
                             <!-- /.tab-pane -->
                             <div class="tab-pane" id="tab_settings">
@@ -89,10 +90,8 @@
                                             <input type="password" class="form-control" id="exampleInputPassword1"
                                                 placeholder="Password">
                                         </div>
-
                                     </div>
                                     <!-- /.card-body -->
-
                                     <div class="card-footer">
                                         <button type="submit" class="btn btn-primary">Обновить</button>
                                     </div>
@@ -128,12 +127,6 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
-@endsection
-
-@section('page-styles')
-    <!-- jsGrid -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid-theme.min.css') }}">
 @endsection
 
 @section('page-scripts')

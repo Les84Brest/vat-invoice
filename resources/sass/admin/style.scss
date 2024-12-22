@@ -7,3 +7,19 @@
     gap: 8px;
 }
 
+.company-page__icon {
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 75px;
+    height: 75px;
+    
+    font-size: 30px;
+    color: var(--secondary);
+    
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+}
