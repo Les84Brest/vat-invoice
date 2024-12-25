@@ -46,8 +46,8 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="логотип счетов по НДС" height="60"
-                width="60">
+            <img class="animation__shake" src="{{ asset('assets/admin/dist/img/vat-invoice-logo.svg') }}"
+                alt="логотип счетов по НДС" height="60" width="60">
         </div>
 
         <!-- Navbar -->
