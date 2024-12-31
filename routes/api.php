@@ -11,3 +11,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/get', App\Http\Controllers\GetController::class);
 });
 
+Route::prefix('v1')->group(base_path('routes/api_v1.php'));

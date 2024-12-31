@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
+            // I go through the official documentation to national portal if VAT invoices
+            // this app supports only the main features not diving deep into nuanses
+            // because the main purpose of this app is to give a general idea of ​​how 
+            // vat invoice mechanism works
             //1. general
             $table->string('number')->unique();
             $table->date('creation_date')->required();
