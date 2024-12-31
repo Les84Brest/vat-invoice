@@ -9,12 +9,10 @@
                 <thead>
                     <tr>
 
-                        <th style="width: 15%">
-                            Фамилия
+                        <th style="width: 25%">
+                            Фамилия Имя
                         </th>
-                        <th style="width: 15%">
-                            Имя
-                        </th>
+
                         <th style="width: 30%">
                             Организация
                         </th>
@@ -30,13 +28,11 @@
                     @foreach ($users as $user)
                         <td>
                             <a href="{{ route('user.show', ['user' => $user->id]) }}">
-                                {{ $user->last_name }}
+                                {{ $user->fullName }}
                             </a>
 
                         </td>
-                        <td>
-                            <span class="cell">{{ $user->name }}</span>
-                        </td>
+                      
                         <td>
                             <span>
                                 @if ($user->company_id)

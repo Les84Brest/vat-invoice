@@ -6,7 +6,7 @@
     <section class="content">
         <div class="row">
             <div class="col-12 mb-2">
-                <a href="{{route('company.create')}}" class="btn btn-success js-btn-add-company">Добавить</a>
+                <a href="{{ route('company.create') }}" class="btn btn-success js-btn-add-company">Добавить</a>
             </div>
         </div>
         <div class="row">
@@ -39,8 +39,7 @@
                         </td>
                         <td>
                             @foreach ($company->users as $companyUser)
-                                <span class="badge bg-success d-inline-block mr-2">{{ $companyUser->last_name }}
-                                    {{ $companyUser->name }} </span>
+                                <span class="badge bg-success d-inline-block mr-2">{{ $companyUser->fullName }} </span>
                             @endforeach
                         </td>
                         <td class="project-actions text-right">

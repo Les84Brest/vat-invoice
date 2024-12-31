@@ -62,4 +62,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+    function getFullNameAttribute(): string
+    {
+        return $this->last_name . " " . $this->name;
+    }
 }
