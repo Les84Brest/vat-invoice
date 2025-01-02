@@ -14,7 +14,8 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        $invoices = Invoice::with('sender_company')->get();
+        return $invoices;
     }
 
     /**

@@ -26,22 +26,22 @@ class Invoice extends Model
 
     public function author()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function signatory()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     function sender_company()
     {
-        $this->hasOne(Company::class);
+        $this->belongsTo(Company::class);
     }
 
     function recipient_company()
     {
-        $this->hasOne(Company::class);
+        $this->belongsTo(Company::class);
     }
 
     /**
@@ -49,6 +49,6 @@ class Invoice extends Model
      */
     public function parent_invoice()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->belongsTo(Invoice::class);
     }
 }

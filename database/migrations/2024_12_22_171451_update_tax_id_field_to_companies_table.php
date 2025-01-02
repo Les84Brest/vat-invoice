@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->dropUnique('tax_id');
+            $table->dropUnique('companies_tax_id_unique');
         });
     }
 };

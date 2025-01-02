@@ -17,7 +17,7 @@ return new class extends Migration
 
             $table->foreignId('company_id')
                 ->nullable()
-                ->constrained('companies', 'id', 'user_company_id')
+                ->constrained('companies', 'id', 'company_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -29,10 +29,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+
+            $table->dropForeign('company_id');
+            $table->dropColumn('company_id');
+
             $table->dropColumn('last_name');
             $table->dropColumn('role');
-
-            $table->dropForeign(['company_id']);
         });
     }
 };
