@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\Companies\CompanyServiceContract;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -33,26 +34,15 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpdateCompanyRequest $request)
+    public function store(UpdateCompanyRequest $request, CompanyServiceContract $service)
     {
         $data = $request->validated();
 
-        if (isset($data['users'])) {
-            $userIds = $data['users'];
-            unset($data['users']);
-        }
+        $company = $service->store($data);
 
-        $company = Company::create($data);
 
-        if(isset($userIds)){
-            foreach ($userIds as $id) {
-                $user = User::findOrFail($id);
-                $user->company_id = $company->id;
-                $user->save();
-            }
-        }
 
-        return ['status'=> 'success'];
+        return ['status' => 'success'];
     }
 
     /**
@@ -69,31 +59,11 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCompanyRequest $request, Company $company)
+    public function update(UpdateCompanyRequest $request, Company $company, CompanyServiceContract $service)
     {
         $data = $request->validated();
 
-
-        if (isset($data['users'])) {
-            $userIds = $data['users'];
-            unset($data['users']);
-        }
-
-        $company->update($data);
-
-        $companyUsers = $company->users;
-        foreach ($companyUsers as $companyUser) {
-            $companyUser->company_id = null;
-            $companyUser->save();
-        }
-
-        if (isset($userIds)) {
-            foreach ($userIds as $id) {
-                $user = User::findOrFail($id);
-                $user->company_id = $company->id;
-                $user->save();
-            }
-        }
+        $updatedCompany = $service->update($company, $data);
 
         return ['status' => 'success'];
     }

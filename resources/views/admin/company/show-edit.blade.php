@@ -131,7 +131,7 @@
                                         data-target="#modal-company-delete">Удалить</button>
                                 </div>
                                 <form action="#" class="js-updatecompany-form">
-                                    @method('PATCH')
+                                    @method('PUT')
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Название</label>
                                         <input type="text" name="title" class="form-control" id="exampleInputEmail1"
@@ -216,6 +216,10 @@
                 const formData = new FormData($(this)[0]);
                 const csrfTokenInput = $('input[name="_token"]');
                 const csrfToken = csrfTokenInput.val();
+                formData.entries().forEach(element => {
+                    console.log('%celem', 'padding: 5px; background: #3dd; color: #333333;', element);
+                });
+              
 
                 try {
                     const response = await fetch('/admin/company/{{ $company->id }}', {
@@ -225,8 +229,7 @@
                             'X-CSRF-TOKEN': csrfToken,
                         }
                     })
-                    console.log('%chere', 'padding: 5px; background: DarkKhaki; color: Yellow;',
-                        response);
+
                     if (response.ok) {
                         toastr["success"]("Данные организации обновлены");
                         setTimeout(() => {
@@ -273,7 +276,7 @@
                 });
             });
         });
-        
+
         // invoice tables
         const commonConfig = {
             height: "100%",

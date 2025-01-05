@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('company_id')
                 ->nullable()
                 ->constrained('companies', 'id', 'company_id')
-                ->onDelete('cascade')
+                ->onDelete('set null')
                 ->onUpdate('cascade');
         });
     }
