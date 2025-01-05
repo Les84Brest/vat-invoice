@@ -33,11 +33,6 @@ class CompanyService implements CompanyServiceContract
         $company->update($data);
 
         if (count($userIds)) {
-            foreach ($company->users as  $user) {
-                $user->company()
-                    ->dissociate()
-                    ->save();
-            }
             foreach ($userIds as $userId) {
                 $updatedUser = User::findOrFail($userId);
                 $updatedUser->company()
@@ -49,11 +44,17 @@ class CompanyService implements CompanyServiceContract
         return Company::findOrFail($company->id);
     }
 
-    private function detachCompanyUsers(Company $company): void {
+    private function detachCompanyUsers(Company $company): void
+    {
+        /** @var Illuminate\Support\Collection $users */
         $users = $company->users;
 
         if ($users->count() > 0) {
-            
+            $users->each(function (User $user) {
+                $user->company()
+                    ->disassociate()
+                    ->save();
+            });
         }
     }
 
