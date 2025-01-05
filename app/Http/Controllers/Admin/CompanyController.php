@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreCompanyRequest;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Models\User;
@@ -34,13 +35,10 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpdateCompanyRequest $request, CompanyServiceContract $service)
+    public function store(StoreCompanyRequest $request, CompanyServiceContract $service)
     {
         $data = $request->validated();
-
         $company = $service->store($data);
-
-
 
         return ['status' => 'success'];
     }
@@ -62,6 +60,7 @@ class CompanyController extends Controller
     public function update(UpdateCompanyRequest $request, Company $company, CompanyServiceContract $service)
     {
         $data = $request->validated();
+  
 
         $updatedCompany = $service->update($company, $data);
 
