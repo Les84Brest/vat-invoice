@@ -34,29 +34,29 @@ return new class extends Migration
 
             // 2 invoice sender fields
             $table->foreignId('sender_company')
-            ->required()
-            ->constrained('companies', 'id', 'sender_company_id')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+                ->required()
+                ->constrained('companies', 'id', 'sender_company_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreignId('author')
-            ->required()
-            ->constrained('users', 'id', 'author_user_id')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+                ->required()
+                ->constrained('users', 'id', 'author_user_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             // 3 invoice recipient fields 
             $table->foreignId('recipient_company')
-            ->required()
-            ->constrained('companies', 'id', 'recipient_company_id')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+                ->required()
+                ->constrained('companies', 'id', 'recipient_company_id')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreignId('signatory')
-            ->nullable()
-            ->constrained('users', 'id', 'signatory_user_id')
-            ->onDelete('cascade')
-            ->onUpdate('cascade');
+                ->nullable()
+                ->constrained('users', 'id', 'signatory_user_id')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
 
             // 3 not supported
             // 5 shipment terms

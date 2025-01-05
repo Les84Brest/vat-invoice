@@ -8,8 +8,8 @@
             @method('POST')
             @csrf
             <div class="form-group">
-                <label for="exampleInputEmail1">Название</label>
-                <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="Введите название">
+                <label for="exampleInputCompanytitle">Название</label>
+                <input type="text" name="title" class="form-control" id="exampleInputCompanytitle" placeholder="Введите название">
             </div>
             <div class="form-group">
                 <label for="shortnameid">Сокращенное название</label>
