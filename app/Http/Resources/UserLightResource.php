@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources;
 
-use App\Http\Resources\CompanyShowResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserShowResource extends JsonResource
+class UserLightResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +16,10 @@ class UserShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'email' => $this->email,
             'last_name' => $this->last_name,
             'name' => $this->name,
-            'role' => $this->role,
-            'company' => new CompanyShowResource($this->whenLoaded('company')),
+            'full_name' => $this->fullName,
+            'company_id' => $this->company_id
         ];
     }
 }

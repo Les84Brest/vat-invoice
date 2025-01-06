@@ -6,6 +6,7 @@ use App\Filters\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiseStoreRequest;
 use App\Http\Requests\ShowInvoiceRequest;
+use App\Http\Resources\InvoiceShowResource;
 use App\Models\Invoice;
 use App\Services\Invoices\InvoiceServiceContract;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class InvoiceController extends Controller
 
         $invoices = $service->getInvoices($data);
 
-        return $invoices;
+        return InvoiceShowResource::collection($invoices);
     }
 
     /**

@@ -10,9 +10,15 @@ class InvoiceService implements InvoiceServiceContract
 {
     public function getInvoices(array $data)
     {
-        $limit = isset($data['limit']) ?? 10;
+        if (isset($data['limit'])) {
+            $limit = $data['limit'];
+            unset($data['limit']);
+        } else {
+            $limit = 10;
+        }
+
         if (empty($data)) {
-            return Invoice::query()->paginate($limit);;
+            return Invoice::query()->paginate($limit);
         }
 
         /** @var InvoiceFilter $invoiceFilter */

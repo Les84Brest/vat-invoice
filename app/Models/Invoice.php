@@ -58,6 +58,12 @@ class Invoice extends Model
         'contract_number',
     ];
 
+    protected $dates = [
+        'action_date',
+        'creation_date',
+        'contract_date',
+    ];
+
     protected $casts = [
         'status' => InvoiceStatusCast::class,
         'type' => InvoiceTypeCast::class,
@@ -70,7 +76,7 @@ class Invoice extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
     /**
@@ -79,25 +85,25 @@ class Invoice extends Model
      */
     public function signatory(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'signatory_id', 'id');
     }
 
     function sender_company(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'sender_company_id', 'id');
     }
 
     function recipient_company(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'recipient_company_id', 'id');
     }
 
     /**
      * Parent invoice instance if it exists
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent_invoice()
+    public function parent_invoice_id()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Invoice::class, 'parent_invoice_id', 'id');
     }
 }
