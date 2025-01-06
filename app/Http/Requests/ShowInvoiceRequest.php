@@ -22,11 +22,12 @@ class ShowInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sender_company' => 'nullable|array',
-            'sender_company.*' => 'nullable|numeric',
-            'author' => 'nullable|numeric',
-            'recipient_company' => 'nullable|numeric',
-            'signatory' => 'nullable|numeric',
+            'sender_company_id' => 'nullable|array',
+            'sender_company_id.*' => 'nullable|numeric',
+            'author_id' => 'nullable|numeric',
+            'recipient_company_id' => 'nullable|array',
+            'recipient_company_id.*' => 'nullable|numeric',
+            'signatory_id' => 'nullable|numeric',
             'limit' => 'nullable|numeric',
             'page' => 'nullable|numeric',
         ];

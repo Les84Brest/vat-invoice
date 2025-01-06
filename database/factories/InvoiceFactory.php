@@ -41,9 +41,9 @@ class InvoiceFactory extends Factory
             'creation_date' => $creationDate->format('Y-m-d'),
             'action_date' => $actionDate->format('Y-m-d'),
 
-            'sender_company' => $senderCompany->id,
-            'author' => $author->id,
-            'recipient_company' => $recipientCompany->id,
+            'sender_company_id' => $senderCompany->id,
+            'author_id' => $author->id,
+            'recipient_company_id' => $recipientCompany->id,
 
             'type' => InvoiceType::ORIGINAL,
             'status' => InvoiceStatus::IN_PROGRESS,
