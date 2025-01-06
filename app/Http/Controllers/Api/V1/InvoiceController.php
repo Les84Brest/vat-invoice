@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Filters\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiseStoreRequest;
+use App\Http\Requests\ShowInvoiceRequest;
+use App\Http\Resources\InvoiceShowResource;
 use App\Models\Invoice;
+use App\Services\Invoices\InvoiceServiceContract;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -12,10 +16,14 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(ShowInvoiceRequest $request, InvoiceServiceContract $service)
     {
-        $invoices = Invoice::with('sender_company')->get();
-        return $invoices;
+
+        $data = $request->validated();
+
+        $invoices = $service->getInvoices($data);
+
+        return InvoiceShowResource::collection($invoices);
     }
 
     /**

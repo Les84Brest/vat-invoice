@@ -33,26 +33,26 @@ return new class extends Migration
             $table->decimal('total_vat', 10, 2)->default(0);
 
             // 2 invoice sender fields
-            $table->foreignId('sender_company')
+            $table->foreignId('sender_company_id')
                 ->required()
                 ->constrained('companies', 'id', 'sender_company_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreignId('author')
+            $table->foreignId('author_id')
                 ->required()
                 ->constrained('users', 'id', 'author_user_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
             // 3 invoice recipient fields 
-            $table->foreignId('recipient_company')
+            $table->foreignId('recipient_company_id')
                 ->required()
                 ->constrained('companies', 'id', 'recipient_company_id')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreignId('signatory')
+            $table->foreignId('signatory_id')
                 ->nullable()
                 ->constrained('users', 'id', 'signatory_user_id')
                 ->onDelete('set null')

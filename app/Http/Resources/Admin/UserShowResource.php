@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Http\Resources\CompanyShowResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,7 +15,6 @@ class UserShowResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        dd($this->company);
         return [
             'id' => $this->id,
             'email' => $this->email,
