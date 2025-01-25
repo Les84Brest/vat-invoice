@@ -2,25 +2,36 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
     {
+        path: "/vat",
+        name: "vat.dashboard",
+        component: () => import('@pages/VatDashboard.vue')
+    },
+    {
+        path: "/user",
+        name: "user.dashboard",
+        component: () => import('@pages/UserDashboard.vue')
+    },
+    {
         path: "/welcome",
         name: "welcome",
         component: () => import('@pages/WelcomePage.vue'),
     },
     {
-        path: "/welcome/login",
-        name: "welcome.login",
-        component: () => import('@pages/WelcomeLoginPage.vue'),
+        path: "/register",
+        name: "register",
+        component: () => import('@pages/RegisterPage.vue'),
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: () => import('@pages/LoginPage.vue'),
     },
     {
         path: '/welcome/test',
         name: 'welcome.test',
         component: () => import('@pages/Test.vue'),
     },
-    {
-        path: '/welcome/register',
-        name: 'welcome.register',
-        component: () => import('@pages/WelcomeRegisterPage.vue'),
-    },
+
     {
         path: '/welcome/personal',
         name: 'welcome.personal',
@@ -39,7 +50,6 @@ const router = createRouter(
 
 router.beforeEach((to, from, next) => {
     const authStatus = localStorage.getItem('auth');
-    console.log('%chere in before each', 'padding: 5px; background: hotpink; color: black;');
 
     if (!authStatus) {
         if (to.name === 'welcome.personal') {

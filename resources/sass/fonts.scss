@@ -1,0 +1,21 @@
+@include font(
+    "NotoSans",
+    normal,
+    400,
+    "../../public/assets/fonts/NotoSans-Regular.woff2",
+    "../../public/assets/fonts/NotoSans-Regular.woff2"
+);
+@include font(
+    "NotoSans",
+    normal,
+    200,
+    "../../public/assets/fonts/NotoSans-Light.woff2",
+    "../../public/assets/fonts/NotoSans-Light.woff2"
+);
+@include font(
+    "NotoSans",
+    normal,
+    700,
+    "../../public/assets/fonts/NotoSans-SemiBold.woff2",
+    "../../public/assets/fonts/NotoSans-SemiBold.woff2"
+);

@@ -1,0 +1,52 @@
+@mixin font($fname, $fstyle, $fweight, $furl, $furlwoff: "") {
+    @font-face {
+        font-family: $fname;
+        font-style: #{$fstyle};
+        font-weight: #{$fweight};
+        font-display: swap;
+
+        @if $furlwoff != "" {
+            src:
+                url($furl) format("woff2"),
+                url($furlwoff) format("woff");
+        } @else {
+            src: url($furl) format("woff2");
+        }
+    }
+}
+
+//миксин для реакции на ховер
+@mixin mediaHover {
+    @media (any-hover: hover) {
+        @content;
+    }
+}
+
+// мискин для реакции на тачскрин
+@mixin mediaTouch {
+    @media (any-pointer: coarse) {
+        @content;
+    }
+}
+
+@mixin flex($justify: null, $align: null, $direction: row) {
+    display: flex;
+    flex-direction: $direction;
+
+    @if $justify != null {
+        justify-content: $justify;
+    }
+
+    @if $align != null {
+        align-items: $align;
+    }
+}
+
+@mixin size($w: null, $h: null) {
+    @if $w != null {
+        width: $w;
+    }
+    @if $h != null {
+        width: $h;
+    }
+}

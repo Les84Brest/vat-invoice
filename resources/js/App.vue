@@ -1,20 +1,8 @@
 <template>
-    <nav>
-        <h2>Навигация по сайту</h2>
-        <ul class="menu-items">
-            <li><router-link to="/welcome">WELCOME</router-link></li>
-            <li><router-link :to="{ name: 'welcome.login' }">Login</router-link></li>
-            <li><router-link :to="{ name: 'welcome.register' }">Register</router-link></li>
-            <li><router-link :to="{ name: 'welcome.personal' }">Some Personal page</router-link></li>
-            <li><router-link :to="{ name: 'welcome.test' }">Test page</router-link></li>
-        </ul>
-    </nav>
-    <router-view></router-view>
+    <RouterView />
 </template>
 
-<script>
-export default {
-    name: 'App'
-}
+<script setup lang="ts">
+import { RouterView } from 'vue-router';
 
 </script>

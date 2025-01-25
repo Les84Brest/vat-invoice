@@ -1,0 +1,40 @@
+.app-logo {
+    @include flex(center, center);
+
+    min-width: $aside-width;
+    min-height: $header-heigth;
+    background: $dark-blue;
+    color: $ligth-gray;
+
+    &__text {
+        font-size: 20px;
+    }
+
+    &__link {
+        @include flex(center, center);
+        gap: 1rem;
+
+        color: $ligth-gray;
+        font-weight: 700;
+        text-decoration: none;
+
+        img {
+            @include size(40px, 40px);
+        }
+    }
+
+    .el-button.toggle-menu {
+        background-color: transparent;
+        color: $ligth-gray;
+        border: none;
+    }
+}
+
+.app-aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    min-height: 100vh;
+    background: $ligth-green;
+}
+

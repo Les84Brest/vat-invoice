@@ -1,9 +1,99 @@
 // Fonts
 @import url("https://fonts.bunny.net/css?family=Nunito");
-
+@import "node_modules/reset-css/sass/reset";
 // Variables
 @import "variables";
+@import "mixins";
+@import "fonts";
 
 // Bootstrap
 @import "bootstrap/scss/bootstrap";
 
+:root {
+    --blue: #287bff;
+    --white: #fff;
+    --grey: #f5f5f5;
+    --black1: #222;
+    --black2: #999;
+}
+
+body {
+    font-family: $base-font;
+    font-size: $font-size-base;
+    line-height: $line-height-base;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+
+.layout-wrap {
+    min-height: 100vh;
+    padding-left: $aside-width;
+}
+
+.navigation {
+    position: fixed;
+
+    width: 300px;
+    height: 100%;
+
+    background: var(--blue);
+    border-left: 10px solid var(--blue);
+    transition: 0.5s;
+    overflow: hidden;
+
+    ul {
+        position: absolute;
+        top: 40px;
+        left: 0;
+        width: 100%;
+
+        li {
+            position: relative;
+            width: 100%;
+            list-style: none;
+            transition-property: background, color;
+            transition: 0.3s ease-in;
+
+            border-bottom-left-radius: 30px;
+            border-top-left-radius: 30px;
+
+            &:hover {
+                background: var(--white);
+
+                a {
+                    color: var(--blue);
+                }
+            }
+
+            a {
+                position: relative;
+                width: 100%;
+
+                display: flex;
+                text-decoration: none;
+
+                color: var(--white);
+
+                .icon {
+                    position: relative;
+                    display: block;
+                    min-width: 60px;
+                    height: 60px;
+                    line-height: 60px;
+                    text-align: center;
+                }
+                .title {
+                    line-height: 60px;
+                    position: relative;
+                    padding: 0 10px;
+                    height: 60px;
+                    text-align: start;
+                    white-space: no-wrap;
+                }
+            }
+        }
+    }
+}
+
+@import "./components/all";

@@ -2,6 +2,17 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: 'Nunito', sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$base-font: 'NotoSans', sans-serif;
+$font-size-base: 1rem;
+$line-height-base: 1.1;
+
+//sizes
+$aside-width: 300px;
+$header-heigth: 60px;
+$footer-heigth: 60px;
+
+//colors
+$dark-blue: #1d3557;
+$text-color: #173038;
+$ligth-green: #f1faee;
+$ligth-gray: #ebf2fa;
