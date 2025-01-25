@@ -1,0 +1,12 @@
+.app-header {
+    @include flex(stretch, center);
+    box-shadow: 0 2px 16px 1px rgba(0, 0, 0, 0.2);
+
+    width: 100%;
+    background: $ligth-green;
+
+    &__content {
+        @include flex(flex-end, center);
+        width: 100%;
+    }
+}

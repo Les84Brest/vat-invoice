@@ -1,0 +1,7 @@
+.app-footer {
+    @include flex(flex-start, center);
+
+    background: $dark-blue;
+    color: $ligth-gray;
+    
+}
