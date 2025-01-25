@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
     {
+        path: "/user",
+        name: "user.dashboard",
+        component: () => import('@pages/UserDashboard.vue')
+    },
+    {
         path: "/welcome",
         name: "welcome",
         component: () => import('@pages/WelcomePage.vue'),
@@ -39,7 +44,6 @@ const router = createRouter(
 
 router.beforeEach((to, from, next) => {
     const authStatus = localStorage.getItem('auth');
-    console.log('%chere in before each', 'padding: 5px; background: hotpink; color: black;');
 
     if (!authStatus) {
         if (to.name === 'welcome.personal') {

@@ -1,11 +1,13 @@
 <template>
-    <div class="container">
-
-        user dashboard page
-    </div>
+    <AppLayout>
+        <div class="cont">
+            <h1>Dashboard content</h1>
+        </div>
+    </AppLayout>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import AppLayout from "@layouts/AppLayout.vue";
 
 
 </script>
