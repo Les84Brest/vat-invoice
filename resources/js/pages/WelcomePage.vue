@@ -1,8 +1,9 @@
 <template>
     <AppLayout>
-        <el-card >
+        <router-link to="/welcome/login"> Shop Grid</router-link>
+        <el-card>
             <p v-for="o in 500" :key="o" class="text item">{{ 'List item ' + o }}</p>
-          </el-card>
+        </el-card>
     </AppLayout>
 </template>
 

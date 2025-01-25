@@ -24,6 +24,16 @@ Route::group(['prefix' => 'user'], function () use ($getVueTemplate) {
     Route::get('/', $getVueTemplate);
 });
 
-Route::get('/welcome', $getVueTemplate);
+
 
 Auth::routes();
+
+Route::get('/welcome', $getVueTemplate);
+Route::get('/welcome/login', $getVueTemplate);
+Route::get('/login', $getVueTemplate);
+Route::get('/register', $getVueTemplate);
+
+Route::group(['prefix' => 'vat', 'middleware' => 'auth:sanctum'], function () use ($getVueTemplate) {
+    Route::get('/', $getVueTemplate);
+});
+
