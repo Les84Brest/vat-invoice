@@ -19,11 +19,15 @@
                 <button class="btn btn-primary" @click="getData">get data</button>
             </div>
         </div>
+        <div class="row">
+            <el-button type="warning">Какая-то кнопка</el-button>
+        </div>
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios';
+import { ElButton } from 'element-plus';
 
 export default {
     name: 'WelcomeLoginPage',
