@@ -29,6 +29,7 @@ export default defineConfig({
             '@pages': path.resolve(__dirname, 'resources/js/pages'),
             '@components': path.resolve(__dirname, 'resources/js/components'),
             '@layouts': path.resolve(__dirname, 'resources/js/layouts'),
+            '@stores': path.resolve(__dirname, 'resources/js/store'),
             '@assets': path.resolve(__dirname, 'public/assets/'),
         },
     },

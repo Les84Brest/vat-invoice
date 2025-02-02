@@ -6,6 +6,7 @@ import App from './App.vue';
 import router from './router';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css'
+import {createPinia} from 'pinia';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -16,6 +17,10 @@ import 'element-plus/dist/index.css'
 const app = createApp(App);
 app.use(router);
 app.use(ElementPlus);
+
+/* add Pinia */
+const pinia = createPinia();
+app.use(pinia);
 
 
 /**
