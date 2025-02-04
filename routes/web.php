@@ -23,15 +23,13 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'user'], function () use ($getVueTemplate) {
     Route::get('/', $getVueTemplate);
 });
-
-
-
 Auth::routes();
+
 
 Route::get('/welcome', $getVueTemplate);
 Route::get('/welcome/login', $getVueTemplate);
-Route::get('/login', $getVueTemplate);
-Route::get('/register', $getVueTemplate);
+Route::get('/login', [App\Http\Controllers\Vat\VatController::class, 'login'])->name('login');
+Route::get('/register', [App\Http\Controllers\Vat\VatController::class, 'register'])->name('register');
 
 Route::group(['prefix' => 'vat', 'middleware' => 'auth:sanctum'], function () use ($getVueTemplate) {
     Route::get('/', $getVueTemplate);

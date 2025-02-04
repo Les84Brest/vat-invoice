@@ -1,13 +1,12 @@
 <template>
     <AppLayout>
-        <div class="cont">
-            <h1>Vat dashboard content</h1>
-        </div>
+        <InvoiceActions />
     </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from "@layouts/AppLayout.vue";
+import InvoiceActions from "@/components/InvoiceActions.vue";
 
 
 </script>

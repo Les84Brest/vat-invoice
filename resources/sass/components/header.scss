@@ -10,3 +10,26 @@
         width: 100%;
     }
 }
+.header {
+    &__content{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 20px;
+
+        width: 100%;
+    }
+
+
+    &__right {
+        @include flex(stretch, stretch, row);
+        gap: 20px;
+        justify-self: end;
+
+    }
+}
+
+.user-header {
+    @include flex(start, center);
+    gap: 12px;
+}

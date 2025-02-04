@@ -1,77 +1,74 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from "vue-router";
+import { getAuthStatus } from "./utils/auth";
 
 const routes = [
     {
         path: "/vat",
         name: "vat.dashboard",
-        component: () => import('@pages/VatDashboard.vue')
+        component: () => import("@pages/VatDashboard.vue"),
+        meta: { requiresAuth: true },
+    },
+    {
+        path: "/vat/create",
+        name: "vat.newInvoice",
+        component: () => import("@pages/CreateInvoice.vue"),
+        meta: { requiresAuth: true },
     },
     {
         path: "/user",
         name: "user.dashboard",
-        component: () => import('@pages/UserDashboard.vue')
+        component: () => import("@pages/UserDashboard.vue"),
     },
     {
         path: "/welcome",
         name: "welcome",
-        component: () => import('@pages/WelcomePage.vue'),
+        component: () => import("@pages/WelcomePage.vue"),
     },
     {
         path: "/register",
         name: "register",
-        component: () => import('@pages/RegisterPage.vue'),
+        component: () => import("@pages/RegisterPage.vue"),
+        meta: { requiresGuest: true },
     },
     {
         path: "/login",
         name: "login",
-        component: () => import('@pages/LoginPage.vue'),
+        component: () => import("@pages/LoginPage.vue"),
+        meta: { requiresGuest: true },
     },
     {
-        path: '/welcome/test',
-        name: 'welcome.test',
-        component: () => import('@pages/Test.vue'),
+        path: "/welcome/test",
+        name: "welcome.test",
+        component: () => import("@pages/Test.vue"),
     },
 
     {
-        path: '/welcome/personal',
-        name: 'welcome.personal',
-        component: () => import('@pages/WelcomePersonalPage.vue'),
+        path: "/welcome/personal",
+        name: "welcome.personal",
+        component: () => import("@pages/WelcomePersonalPage.vue"),
     },
-
 ];
 
-const router = createRouter(
-    {
-        history: createWebHistory(),
-        routes
-
-    }
-);
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
 
 router.beforeEach((to, from, next) => {
-    const authStatus = localStorage.getItem('auth');
+    const authStatus = getAuthStatus();
 
-    if (!authStatus) {
-        if (to.name === 'welcome.personal') {
-            return next({name: 'welcome'});
-        } else {
-            return next();
-        }
+    if (to.meta.requiresGuest && authStatus) {
+        // If the user is logged in and tries to access a guest-only route, redirect to dashboard
+        next({ name: "vat.dashboard" });
+    } else if (to.meta.requiresAuth && !authStatus) {
+        // If the user is not logged in and tries to access a protected route, redirect to login
+        next({ name: "login" });
+    } else {
+        // Otherwise, allow access
+        next();
     }
 
-    //     // if (!authStatus) {
-    //     //     if (to.name === 'welcome.login' || to.name === 'welcome.register') {
-    //     //         return next();
-    //     //     }
-    //     // } else {
-    //     //     return next({ name: 'welcome.login' });
-    //     // }
-
-    //     // if (to.name === 'welcome.login' || to.name === 'welcome.register' && authStatus) {
-    //     //     next({ name: 'welcome' });
-    //     // }
-
     return next();
-})
+});
 
 export default router;
