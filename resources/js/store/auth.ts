@@ -1,0 +1,79 @@
+import { defineStore, storeToRefs } from "pinia";
+import type { User } from "../types/user";
+import { fetchCsrfTocken } from "../utils/token";
+import axios, { AxiosResponse } from "axios";
+import { ILoginForm } from "../types/user";
+import { setAuthStatus } from "@/utils/auth";
+import { useRouter } from "vue-router";
+
+interface AuthState {
+    isLogined: boolean;
+    user: User | null;
+}
+
+const router = useRouter();
+function redirectSomewhere(path: string) {
+    console.log('%chere in redirect', 'padding: 5px; background: hotpink; color: black;');
+    router.push(path);
+}
+
+export const useAuthStore = defineStore("auth", {
+    state: (): AuthState => {
+        return {
+            isLogined: false,
+            user: null,
+        };
+    },
+    actions: {
+        async loginIn(loginData: ILoginForm): Promise<boolean> {
+            try {
+                const isTokenFetched = await fetchCsrfTocken();
+
+                if (isTokenFetched) {
+                    const response = await axios.post("/login", loginData);
+
+                    if (response.status == 204) {
+                        window.localStorage.setItem("auth", "true");
+                        this.isLogined = true;
+                        this.fetchAuthUser();
+                        router.push('/vat');
+                        return true;
+                    }
+                }
+            } catch (error) {
+                throw new Error("Ошибка входа. Попробуйте еще раз.");
+            }
+            return false;
+        },
+
+        async logOut() {
+            try {
+                setAuthStatus(false);
+
+                const response = await axios.post(
+                    "/logout",
+                    {},
+                    {
+                        withCredentials: true,
+                    }
+                );
+                this.$reset();
+                router.push("/login");
+                // this.isLogined = false;
+                // this.user = null;
+            } catch (error) {
+                console.error("Logout failed:", error);
+            }
+        },
+        async fetchAuthUser(): Promise<void> {
+            try {
+                const response = await axios.get("/api/v1/auth_user");
+                const authUser = response.data.data;
+
+                this.user = authUser;
+            } catch (error) {
+                throw new Error("Ошибка получения данных пользователя");
+            }
+        },
+    },
+});

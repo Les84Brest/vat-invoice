@@ -22,22 +22,6 @@ class UpdateCompanyRequest extends FormRequest
      */
     public function rules(): array
     {
-        // return [
-        //     'title' => 'required|string',
-        //     'short_title' => 'required|string',
-        //     'address' => 'nullable|string',
-        //     'tax_id' => 'required|numeric|digits:9|unique:companies,tax_id',
-        //     'users' => 'nullable|array',
-        //     'users.*' => 'numeric'
-        // ];
-        // return [
-        //     'title' => 'nullable|string',
-        //     'short_title' => 'nullable|string',
-        //     'address' => 'nullable|string',
-        //     'tax_id' => 'nullable|numeric|digits:9|unique:companies,tax_id',
-        //     'users.*' => 'nullable|numeric'
-        // ];
-
         return [
             'title' => 'nullable|string',
             'short_title' => 'nullable|string',
