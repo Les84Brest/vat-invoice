@@ -102,7 +102,7 @@ class Invoice extends Model
      * Parent invoice instance if it exists
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent_invoice_id()
+    public function parent_invoice()
     {
         return $this->belongsTo(Invoice::class, 'parent_invoice_id', 'id');
     }
