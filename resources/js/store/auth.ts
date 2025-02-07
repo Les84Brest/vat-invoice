@@ -59,8 +59,7 @@ export const useAuthStore = defineStore("auth", {
                 );
                 this.$reset();
                 router.push("/login");
-                // this.isLogined = false;
-                // this.user = null;
+               
             } catch (error) {
                 console.error("Logout failed:", error);
             }
