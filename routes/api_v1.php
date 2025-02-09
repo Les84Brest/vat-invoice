@@ -12,5 +12,4 @@ Route::apiResource('invoice', App\Http\Controllers\Api\V1\InvoiceController::cla
 Route::middleware('auth:sanctum')->get('/auth_user', [AuthDataController::class, 'getAuthUser']);
 Route::middleware('auth:sanctum')->get('/reciever_tax_ids', [RecieverCompanyController::class, 'getRecieverIds']);
 Route::middleware('auth:sanctum')->get('/reciever_company', [RecieverCompanyController::class, 'getRecieverCompany']);
-Route::middleware('auth:sanctum')->get('/create_invoice_data', [InvoiceController::class, 'getInitialData']);
 
