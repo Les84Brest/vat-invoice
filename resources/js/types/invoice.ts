@@ -20,3 +20,22 @@ export type Invoice = {
     delivery_documents?: object,
     parent_invoice?: Invoice
 }
+
+export type DeliveryDocument = {
+    id: string,
+    document_type: string,
+    number: string,
+    date: string
+};
+
+export type InvoiceItem = {
+    id: string,
+    name: string,
+    dimension: string,
+    count: number,
+    price: number,
+    cost: number,
+    vat_rate: number,
+    vat_sum: number,
+    cost_vat: number,
+};
