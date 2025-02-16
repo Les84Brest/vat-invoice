@@ -33,15 +33,15 @@ class InvoiseStoreRequest extends FormRequest
             'total_wo_vat' => 'numeric',
             'total_vat' => 'numeric',
 
-            'sender_company' => 'required|numeric|exists:companies,id',
-            'author' => 'required|numeric|exists:users,id',
+            'sender_company_id' => 'required|numeric|exists:companies,id',
+            'author_id' => 'required|numeric|exists:users,id',
 
-            'recipient_company' => 'nullable|numeric',
-            'signatory' => 'nullable|numeric',
+            'recipient_company_id' => 'nullable|numeric',
+            'signatory_id' => 'nullable|numeric',
 
             'contract_number' => '',
             'contract_date' => 'nullable|date|date_format:Y-m-d',
-            'delivery_documents' => '',
+            'delivery_documents' => 'nullable|string',
         ];
     }
 

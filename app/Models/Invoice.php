@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\InvoiceDocumentsCast;
 use App\Casts\InvoiceStatusCast;
 use App\Casts\InvoiceTypeCast;
 use App\Models\Traits\Filterable;
@@ -45,14 +46,14 @@ class Invoice extends Model
         'status',
         'action_date',
         'creation_date',
-        'number ',
+        'number',
         'total',
         'total_vat',
         'total_wo_vat',
-        'signatory',
-        'recipient_company',
-        'author',
-        'sender_company',
+        'signatory_id',
+        'recipient_company_id',
+        'author_id',
+        'sender_company_id',
         'delivery_documents',
         'contract_date',
         'contract_number',
@@ -67,6 +68,7 @@ class Invoice extends Model
     protected $casts = [
         'status' => InvoiceStatusCast::class,
         'type' => InvoiceTypeCast::class,
+        'delivery_documents' => InvoiceDocumentsCast::class
     ];
 
     /**

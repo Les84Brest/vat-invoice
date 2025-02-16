@@ -40,6 +40,7 @@ class InvoiceController extends Controller
     public function store(InvoiseStoreRequest $request)
     {
         $data = $request->validated();
+        // dd($data);
 
         $invoice = Invoice::create($data);
 
