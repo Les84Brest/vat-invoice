@@ -88,6 +88,5 @@ import {
 
 function handleToggleMenu() {
 
-    console.log('%chandle toggle menu', 'padding: 5px; background: hotpink; color: black;');
 }
 </script>

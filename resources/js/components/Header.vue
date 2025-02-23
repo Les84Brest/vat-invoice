@@ -36,8 +36,6 @@ const authStore = useAuthStore();
 const isLogined = getAuthStatus();
 const router = useRouter();
 
-console.log('%cstate', 'padding: 5px; background: hotpink; color: black;', authStore.user);
-
 const handleUserDropdown = (command: string | number | object) => {
     if (command === 'user_logout') {
         authStore.logOut();
