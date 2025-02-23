@@ -23,7 +23,6 @@ export const useAuthStore = defineStore("auth", {
     getters: {
         newInvoiceNumber: (state) => {
             const lastInvoiceNumber = state.user?.company.last_invoice_number;
-            console.log('%clastinv', 'padding: 5px; background: hotpink; color: black;', typeof lastInvoiceNumber);
 
             if ((typeof lastInvoiceNumber === 'number') && lastInvoiceNumber >= 0) {
                 return lastInvoiceNumber + 1;

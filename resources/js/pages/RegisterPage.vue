@@ -30,7 +30,7 @@
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules, FormValidateCallback } from 'element-plus'
 import axios from 'axios';
-import {IRegisterForm} from "../types/user";
+import { IRegisterForm } from "../types/user";
 
 const registerFormRef = ref<FormInstance>();
 
@@ -100,11 +100,9 @@ function submitRegister(formEl: FormInstance | undefined) {
     formEl.validate((valid) => {
         if (valid) {
             axios.get('/sanctum/csrf-cookie')
-            .then( (data) => {
-                console.log('%cdata', 'padding: 5px; background: hotpink; color: black;', data);
-            })
+                .then((data) => {
+                })
         } else {
-            console.log('%cregistation error', 'padding: 5px; background: hotpink; color: black;');
         }
     });
 }

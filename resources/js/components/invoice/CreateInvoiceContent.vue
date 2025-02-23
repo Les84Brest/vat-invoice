@@ -119,13 +119,10 @@
 
             <el-form-item>
                 <el-button type="primary" @click="submitCreate(createFormRef)">
-                    Создать
+                    Сохранить
                 </el-button>
                 <el-button @click="submitCreate(createFormRef)">
-                    Создать и подписать
-                </el-button>
-                <el-button @click="testDocs">
-                    Доки тест
+                    Сохранить и отправить
                 </el-button>
             </el-form-item>
 
@@ -134,18 +131,18 @@
 </template>
 
 <script setup lang="ts">
-import { FormInstance } from "element-plus";
-import { reactive, computed, ref, watch, onMounted } from "vue";
-import type { ComponentPublicInstance } from 'vue';
 import { useAuthStore } from "@/store/auth";
-import InvoiceItems from "@components/invoice/InvoiceItems.vue";
+import { Company } from "@/types/company";
+import { DeliveryDocument } from "@/types/invoice";
+import { formatDate } from "@/utils/date";
+import { addLeadingZeros } from "@/utils/format";
 import DeliveryDocuments from "@components/invoice/DeliveryDocuments.vue";
+import InvoiceItems from "@components/invoice/InvoiceItems.vue";
 import { Edit } from "@element-plus/icons-vue";
 import axios from "axios";
-import { Company } from "@/types/company";
-import { addLeadingZeros } from "@/utils/format";
-import { formatDate } from "@/utils/date";
-import { DeliveryDocument } from "@/types/invoice";
+import { FormInstance } from "element-plus";
+import type { ComponentPublicInstance } from 'vue';
+import { computed, reactive, ref, watch } from "vue";
 
 interface CustomComponentPublicInstance extends ComponentPublicInstance {
     $on: (event: string, callback: (...args: any[]) => void) => void;
@@ -225,11 +222,6 @@ function onUpdateDeliveryDocuments(documents: Array<DeliveryDocument>) {
 const deliveryDocuments = ref<Array<DeliveryDocument>>([]);
 const deliveryDocumentsRef = ref<CustomComponentPublicInstance | null>(null);
 
-
-
-function testDocs() {
-    console.log('%cтестовые доки', 'padding: 5px; background: DarkKhaki; color: Yellow;', deliveryDocuments.value);
-}
 </script>
 
 <style lang="scss">
