@@ -42,14 +42,6 @@ export const useInvoiceStore = defineStore("invoice", {
                     (item) => item.id === id
                 );
 
-                // const foo = state.invoiceItems.find((bar) => )
-
-                console.log(
-                    "%cid   ",
-                    "padding: 5px; background: crimson; color: white;",
-                    id
-                );
-
                 if (itemIndex !== -1) {
                     return state.invoiceItems[itemIndex];
                 }
@@ -59,4 +51,3 @@ export const useInvoiceStore = defineStore("invoice", {
         },
     },
 });
-
