@@ -6,13 +6,13 @@ const routes = [
         path: "/vat",
         name: "vat.dashboard",
         component: () => import("@pages/VatDashboard.vue"),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, title: "Дашборд" },
     },
     {
         path: "/vat/create",
         name: "vat.newInvoice",
         component: () => import("@pages/CreateInvoice.vue"),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, title: "Новый счет" },
     },
     {
         path: "/user",
@@ -28,13 +28,13 @@ const routes = [
         path: "/register",
         name: "register",
         component: () => import("@pages/RegisterPage.vue"),
-        meta: { requiresGuest: true },
+        meta: { requiresGuest: true, title: "Регистрация" },
     },
     {
         path: "/login",
         name: "login",
         component: () => import("@pages/LoginPage.vue"),
-        meta: { requiresGuest: true },
+        meta: { requiresGuest: true, title: "Вход" },
     },
     {
         path: "/welcome/test",
@@ -56,6 +56,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const authStatus = getAuthStatus();
+
+    const pageTitle = to.meta.title as string;
+    document.title = pageTitle || "Работа с ЭСЧФ";
 
     if (to.meta.requiresGuest && authStatus) {
         // If the user is logged in and tries to access a guest-only route, redirect to dashboard
