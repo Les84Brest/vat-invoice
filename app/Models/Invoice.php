@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\InvoiceDocumentsCast;
+use App\Casts\InvoiceItemsCast;
 use App\Casts\InvoiceStatusCast;
 use App\Casts\InvoiceTypeCast;
 use App\Models\Traits\Filterable;
@@ -57,6 +58,7 @@ class Invoice extends Model
         'delivery_documents',
         'contract_date',
         'contract_number',
+        'items',
     ];
 
     protected $dates = [
@@ -68,7 +70,8 @@ class Invoice extends Model
     protected $casts = [
         'status' => InvoiceStatusCast::class,
         'type' => InvoiceTypeCast::class,
-        'delivery_documents' => InvoiceDocumentsCast::class
+        'delivery_documents' => InvoiceDocumentsCast::class,
+        'items' => InvoiceItemsCast::class,
     ];
 
     /**
