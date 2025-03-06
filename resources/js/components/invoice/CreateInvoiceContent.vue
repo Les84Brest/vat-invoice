@@ -1,7 +1,7 @@
 <template>
     <el-card>
         <h3>Новый счет</h3>
-        <el-form ref="createFormRef" :model="invoiceData" label-position="left" label-width="auto"
+        <el-form ref="createFormRef" :model="invoiceData" label-position="left" label-width="auto" :rules="invoiceRules"
             require-asterisk-position="left">
             <el-divider content-position="left">Общие данные</el-divider>
             <el-row>
@@ -63,8 +63,8 @@
             </el-row>
 
             <el-divider content-position="left">Реквизиты получателя</el-divider>
-            <el-form-item label="УНП" prop="parent_invoice_id">
-                <el-autocomplete v-model="receiverTaxId" :fetch-suggestions="fetchTaxIds"
+            <el-form-item label="УНП" prop="receiverTaxId">
+                <el-autocomplete v-model="invoiceData.receiverTaxId" :fetch-suggestions="fetchTaxIds"
                     popper-class="reciever-autocomplete" placeholder="Введите УНП" @select="handleSelectReceiverTaxId">
                     <template #suffix>
                         <el-icon class="el-input__icon">
@@ -121,7 +121,7 @@
                 <el-button type="primary" @click="submitCreate(createFormRef)">
                     Сохранить
                 </el-button>
-                <el-button @click="submitCreate(createFormRef)">
+                <el-button @click="submitCreateAndSend(createFormRef)">
                     Сохранить и отправить
                 </el-button>
             </el-form-item>
@@ -133,16 +133,17 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/store/auth";
 import { Company } from "@/types/company";
-import { DeliveryDocument } from "@/types/invoice";
-import { formatDate } from "@/utils/date";
+import { DeliveryDocument, InvoiceStatus, InvoiceType, NewInvoice } from "@/types/invoice";
+import { getCurrentDate } from "@/utils/date";
 import { addLeadingZeros } from "@/utils/format";
 import DeliveryDocuments from "@components/invoice/DeliveryDocuments.vue";
 import InvoiceItems from "@components/invoice/InvoiceItems.vue";
 import { Edit } from "@element-plus/icons-vue";
-import axios from "axios";
-import { FormInstance } from "element-plus";
+import axios, { formToJSON } from "axios";
+import { ElNotification, FormInstance, FormRules } from "element-plus";
 import type { ComponentPublicInstance } from 'vue';
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch, h } from "vue";
+import { useInvoiceStore } from "@/store/invoice";
 
 interface CustomComponentPublicInstance extends ComponentPublicInstance {
     $on: (event: string, callback: (...args: any[]) => void) => void;
@@ -153,16 +154,18 @@ const authStore = useAuthStore();
 const company = computed(() => authStore.user?.company);
 const newInvoiceNumber = computed(() => authStore.newInvoiceNumber);
 const createFormRef = ref<FormInstance>();
+const invoiceStore = useInvoiceStore();
 
 
 const invoiceData = reactive({
     number: addLeadingZeros(newInvoiceNumber.value, 9),
-    creation_date: formatDate(new Date().toISOString().split('T')[0]),
+    creation_date: getCurrentDate(),
     action_date: '',
-    type: 'ORIGINAL',
+    type: InvoiceType.ORIGINAL,
     parent_invoice_id: null,
     contract_number: '',
     contract_date: '',
+    receiverTaxId: '',
 })
 
 watch(newInvoiceNumber, (newValue) => {
@@ -170,10 +173,6 @@ watch(newInvoiceNumber, (newValue) => {
 }, { deep: true });
 
 const parentInvoiceIdDisabled = computed(() => invoiceData.type === 'ORIGINAL');
-function submitCreate(ormEl: FormInstance | undefined) {
-
-}
-
 
 const invoicePostfix = computed(() => {
     const curDate = new Date();
@@ -183,7 +182,6 @@ const invoicePostfix = computed(() => {
     return `${year}-${taxId}`;
 });
 
-const receiverTaxId = ref('');
 const invoiceReciever = ref<Company | null>(null);
 
 async function fetchTaxIds(queryString: string, cb: (arg: any) => void) {
@@ -221,6 +219,139 @@ function onUpdateDeliveryDocuments(documents: Array<DeliveryDocument>) {
 }
 const deliveryDocuments = ref<Array<DeliveryDocument>>([]);
 const deliveryDocumentsRef = ref<CustomComponentPublicInstance | null>(null);
+
+// submit invoice
+function submitCreate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    formEl.validate((valid) => {
+        if (valid) {
+            if (invoiceStore.invoiceItems.length == 0) {
+                ElNotification({
+                    title: 'Не хватает информации',
+                    message: h('i', { style: 'color: teal' }, 'Заполните раздел "Данные по товарам (работам, услугам), имущественным правам"'),
+                    type: 'error',
+                })
+
+                return;
+            }
+
+            const newInvoice = buildInvoiceData();
+            const jsonData = JSON.stringify(newInvoice);
+
+            axios.post('/api/v1/invoice', jsonData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((data) => console.log('%cdata', 'padding: 5px; background: hotpink; color: black;', data));
+        } else {
+            console.log('error submit!')
+        }
+    })
+
+
+}
+function submitCreateAndSend(formEl: FormInstance | undefined) {
+
+}
+
+function buildInvoiceData(): NewInvoice | null {
+    const senderCompanyId = authStore.user?.company.id;
+    const authorId = authStore.user?.id;
+    const recipientCompanyId = invoiceReciever.value?.id;
+
+    if (senderCompanyId && authorId && recipientCompanyId) {
+
+        const invoiceTotals = getInvoiceTotals();
+
+        const invoice: NewInvoice = {
+            number: `${invoiceData.number}${invoicePostfix.value}`,
+            creation_date: invoiceData.creation_date,
+            action_date: invoiceData.action_date,
+            type: invoiceData.type,
+            status: InvoiceStatus.IN_PROGRESS ,
+            total_wo_vat: invoiceTotals.total_wo_vat,
+            total_vat: invoiceTotals.total_vat,
+            total: invoiceTotals.total,
+            sender_company_id: senderCompanyId,
+            author_id: authorId,
+            recipient_company_id: recipientCompanyId,
+            contract_number: invoiceData.contract_number,
+            contract_date: invoiceData.contract_date,
+            invoice_items: invoiceStore.invoiceItems,
+        };
+        const documents = deliveryDocuments.value;
+
+        if (deliveryDocuments.value.length > 0) {
+            invoice.delivery_documents = documents;
+        }
+
+        return invoice;
+    }
+
+    return null;
+
+}
+
+function getInvoiceTotals(): Record<string, number> {
+    const invoiceTotals = {
+        total_wo_vat: 0,
+        total_vat: 0,
+        total: 0,
+    };
+    if (!invoiceStore.invoiceItems.length) {
+        return invoiceTotals;
+    }
+
+    invoiceStore.invoiceItems.forEach(item => {
+        invoiceTotals.total_wo_vat += item.cost;
+        invoiceTotals.total_vat += item.vat_sum;
+        invoiceTotals.total += item.cost_vat;
+    });
+    return invoiceTotals;
+}
+// invoice validation
+const invoiceRules = reactive<FormRules>({
+    number: [{ 'required': true, message: "Укажите номер ЭСЧФ", trigger: 'blur' }],
+    creation_date: [{ 'required': true, message: "Заполните дату выставления ЭСЧФ", trigger: 'blur' }],
+    action_date: [
+        { 'required': true, message: "Заполните дату совершения операции", trigger: 'change' },
+        {
+            validator: (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('Заполните дату совершения операции'));
+                } else if (invoiceData.action_date && value >= invoiceData.creation_date) {
+                    callback(new Error('Дата совршения операции должна быть раньше даты создания счета'));
+                } else {
+                    callback();
+                }
+            }, trigger: 'change'
+        }
+    ],
+    receiverTaxId: [
+        { 'required': true, message: "Выберите УНП получателя счета", trigger: 'blur' },
+    ],
+    contract_number: [
+        { 'required': true, message: "Укажите номер договора", trigger: 'blur' },
+    ],
+    contract_date: [{ 'required': true, message: "Заполните дату договора", trigger: 'blur' },
+    {
+
+        validator: (rule, value, callback) => {
+            if (!value) {
+                callback(new Error('Заполните дату договора'));
+            } else if (invoiceData.action_date && value >= invoiceData.creation_date) {
+                callback(new Error('Дата договора должна быть раньше даты создания счета'));
+            } else {
+                callback();
+            }
+        }, trigger: 'change'
+    }
+    ],
+
+
+});
+
 
 </script>
 

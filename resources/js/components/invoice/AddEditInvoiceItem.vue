@@ -80,8 +80,6 @@ const props = defineProps<
     }
 >();
 
-
-
 const invoiceStore = useInvoiceStore();
 const dialogVisible = ref<boolean>(props.isVisible);
 
