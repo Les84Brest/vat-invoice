@@ -41,7 +41,21 @@ class InvoiseStoreRequest extends FormRequest
 
             'contract_number' => '',
             'contract_date' => 'nullable|date|date_format:Y-m-d',
-            'delivery_documents' => 'nullable|string',
+            //delivery documents validation
+            'delivery_documents' => 'sometimes|array',
+            'delivery_document.*.id' => ['required', 'uuid'], 
+            //items validation
+            'invoice_items' => 'required|array|min:1',
+
+            'invoice_items.*.id' => ['required', 'uuid'], 
+            'invoice_items.*.name' => ['required', 'string', 'max:255'],
+            'invoice_items.*.dimension' => ['required', 'string', 'max:50'],
+            'invoice_items.*.count' => ['required', 'numeric'], 
+            'invoice_items.*.price' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.cost' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.vat_rate' => ['required', 'numeric', 'between:0,1'], 
+            'invoice_items.*.vat_sum' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.cost_vat' => ['required', 'numeric', 'min:0'],
         ];
     }
 
@@ -49,6 +63,11 @@ class InvoiseStoreRequest extends FormRequest
 {
     return [
         'author.exists' => 'Пользователь не существует',
+        'invoice_items.required' => 'Должен быть заполнен раздел \"Данные по товарам (работам, услугам), имущественным правам\"',
+        'invoice_items.min' => 'Должен быть заполнен раздел \"Данные по товарам (работам, услугам), имущественным правам\"',
+        'invoice_items.*.name.required' => 'Товар (работа, услуга) должны иметь название',
+        'invoice_items.*.price.numeric' => 'Цена должна иметь цифровое значение',
+        'invoice_items.*.id.uuid' => 'Каждая позиция должна иметь UUID.',
     ];
 }
 }

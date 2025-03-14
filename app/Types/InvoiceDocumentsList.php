@@ -14,19 +14,17 @@ class InvoiceDocumentsList implements \Stringable, Jsonable, Arrayable
     protected array $invoiceDocuments;
 
 
-    public function __construct(string $invoiceDocuments)
+    public function __construct(array $invoiceDocuments)
     {
 
         $this->setDocuments($invoiceDocuments);
     }
 
-    public function setDocuments(string $invoiceDocuments)
+    public function setDocuments(array $invoiceDocuments)
     {
-        $jsonInvoices = json_decode($invoiceDocuments, true);
-
         $invoices = [];
-        for ($i = 0; $i < count($jsonInvoices); $i++) {
-            $invoices[] = InvoiceDocument::fromArray($jsonInvoices[$i]);
+        for ($i = 0; $i < count($invoiceDocuments); $i++) {
+            $invoices[] = InvoiceDocument::fromArray($invoiceDocuments[$i]);
         }
 
         $this->invoiceDocuments = $invoices;

@@ -15,28 +15,27 @@ class InvoiceItemsList implements \Stringable, Jsonable, Arrayable
     protected array $invoiceItems = [];
 
 
-    public function __construct(string $invoiceItems)
+    public function __construct(array $invoiceItems)
     {
-
         $this->setDocuments($invoiceItems);
     }
-    
+
     /**
      * Set invoice items ensuring they are of type InvoiceItem
      *
-     * @param string $invoiceItems
+     * @param array $invoiceItems
      */
-    public function setDocuments(string $invoiceItems): void
+    public function setDocuments(mixed $invoiceItems): void
     {
-        $jsonItems = json_decode($invoiceItems, true);
-
         $invoices = [];
-        for ($i = 0; $i < count($jsonItems); $i++) {
-            $invoices[] = InvoiceDocument::fromArray($jsonItems[$i]);
-        }
+        for ($i = 0; $i < count($invoiceItems); $i++) {
+            $invoices[] = InvoiceItem::fromArray($invoiceItems[$i]);
 
-        $this->invoiceItems = $invoices;
+            $this->invoiceItems = $invoices;
+        }
     }
+
+
 
     public function toArray(): array
     {

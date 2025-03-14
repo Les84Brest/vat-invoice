@@ -66,7 +66,7 @@ class InvoiceItem implements \Stringable, Jsonable, Arrayable
             'cost' => $this->cost,
             'vat_rate' => $this->vat_rate,
             'vat_sum' => $this->vat_sum,
-            'cost_va' => $this->cost_vat
+            'cost_vat' => $this->cost_vat
         ];
     }
 

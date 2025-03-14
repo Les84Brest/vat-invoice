@@ -58,7 +58,7 @@ class Invoice extends Model
         'delivery_documents',
         'contract_date',
         'contract_number',
-        'items',
+        'invoice_items',
     ];
 
     protected $dates = [
@@ -71,7 +71,7 @@ class Invoice extends Model
         'status' => InvoiceStatusCast::class,
         'type' => InvoiceTypeCast::class,
         'delivery_documents' => InvoiceDocumentsCast::class,
-        'items' => InvoiceItemsCast::class,
+        'invoice_items' => InvoiceItemsCast::class,
     ];
 
     /**
