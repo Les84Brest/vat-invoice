@@ -176,7 +176,7 @@ const parentInvoiceIdDisabled = computed(() => invoiceData.type === 'ORIGINAL');
 
 const invoicePostfix = computed(() => {
     const curDate = new Date();
-    const year = `- ${curDate.getFullYear()}`;
+    const year = `-${curDate.getFullYear()}`;
     const taxId = authStore.user?.company.tax_id
 
     return `${year}-${taxId}`;

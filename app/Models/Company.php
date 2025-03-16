@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property string|null $short_title
  * @property string $address
+ * @property int $last_invoice_number	
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
@@ -30,6 +31,7 @@ class Company extends Model
         'title',
         'short_title',
         'address',
+        'last_invoice_number',
     ];
 
     public function users()

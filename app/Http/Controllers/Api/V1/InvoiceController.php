@@ -37,11 +37,11 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiseStoreRequest $request)
+    public function store(InvoiseStoreRequest $request, InvoiceServiceContract $service)
     {
         $data = $request->validated();
 
-        $invoice = Invoice::create($data);
+        $invoice = $service->createInvoice($data);
 
         return $invoice;
     }
