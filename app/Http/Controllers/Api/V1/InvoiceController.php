@@ -10,6 +10,7 @@ use App\Http\Resources\InvoiceShowResource;
 use App\Models\Invoice;
 use App\Services\Invoices\InvoiceServiceContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class InvoiceController extends Controller
 {
@@ -20,7 +21,6 @@ class InvoiceController extends Controller
     {
 
         $data = $request->validated();
-
         $invoices = $service->getInvoices($data);
 
         return InvoiceShowResource::collection($invoices);
@@ -41,9 +41,11 @@ class InvoiceController extends Controller
     {
         $data = $request->validated();
 
-        $invoice = $service->createInvoice($data);
+        if (Gate::allows('create-invoice', [$data])) {
+            $invoice = $service->createInvoice($data);
 
-        return $invoice;
+            return $invoice;
+        }
     }
 
     /**
