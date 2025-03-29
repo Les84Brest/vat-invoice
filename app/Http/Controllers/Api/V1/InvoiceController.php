@@ -48,6 +48,17 @@ class InvoiceController extends Controller
         }
     }
 
+    public function storeSubmittedInvoice(InvoiseStoreRequest $request, InvoiceServiceContract $service)
+    {
+        $data = $request->validated();
+
+        if (Gate::allows('create-invoice', [$data])) {
+            $invoice = $service->createAndSubmit($data);
+        }
+
+        return $invoice;
+    }
+
     /**
      * Display the specified resource.
      */

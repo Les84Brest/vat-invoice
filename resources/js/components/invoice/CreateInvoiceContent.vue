@@ -128,6 +128,8 @@
 
         </el-form>
     </el-card>
+
+    <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
 </template>
 
 <script setup lang="ts">
@@ -137,13 +139,15 @@ import { DeliveryDocument, InvoiceStatus, InvoiceType, NewInvoice } from "@/type
 import { getCurrentDate } from "@/utils/date";
 import { addLeadingZeros } from "@/utils/format";
 import DeliveryDocuments from "@components/invoice/DeliveryDocuments.vue";
+import PasswordConfirmDialog from "./PasswordConfirmDialog.vue";
 import InvoiceItems from "@components/invoice/InvoiceItems.vue";
 import { Edit } from "@element-plus/icons-vue";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import { ElNotification, FormInstance, FormRules } from "element-plus";
 import type { ComponentPublicInstance } from 'vue';
 import { computed, reactive, ref, watch, h } from "vue";
 import { useInvoiceStore } from "@/store/invoice";
+import { useRouter } from "vue-router";
 
 interface CustomComponentPublicInstance extends ComponentPublicInstance {
     $on: (event: string, callback: (...args: any[]) => void) => void;
@@ -155,7 +159,8 @@ const company = computed(() => authStore.user?.company);
 const newInvoiceNumber = computed(() => authStore.newInvoiceNumber);
 const createFormRef = ref<FormInstance>();
 const invoiceStore = useInvoiceStore();
-
+const isSubmitAndSendPressed = ref<boolean>(false);
+const router = useRouter();
 
 const invoiceData = reactive({
     number: addLeadingZeros(newInvoiceNumber.value, 9),
@@ -243,16 +248,75 @@ function submitCreate(formEl: FormInstance | undefined) {
                     'Content-Type': 'application/json'
                 }
             })
-                .then((data) => console.log('%cdata', 'padding: 5px; background: hotpink; color: black;', data));
+                .then((data) => {
+                    ElNotification({
+                        title: 'Счет сохранен',
+                        type: "success",
+                    });
+                    isSubmitAndSendPressed.value = false;
+
+                    setTimeout(() => {
+                        router.push('/vat');
+                    }, 2000);
+                });
         } else {
             console.log('error submit!')
         }
     })
-
-
 }
-function submitCreateAndSend(formEl: FormInstance | undefined) {
 
+//submit and send invoice
+function submitCreateAndSend(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+
+    formEl.validate((valid) => {
+        if (valid) {
+            // switch component in submit and send mode. 
+            // @user-password-confirmed listener starts to work
+            isSubmitAndSendPressed.value = true;
+            invoiceStore.togglePasswordConfirmVisible();
+        }
+    });
+}
+
+function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
+    if (!isSubmitAndSendPressed.value) {
+        return;
+    }
+
+    const { isConfirmed } = payload;
+
+    if (!isConfirmed) {
+        ElNotification({
+            title: 'Пароль не подтвержден',
+            message: h('i', { style: 'color: teal' }, 'Неправильный пароль'),
+            type: 'error',
+        });
+        isSubmitAndSendPressed.value = false;
+
+        return;
+    }
+
+    const newInvoice = buildInvoiceData();
+    const jsonData = JSON.stringify(newInvoice);
+
+    axios.post('/api/v1/invoice/submit-and-store', jsonData, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then((data) => {
+            ElNotification({
+                title: 'Счет сохранен и подписан',
+                message: h('i', { style: 'color: teal' }, "Счет  создан и отправлен получателю"),
+                type: "success",
+            });
+            isSubmitAndSendPressed.value = false;
+
+            setTimeout(() => {
+                router.push('/vat');
+            }, 2000);
+        });
 }
 
 function buildInvoiceData(): NewInvoice | null {
@@ -269,7 +333,7 @@ function buildInvoiceData(): NewInvoice | null {
             creation_date: invoiceData.creation_date,
             action_date: invoiceData.action_date,
             type: invoiceData.type,
-            status: InvoiceStatus.IN_PROGRESS ,
+            status: InvoiceStatus.IN_PROGRESS,
             total_wo_vat: invoiceTotals.total_wo_vat,
             total_vat: invoiceTotals.total_vat,
             total: invoiceTotals.total,
@@ -348,8 +412,6 @@ const invoiceRules = reactive<FormRules>({
         }, trigger: 'change'
     }
     ],
-
-
 });
 
 
