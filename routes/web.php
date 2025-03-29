@@ -33,5 +33,7 @@ Route::get('/register', [App\Http\Controllers\Vat\VatController::class, 'registe
 
 Route::group(['prefix' => 'vat', 'middleware' => 'auth:sanctum'], function () use ($getVueTemplate) {
     Route::get('/', $getVueTemplate);
+    Route::get('/{all}', $getVueTemplate)->where('all', '.*');
+    
 });
 

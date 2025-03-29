@@ -2,12 +2,11 @@
 
 namespace App\Casts;
 
-use App\Types\InvoiceStatus;
-use App\Types\InvoiceType;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
+use App\Types\InvoiceItemsList;
 
-class InvoiceTypeCast implements CastsAttributes
+class InvoiceItemsCast implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -16,8 +15,8 @@ class InvoiceTypeCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $invoiceType = new InvoiceType($value);
-        return $invoiceType->__toString();
+        $castedItems = json_decode($value, true);
+        return  new InvoiceItemsList($castedItems);
     }
 
     /**
@@ -27,10 +26,8 @@ class InvoiceTypeCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (!is_string($value) && !InvoiceType::validateStatus($value)) {
-            throw new \InvalidArgumentException($key . ' value must be string compatible with allowed invoice types');
-        }
+        $castedItems = new InvoiceItemsList($value);
 
-        return $value;
+        return $castedItems->toJson();
     }
 }

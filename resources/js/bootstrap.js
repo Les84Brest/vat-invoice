@@ -15,15 +15,32 @@ axios.defaults.withXSRFToken = true;
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.interceptors.response.use({}, (err) => {
-    if (err.response.status === 401 || err.response.status === 419) {
-        const auth = localStorage.getItem('auth');
-        if (auth) {
-            localStorage.removeItem('auth');
+
+window.axios.interceptors.response.use(
+    (response) => {
+        // For successful responses (2xx), just pass them through
+        return response;
+    },
+    (error) => {
+        if (!error.response) {
+            // Network error or no response
+            return Promise.reject(error);
         }
-        router.push({ name: 'welcome.login' });
+
+        const { status } = error.response;
+
+        // Handle specific status codes
+        if (status === 401 || err.response.status === 419) {
+            const auth = localStorage.getItem('auth');
+            if (auth) {
+                localStorage.removeItem('auth');
+            }
+            router.push({ name: 'welcome.login' });
+        }
+
+        return Promise.reject(error);
     }
-});
+);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

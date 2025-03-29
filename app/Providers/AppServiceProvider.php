@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Services\Companies\CompanyService;
 use App\Services\Companies\CompanyServiceContract;
 use App\Services\Invoices\InvoiceService;
@@ -9,6 +10,7 @@ use App\Services\Invoices\InvoiceServiceContract;
 use App\Services\Users\UserService;
 use App\Services\Users\UserServiceContract;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +29,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+
+        Gate::define('create-invoice', function (User $user, array $invoiceData) {
+            $authorId = $invoiceData['author_id'];
+            $companyId = $invoiceData['sender_company_id'];
+            $allow = false;
+
+            if ($user->id === $authorId && $user->company_id = $companyId) {
+                $allow = true;
+            }
+
+            return $allow;
+        });
     }
 }

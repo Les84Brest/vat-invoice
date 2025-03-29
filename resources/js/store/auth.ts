@@ -12,10 +12,6 @@ interface AuthState {
 }
 
 const router = useRouter();
-function redirectSomewhere(path: string) {
-    console.log('%chere in redirect', 'padding: 5px; background: hotpink; color: black;');
-    router.push(path);
-}
 
 export const useAuthStore = defineStore("auth", {
     state: (): AuthState => {
@@ -23,6 +19,17 @@ export const useAuthStore = defineStore("auth", {
             isLogined: false,
             user: null,
         };
+    },
+    getters: {
+        newInvoiceNumber: (state) => {
+            const lastInvoiceNumber = state.user?.company.last_invoice_number;
+
+            if ((typeof lastInvoiceNumber === 'number') && lastInvoiceNumber >= 0) {
+                return lastInvoiceNumber + 1;
+            }
+
+            return 0;
+        },
     },
     actions: {
         async loginIn(loginData: ILoginForm): Promise<boolean> {
@@ -36,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
                         window.localStorage.setItem("auth", "true");
                         this.isLogined = true;
                         this.fetchAuthUser();
-                        router.push('/vat');
+                        router.push("/vat");
                         return true;
                     }
                 }
@@ -59,8 +66,6 @@ export const useAuthStore = defineStore("auth", {
                 );
                 this.$reset();
                 router.push("/login");
-                // this.isLogined = false;
-                // this.user = null;
             } catch (error) {
                 console.error("Logout failed:", error);
             }

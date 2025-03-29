@@ -12,24 +12,31 @@ namespace App\Types;
 class InvoiceStatus implements \Stringable
 {
     /** @var string Invoice status is in progress. */
+    // В разработке
     const IN_PROGRESS = 'IN_PROGRESS';
 
     /** @var string Invoice status is in progress but encountered an error. */
+    // В разработке с ошибкой
     const IN_PROGRESS_ERROR = 'IN_PROGRESS_ERROR';
 
     /** @var string Invoice status is completed. */
+    // Выставлен
     const COMPLETED = 'COMPLETED';
-
+    
     /** @var string Invoice status is on agreement. */
+    // На согласовании
     const ON_AGREEMENT = 'ON_AGREEMENT';
 
     /** @var string Invoice status is completed and signed. */
+    // Выставлен. Подписан получателем
     const COMPLETED_SIGNED = 'COMPLETED_SIGNED';
 
     /** @var string Invoice status is cancelled. */
+    // Аннулирован
     const CANCELLED = 'CANCELLED';
 
     /** @var string Invoice status is on agreement for cancellation. */
+    //Выставлен. Аннулирован поставщиком
     const ON_AGREEMENT_CANCEL = 'ON_AGREEMENT_CANCEL';
 
     /** @var string The current status of the invoice. */

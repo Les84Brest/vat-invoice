@@ -4,4 +4,5 @@ export type Company = {
     short_title?: string;
     address?: string;
     tax_id: number;
+    last_invoice_number?: number;
 };

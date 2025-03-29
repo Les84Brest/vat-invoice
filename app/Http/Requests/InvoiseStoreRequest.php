@@ -22,7 +22,7 @@ class InvoiseStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => '',
+            'number' => ['required', 'regex:/^0*[1-9]\d*-\d{4}-\d{9}$/'],
             'creation_date' => 'required|date|date_format:Y-m-d',
             'action_date' => 'required|date|date_format:Y-m-d',
             'type' => 'string',
@@ -33,22 +33,45 @@ class InvoiseStoreRequest extends FormRequest
             'total_wo_vat' => 'numeric',
             'total_vat' => 'numeric',
 
-            'sender_company' => 'required|numeric|exists:companies,id',
-            'author' => 'required|numeric|exists:users,id',
+            'sender_company_id' => 'required|numeric|exists:companies,id',
+            'author_id' => 'required|numeric|exists:users,id',
 
-            'recipient_company' => 'nullable|numeric',
-            'signatory' => 'nullable|numeric',
+            'recipient_company_id' => 'nullable|numeric',
+            'signatory_id' => 'nullable|numeric',
 
             'contract_number' => '',
             'contract_date' => 'nullable|date|date_format:Y-m-d',
-            'delivery_documents' => '',
+
+            //delivery documents validation
+            'delivery_documents' => 'sometimes|array',
+            'delivery_document.*.id' => ['required', 'uuid'],
+
+            //items validation
+            'invoice_items' => 'required|array|min:1',
+
+            'invoice_items.*.id' => ['required', 'uuid'],
+            'invoice_items.*.name' => ['required', 'string', 'max:255'],
+            'invoice_items.*.dimension' => ['required', 'string', 'max:50'],
+            'invoice_items.*.count' => ['required', 'numeric'],
+            'invoice_items.*.price' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.cost' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.vat_rate' => ['required', 'numeric', 'between:0,1'],
+            'invoice_items.*.vat_sum' => ['required', 'numeric', 'min:0'],
+            'invoice_items.*.cost_vat' => ['required', 'numeric', 'min:0'],
         ];
     }
 
     public function messages()
-{
-    return [
-        'author.exists' => 'Пользователь не существует',
-    ];
-}
+    {
+        return [
+            'author.exists' => 'Пользователь не существует',
+            'invoice_items.required' => 'Должен быть заполнен раздел \"Данные по товарам (работам, услугам), имущественным правам\"',
+            'invoice_items.min' => 'Должен быть заполнен раздел \"Данные по товарам (работам, услугам), имущественным правам\"',
+            'invoice_items.*.name.required' => 'Товар (работа, услуга) должны иметь название',
+            'invoice_items.*.price.numeric' => 'Цена должна иметь цифровое значение',
+            'invoice_items.*.id.uuid' => 'Каждая позиция должна иметь UUID.',
+            'number.regex' => 'Неправильный формат номера ЭСЧФ',
+
+        ];
+    }
 }
