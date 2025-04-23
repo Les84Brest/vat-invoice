@@ -8,9 +8,9 @@
             <el-button :icon="DArrowLeft" class="toggle-menu" @click="handleToggleMenu"></el-button>
         </div>
         <el-scrollbar>
-            <el-menu mode="vertical" router class="app-aside__menu menu-aside">
+            <el-menu mode="vertical" router  :default-active="$route.path" class="app-aside__menu menu-aside"  >
 
-                <el-sub-menu index="100500">
+                <el-sub-menu index="my-invoices">
                     <template #title>
                         <el-icon>
                             <DocumentCopy />
@@ -18,43 +18,43 @@
                         <span>Мои счета-фактуры</span>
                     </template>
 
-                    <el-menu-item index="1-1">
+                    <el-menu-item index="/vat/current" route="/vat/current">
                         <el-icon>
                             <Compass />
                         </el-icon>
                         В работе (черновики)
                     </el-menu-item>
-                 
-                    <el-sub-menu index="1-1wewewewe">
+
+                    <el-sub-menu index="income-invoices">
                         <template #title>
                             <el-icon>
                                 <MessageBox />
                             </el-icon>
                             <span>Входящие</span>
                         </template>
-                        <el-menu-item index="1-1wqwqwqwqw">
+                        <el-menu-item index="/vat/income/unsigned" route="/vat/income/unsigned">
                             Неподписанные
                         </el-menu-item>
-                        <el-menu-item index="1-1sign">
+                        <el-menu-item index="/vat/income/signed" route="/vat/income/signed">
                             Подписанные
                         </el-menu-item>
-                        <el-menu-item index="1-1wqwqwqwqw">
+                        <el-menu-item index="/vat/income/canseled" route="/vat/income/canseled">
                             Аннулированные
                         </el-menu-item>
                     </el-sub-menu>
 
-                    <el-sub-menu index="1-send">
+                    <el-sub-menu index="sent-invoices">
                         <template #title>
                             <el-icon>
-                                <Finished/>
+                                <Finished />
                             </el-icon>
                             <span>Отправеленные</span>
                         </template>
 
-                        <el-menu-item index="1-1-send-sign">
+                        <el-menu-item index="/vat/sent/signed" route="/vat/sent/signed">
                             Подписанные
                         </el-menu-item>
-                        <el-menu-item index="1-1-send-fyek">
+                        <el-menu-item index="/vat/sent/signed" route="/vat/sent/canseled">
                             Аннулированные
                         </el-menu-item>
                     </el-sub-menu>
@@ -63,7 +63,7 @@
 
 
                 </el-sub-menu>
-                <el-menu-item index="1" route="welcome/login">
+                <el-menu-item index="/vat/control" route="/vat/control">
                     <el-icon>
                         <DataAnalysis />
                     </el-icon>
@@ -86,7 +86,4 @@ import {
     DocumentCopy
 } from "@element-plus/icons-vue";
 
-function handleToggleMenu() {
-
-}
 </script>

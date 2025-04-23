@@ -15,6 +15,18 @@ const routes = [
         meta: { requiresAuth: true, title: "Новый счет" },
     },
     {
+        path: "/vat/current",
+        name: "vat.currentIncoices",
+        component: () => import("@pages/CurrentInvoices.vue"),
+        meta: { requiresAuth: true, title: "Созданные счета" },
+    },
+    {
+        path: "/vat/income/unsigned",
+        name: "vat.incomeUnsigned",
+        component: () => import("@pages/IncomeUnsignedInvoices.vue"),
+        meta: { requiresAuth: true, title: "Входящие неподписанные" },
+    },
+    {
         path: "/user",
         name: "user.dashboard",
         component: () => import("@pages/UserDashboard.vue"),
