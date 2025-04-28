@@ -8,8 +8,8 @@ use App\Http\Controllers\Api\V1\PasswordConfirmController;
 use App\Http\Controllers\Api\V1\RecieverCompanyController;
 
 Route::apiResource('posts', PostController::class);
-Route::apiResource('invoice', App\Http\Controllers\Api\V1\InvoiceController::class);
-
+Route::apiResource('invoice', App\Http\Controllers\Api\V1\InvoiceController::class);/* ->middleware('auth:sanctum');
+ */
 Route::middleware('auth:sanctum')->get('/auth_user', [AuthDataController::class, 'getAuthUser']);
 Route::middleware('auth:sanctum')->get('/reciever_tax_ids', [RecieverCompanyController::class, 'getRecieverIds']);
 Route::middleware('auth:sanctum')->get('/reciever_company', [RecieverCompanyController::class, 'getRecieverCompany']);
@@ -17,3 +17,4 @@ Route::middleware('auth:sanctum')->get('/reciever_company', [RecieverCompanyCont
 Route::middleware('auth:sanctum')->post('/confirm-password', [PasswordConfirmController::class, 'confirm']);
 
 Route::middleware('auth:sanctum')->post('/invoice/submit-and-store', [App\Http\Controllers\Api\V1\InvoiceController::class, 'storeSubmittedInvoice']);
+Route::middleware('auth:sanctum')->post('/register', [App\Http\Controllers\Api\V1\RegisterUserController::class, 'register']);

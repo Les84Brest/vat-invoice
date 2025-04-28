@@ -16,7 +16,7 @@ abstract class AbstractFilter implements FilterInterface
      */
     public function __construct(private array $queryParams)
     {
-        // $this->queryParams = $queryParams;
+        $this->queryParams = $queryParams;
     }
 
     abstract protected function getCallbacks(): array;

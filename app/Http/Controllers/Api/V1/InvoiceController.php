@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Filters\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiseStoreRequest;
 use App\Http\Requests\ShowInvoiceRequest;
 use App\Http\Resources\InvoiceShowResource;
-use App\Models\Invoice;
 use App\Services\Invoices\InvoiceServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -26,13 +24,6 @@ class InvoiceController extends Controller
         return InvoiceShowResource::collection($invoices);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

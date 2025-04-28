@@ -1,5 +1,4 @@
 <template>
-
     <el-container>
         <el-form ref="loginFormRef" :rules="rules" :model="loginData" label-position="left" label-width="auto"
             require-asterisk-position="left">
@@ -16,6 +15,8 @@
             </el-form-item>
 
         </el-form>
+        <el-text>Для создания учетной записи перейдите на <RouterLink to="/register">страницу регистрации</RouterLink>
+            </el-text>
 
     </el-container>
 </template>
@@ -25,7 +26,7 @@ import { ref, reactive } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { ILoginForm } from "../types/user";
 import { useAuthStore } from "../store/auth";
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 
 const loginFormRef = ref<FormInstance>();
 const authStore = useAuthStore();

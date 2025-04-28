@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class InvoiceFilter extends AbstractFilter
 {
-    const SENDER_COMPANY_FILTER = 'sender_company';
-    const AUTHOR_FILTER = 'author';
-    const RECIPIENT_COMPANY_FILTER = 'recipient_company';
-    const SIGNATORY_FILTER = 'signatory';
+    const SENDER_COMPANY_FILTER = 'sender_company_id';
+    const AUTHOR_FILTER = 'author_id';
+    const RECIPIENT_COMPANY_FILTER = 'recipient_company_id';
+    const SIGNATORY_FILTER = 'signatory_id';
+    const STATUS_FILTER = 'status';
+
 
     /**
      * Get the filter callbacks.
@@ -25,14 +27,25 @@ class InvoiceFilter extends AbstractFilter
     public function getCallbacks(): array
     {
         return [
-            self::SENDER_COMPANY_FILTER => [$this, 'sender_company'],
-            self::AUTHOR_FILTER => [$this, 'author'],
-            self::RECIPIENT_COMPANY_FILTER => [$this, 'recipient_company'],
-            self::SIGNATORY_FILTER => [$this, 'signatory'],
+            self::SENDER_COMPANY_FILTER => [$this, 'sender_company_id'],
+            self::AUTHOR_FILTER => [$this, 'author_id'],
+            self::RECIPIENT_COMPANY_FILTER => [$this, 'recipient_company_id'],
+            self::SIGNATORY_FILTER => [$this, 'signatory_id'],
+            self::STATUS_FILTER => [$this, 'status'],
 
         ];
     }
-
+    /**
+     * Filter by invoice status.
+     *
+     * @param Builder $builder
+     * @param mixed $value
+     * @return void
+     */
+    public function status(Builder $builder, $value)
+    {
+        $builder->whereIn('status', $value);
+    }
     /**
      * Filter by sender company.
      *
@@ -40,10 +53,10 @@ class InvoiceFilter extends AbstractFilter
      * @param mixed $value
      * @return void
      */
-    public function sender_company(Builder $builder, $value): void
+    public function sender_company_id(Builder $builder, $value): void
     {
-    
-        $builder->whereIn('sender_company', $value);
+
+        $builder->whereIn('sender_company_id', $value);
     }
 
     /**
@@ -53,9 +66,9 @@ class InvoiceFilter extends AbstractFilter
      * @param mixed $value
      * @return void
      */
-    public function author(Builder $builder, $value): void
+    public function author_id(Builder $builder, $value): void
     {
-        $builder->where('author', $value);
+        $builder->where('author_id', $value);
     }
 
     /**
@@ -65,9 +78,9 @@ class InvoiceFilter extends AbstractFilter
      * @param mixed $value
      * @return void
      */
-    public function recipient_company(Builder $builder, $value): void
+    public function recipient_company_id(Builder $builder, $value): void
     {
-        $builder->whereIn('recipient_company', $value);
+        $builder->whereIn('recipient_company_id', $value);
     }
 
     /**
@@ -77,8 +90,8 @@ class InvoiceFilter extends AbstractFilter
      * @param mixed $value
      * @return void
      */
-    public function signatory(Builder $builder, $value): void
+    public function signatory_id(Builder $builder, $value): void
     {
-        $builder->where('signatory', $value);
+        $builder->where('signatory_id', $value);
     }
 }

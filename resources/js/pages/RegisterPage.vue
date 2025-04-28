@@ -29,10 +29,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules, FormValidateCallback } from 'element-plus'
-import axios from 'axios';
 import { IRegisterForm } from "../types/user";
+import { useAuthStore } from "../store/auth";
+import { useRouter } from 'vue-router';
 
 const registerFormRef = ref<FormInstance>();
+const authStore = useAuthStore();
+const router = useRouter();
 
 const registerData = reactive<IRegisterForm>({
     name: '',
@@ -97,12 +100,12 @@ const rules = reactive<FormRules<IRegisterForm>>({
 function submitRegister(formEl: FormInstance | undefined) {
     if (!formEl) return;
 
-    formEl.validate((valid) => {
+    formEl.validate(async (valid) => {
         if (valid) {
-            axios.get('/sanctum/csrf-cookie')
-                .then((data) => {
-                })
+            await authStore.registerUser(registerData);
+            router.push('/vat');
         } else {
+            console.log('Ошибка валидации данных');
         }
     });
 }

@@ -15,6 +15,8 @@ class InvoiceService implements InvoiceServiceContract
 {
     public function getInvoices(array $data)
     {
+
+
         if (isset($data['limit'])) {
             $limit = $data['limit'];
             unset($data['limit']);
@@ -25,13 +27,14 @@ class InvoiceService implements InvoiceServiceContract
         if (empty($data)) {
             return Invoice::query()->paginate($limit);
         }
-
         /** @var InvoiceFilter $invoiceFilter */
         $invoiceFilter = app()->make(InvoiceFilter::class, ['queryParams' => array_filter($data)]);
 
-        return Invoice::query()
+        $curInvoices = Invoice::query()
             ->filter($invoiceFilter)
             ->paginate($limit);
+
+        return $curInvoices;
     }
 
     public function createInvoice(array $data)
