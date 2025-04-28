@@ -18,7 +18,7 @@ const routes = [
         path: "/vat/current",
         name: "vat.currentIncoices",
         component: () => import("@pages/CurrentInvoices.vue"),
-        meta: { requiresAuth: true, title: "Созданные счета" },
+        meta: { requiresAuth: true, title: "Текущие счета (черновики)" },
     },
     {
         path: "/vat/income/unsigned",

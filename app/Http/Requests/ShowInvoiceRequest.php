@@ -30,6 +30,8 @@ class ShowInvoiceRequest extends FormRequest
             'signatory_id' => 'nullable|numeric',
             'limit' => 'nullable|numeric',
             'page' => 'nullable|numeric',
+            'status' => 'nullable|array',
+            'status.*' => 'nullable|string',
         ];
     }
 }

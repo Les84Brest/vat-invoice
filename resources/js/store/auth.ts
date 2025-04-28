@@ -2,7 +2,7 @@ import { defineStore, storeToRefs } from "pinia";
 import type { User } from "../types/user";
 import { fetchCsrfTocken } from "../utils/token";
 import axios, { AxiosResponse } from "axios";
-import { ILoginForm } from "../types/user";
+import { ILoginForm, IRegisterForm } from "../types/user";
 import { setAuthStatus } from "@/utils/auth";
 import { useRouter } from "vue-router";
 
@@ -24,7 +24,10 @@ export const useAuthStore = defineStore("auth", {
         newInvoiceNumber: (state) => {
             const lastInvoiceNumber = state.user?.company.last_invoice_number;
 
-            if ((typeof lastInvoiceNumber === 'number') && lastInvoiceNumber >= 0) {
+            if (
+                typeof lastInvoiceNumber === "number" &&
+                lastInvoiceNumber >= 0
+            ) {
                 return lastInvoiceNumber + 1;
             }
 
@@ -46,10 +49,13 @@ export const useAuthStore = defineStore("auth", {
                         router.push("/vat");
                         return true;
                     }
+
+                    return false;
                 }
             } catch (error) {
                 throw new Error("Ошибка входа. Попробуйте еще раз.");
             }
+
             return false;
         },
 
@@ -70,6 +76,19 @@ export const useAuthStore = defineStore("auth", {
                 console.error("Logout failed:", error);
             }
         },
+        async registerUser(registerData: IRegisterForm) {
+            try {
+                const isTokenFetched = await fetchCsrfTocken();
+
+                if (isTokenFetched) {
+                    const response = await axios.post('/register', registerData);
+                    console.log('%cresponse', 'padding: 5px; background: DarkKhaki; color: Yellow;', response);
+                }
+            } catch (error) {
+                throw new Error("Ошибка при регистрации пользователя");
+            }
+        },
+
         async fetchAuthUser(): Promise<void> {
             try {
                 const response = await axios.get("/api/v1/auth_user");
