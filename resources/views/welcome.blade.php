@@ -16,7 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
         <style>
-            
+
         </style>
     @endif
 </head>
@@ -39,7 +39,7 @@
                                 Пользователи:
                             </span>
                             <span class="font-bold">
-                                25
+                                {{ $usersCount }}
                             </span>
                         </li>
                         <li class="stat-welcome__item">
@@ -47,7 +47,7 @@
                                 ЭСЧФ:
                             </span>
                             <span class="font-bold">
-                                115
+                                {{ $invoicesCount }}
                             </span>
                         </li>
                     </ul>
