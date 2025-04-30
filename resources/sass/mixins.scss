@@ -22,6 +22,18 @@
     }
 }
 
+@mixin  mediaMax($max-res){
+    @media (max-width: $max-res) {
+        @content;
+    }
+}
+
+@mixin  mediaMin($min-res){
+    @media (min-width: $min-res) {
+        @content;
+    }
+}
+
 // мискин для реакции на тачскрин
 @mixin mediaTouch {
     @media (any-pointer: coarse) {

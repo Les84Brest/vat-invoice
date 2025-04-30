@@ -1,5 +1,8 @@
 <template>
-    <el-container>
+    <AuthLayout>
+        <h1 class="auth__title">
+            Регистрация
+        </h1>
         <el-form ref="registerFormRef" :rules="rules" :model="registerData" label-position="left" label-width="auto"
             require-asterisk-position="left">
             <el-form-item label="Имя" prop="name">
@@ -17,16 +20,19 @@
             <el-form-item label="Подтверждение пароля" prop="password_confirmation">
                 <el-input type="password" v-model="registerData.password_confirmation" />
             </el-form-item>
-            <el-form-item>
+            <div class="auth__actions">
                 <el-button type="primary" @click="submitRegister(registerFormRef)">
                     Создать пользователя
                 </el-button>
-            </el-form-item>
+            </div>
+
 
         </el-form>
-    </el-container>
+
+    </AuthLayout>
 </template>
 <script setup lang="ts">
+import AuthLayout from '@/layouts/AuthLayout.vue';
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules, FormValidateCallback } from 'element-plus'
 import { IRegisterForm } from "../types/user";

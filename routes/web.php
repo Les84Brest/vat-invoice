@@ -7,9 +7,7 @@ $getVueTemplate = function () {
 };
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome'] );
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', App\Http\Controllers\Admin\MainController::class)->name('admin.dashboard');
@@ -27,7 +25,6 @@ Auth::routes();
 
 
 Route::get('/welcome', $getVueTemplate);
-Route::get('/welcome/login', $getVueTemplate);
 Route::get('/login', [App\Http\Controllers\Vat\VatController::class, 'login'])->name('login');
 Route::get('/register', [App\Http\Controllers\Vat\VatController::class, 'register'])->name('register');
 

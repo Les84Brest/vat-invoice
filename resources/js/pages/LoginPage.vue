@@ -1,5 +1,8 @@
 <template>
-    <el-container>
+    <AuthLayout>
+        <h1 class="auth__title">
+            Вход
+        </h1>
         <el-form ref="loginFormRef" :rules="rules" :model="loginData" label-position="left" label-width="auto"
             require-asterisk-position="left">
             <el-form-item label="Email" prop="email">
@@ -13,15 +16,15 @@
                     Войти
                 </el-button>
             </el-form-item>
-
         </el-form>
         <el-text>Для создания учетной записи перейдите на <RouterLink to="/register">страницу регистрации</RouterLink>
-            </el-text>
+        </el-text>
 
-    </el-container>
+    </AuthLayout>
 </template>
 
 <script setup lang="ts">
+import AuthLayout from "@/layouts/AuthLayout.vue";
 import { ref, reactive } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { ILoginForm } from "../types/user";
