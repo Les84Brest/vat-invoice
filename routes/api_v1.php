@@ -17,4 +17,4 @@ Route::middleware('auth:sanctum')->get('/reciever_company', [RecieverCompanyCont
 Route::middleware('auth:sanctum')->post('/confirm-password', [PasswordConfirmController::class, 'confirm']);
 
 Route::middleware('auth:sanctum')->post('/invoice/submit-and-store', [App\Http\Controllers\Api\V1\InvoiceController::class, 'storeSubmittedInvoice']);
-Route::middleware('auth:sanctum')->post('/register', [App\Http\Controllers\Api\V1\RegisterUserController::class, 'register']);
+Route::post('/register', [App\Http\Controllers\Api\V1\RegisterUserController::class, 'register']);

@@ -46,7 +46,6 @@ export const useAuthStore = defineStore("auth", {
                         window.localStorage.setItem("auth", "true");
                         this.isLogined = true;
                         this.fetchAuthUser();
-                        router.push("/vat");
                         return true;
                     }
 
@@ -70,8 +69,9 @@ export const useAuthStore = defineStore("auth", {
                         withCredentials: true,
                     }
                 );
+
                 this.$reset();
-                router.push("/login");
+                window.localStorage.removeItem("auth");
             } catch (error) {
                 console.error("Logout failed:", error);
             }
@@ -81,7 +81,7 @@ export const useAuthStore = defineStore("auth", {
                 const isTokenFetched = await fetchCsrfTocken();
 
                 if (isTokenFetched) {
-                    const response = await axios.post('/register', registerData);
+                    const response = await axios.post('/api/v1/register', registerData);
                     console.log('%cresponse', 'padding: 5px; background: DarkKhaki; color: Yellow;', response);
                 }
             } catch (error) {
@@ -91,6 +91,7 @@ export const useAuthStore = defineStore("auth", {
 
         async fetchAuthUser(): Promise<void> {
             try {
+                console.log('%cin fetch auth user', 'padding: 5px; background: hotpink; color: black;');
                 const response = await axios.get("/api/v1/auth_user");
                 const authUser = response.data.data;
 

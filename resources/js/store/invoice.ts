@@ -13,7 +13,11 @@ interface InvoiceState {
     invoiceItems: Array<InvoiceItem>;
     isPasswordConfirmDialogVisible: boolean;
     invoices: Array<Invoice>;
-    invoicesPagination?: Record<string, string | number>
+    totalInvoices?: number;
+    pageCount?: number;
+    fistPage?: number;
+    lastPage?: number;
+    currentPage: number,
 }
 
 export const useInvoiceStore = defineStore("invoice", {
@@ -22,12 +26,11 @@ export const useInvoiceStore = defineStore("invoice", {
             invoiceItems: [],
             isPasswordConfirmDialogVisible: false,
             invoices: [], //storage to list invoices
-            invoicesPagination: {
-                totalItems: 0,
-                pages: 0,
-                fistPage: 0,
-                lastPage: 0,
-            }
+            totalInvoices: 0,
+            pageCount: 0,
+            fistPage: 0,
+            lastPage: 0,
+            currentPage: 0,
         };
     },
     actions: {
@@ -61,11 +64,11 @@ export const useInvoiceStore = defineStore("invoice", {
                 !this.isPasswordConfirmDialogVisible;
         },
         //current invoices
-        async fetchCurrentInvoices(): Promise<Invoice[]> {
+        async fetchCurrentInvoices(page: number = 0): Promise<Invoice[]> {
             const auth = useAuthStore();
 
             const companyId = auth.user?.company.id;
-            if(!companyId){
+            if (!companyId) {
                 await auth.fetchAuthUser();
             }
 
@@ -74,11 +77,18 @@ export const useInvoiceStore = defineStore("invoice", {
                     params: {
                         sender_company_id: [auth.user?.company.id],
                         status: [InvoiceStatus.IN_PROGRESS],
+                        page,
                     },
                 });
 
                 this.invoices = response.data.data;
-                this.invoicesPagination.totalItems =  response.data.meta.total;
+                const { meta } = response.data;
+
+                this.totalInvoices = meta.total ?? 0;
+                
+                this.pageCount = meta.last_page ?? 0;
+                this.lastPage = meta.last_page ?? 0;
+                this.currentPage = meta.current_page ?? 0;
 
                 return response.data.data;
             } catch (error) {
@@ -86,6 +96,7 @@ export const useInvoiceStore = defineStore("invoice", {
                 throw error;
             }
         },
+
         signInvoice(number: number) {},
         cancelInvoice(number: number) {},
     },
@@ -105,4 +116,3 @@ export const useInvoiceStore = defineStore("invoice", {
         },
     },
 });
-

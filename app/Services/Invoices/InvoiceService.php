@@ -30,9 +30,17 @@ class InvoiceService implements InvoiceServiceContract
         /** @var InvoiceFilter $invoiceFilter */
         $invoiceFilter = app()->make(InvoiceFilter::class, ['queryParams' => array_filter($data)]);
 
-        $curInvoices = Invoice::query()
-            ->filter($invoiceFilter)
-            ->paginate($limit);
+        $curInvoices = null;
+        if (isset($data['page'])) {
+            $curInvoices = Invoice::query()
+                ->filter($invoiceFilter)
+                ->paginate($limit, ['*'], 'page', $data['page']);
+        } else {
+            $curInvoices =  Invoice::query()
+                ->filter($invoiceFilter)
+                ->paginate($limit);
+        }
+
 
         return $curInvoices;
     }
