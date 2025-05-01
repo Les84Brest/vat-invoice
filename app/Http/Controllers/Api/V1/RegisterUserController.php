@@ -15,12 +15,13 @@ class RegisterUserController extends Controller
     {
         $data = $request->validated();
 
+
         $user = User::create([
-            'name' => $data->name,
-            'email' => $data->email,
-            'last_name' => $data->last_name,
-            'role'=> USER::ROLE_USER,
-            'password' => Hash::make($data->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'last_name' => $data['last_name'],
+            'role' => User::ROLE_USER,
+            'password' => Hash::make($data['password']),
         ]);
 
         return response()->json([
