@@ -11,13 +11,20 @@ use Illuminate\Contracts\Support\Jsonable;
 class InvoiceDocumentsList implements \Stringable, Jsonable, Arrayable
 {
 
-    protected array $invoiceDocuments;
+    protected  array $invoiceDocuments = [];
 
 
-    public function __construct(array $invoiceDocuments)
+    public function __construct(mixed $invoiceDocuments)
     {
+        if (is_array($invoiceDocuments)) {
 
-        $this->setDocuments($invoiceDocuments);
+            $this->setDocuments($invoiceDocuments);
+        }
+
+        if (is_string($invoiceDocuments)) {
+            $invoices = json_decode($invoiceDocuments, true);
+            $this->setDocuments($invoices);
+        }
     }
 
     public function setDocuments(array $invoiceDocuments)

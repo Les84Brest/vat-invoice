@@ -10,15 +10,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    @vite(['resources/sass/app.scss'])
 
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <style>
-
-        </style>
-    @endif
 </head>
 
 <body class="font-sans antialiased bg-light-gray">
@@ -27,7 +20,7 @@
             <div class="flex gap-6 items-center">
                 <div class="welcome__logo logo-welcome flex gap-3 items-center">
                     <div class="logo-welcome__image w-8">
-                        <img class="w-full object-cover" src="/assets/images/vat-invoice-logo-light.svg"
+                        <img class="w-full object-cover" src="{{ asset('/assets/images/vat-invoice-logo-light.svg') }}"
                             alt="ЭСЧФ лого">
                     </div>
                     <div class="logo-welcome__text text-light-gray font-bold">ЭСЧФ</div>
@@ -70,9 +63,11 @@
             </div>
         </header>
         <div class="flex flex-col gap-8  text-white text-center ">
-            <h1 class="text-2xl md:text-4xl lg:text-5xl uppercase font-bold ">Электронные счета-фактуры <br>
+            <h1 class="text-2xl md:text-4xl lg:text-5xl uppercase font-bold ">
+                Учебный портал <br>
+                Электронные счета-фактуры <br>
                 по НДС</h1>
-            <div class="md:text-2xl">Портал для обучения
+            <div class="md:text-2xl">Обучение
                 работе <br> с электронными счетами фактурами</div>
             <div class="welcome__action">
                 <a href="{{ url('/vat') }}"
@@ -83,6 +78,7 @@
 
         </div>
     </main>
+
 </body>
 
 </html>

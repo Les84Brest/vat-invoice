@@ -7,7 +7,11 @@
             <el-table-column type="index" :index="startingIndex" label="№ п/п" width="45" />
             <el-table-column prop="recipient_company.tax_id" label="УНП получателя" width="100" />
             <el-table-column prop="recipient_company.title" label="Наименование получателя" />
-            <el-table-column prop="number" label="Номер" />
+            <el-table-column prop="number" label="Номер">
+                <template #default="scope">
+                    <router-link :to="`/vat/invoice/${scope.row.id}`">{{ scope.row.number }}</router-link>
+                </template>
+            </el-table-column>
             <el-table-column prop="status" label="Статус">
                 <template #default="scope">
                     <InvoiceStatus :status="scope.row.status" />

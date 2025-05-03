@@ -13,11 +13,12 @@ interface InvoiceState {
     invoiceItems: Array<InvoiceItem>;
     isPasswordConfirmDialogVisible: boolean;
     invoices: Array<Invoice>;
+    currentInvoice?: Invoice | null;
     totalInvoices?: number;
     pageCount?: number;
     fistPage?: number;
     lastPage?: number;
-    currentPage: number,
+    currentPage: number;
 }
 
 export const useInvoiceStore = defineStore("invoice", {
@@ -31,6 +32,7 @@ export const useInvoiceStore = defineStore("invoice", {
             fistPage: 0,
             lastPage: 0,
             currentPage: 0,
+            currentInvoice: null
         };
     },
     actions: {
@@ -85,7 +87,7 @@ export const useInvoiceStore = defineStore("invoice", {
                 const { meta } = response.data;
 
                 this.totalInvoices = meta.total ?? 0;
-                
+
                 this.pageCount = meta.last_page ?? 0;
                 this.lastPage = meta.last_page ?? 0;
                 this.currentPage = meta.current_page ?? 0;
@@ -96,7 +98,19 @@ export const useInvoiceStore = defineStore("invoice", {
                 throw error;
             }
         },
-
+        async fetchInvoiceById(id: number) {
+            try {
+                const response = await axios.get(`/api/v1/invoice/${id}`);
+                console.log(
+                    "%crest",
+                    "padding: 5px; background: hotpink; color: black;",
+                    response
+                );
+                console.log('%cinvoice clean', 'padding: 5px; background: crimson; color: white;', response.data);
+                this.currentInvoice = response.data.data;
+                console.log('%ccur inv', 'padding: 5px; background: DarkGreen; color: MediumSpringGreen;', this);
+            } catch (error) {}
+        },
         signInvoice(number: number) {},
         cancelInvoice(number: number) {},
     },

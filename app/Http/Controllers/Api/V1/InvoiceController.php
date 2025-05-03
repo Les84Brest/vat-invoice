@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiseStoreRequest;
 use App\Http\Requests\ShowInvoiceRequest;
+use App\Http\Resources\InvoiceFullResource;
 use App\Http\Resources\InvoiceShowResource;
+use App\Models\Invoice;
 use App\Services\Invoices\InvoiceServiceContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -55,7 +57,9 @@ class InvoiceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+
+        return new InvoiceFullResource($invoice);
     }
 
     /**

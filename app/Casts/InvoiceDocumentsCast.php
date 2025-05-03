@@ -19,8 +19,8 @@ class InvoiceDocumentsCast implements CastsAttributes
         if(!isset($value)){
             return [];
         }
-        
-        return  new InvoiceDocumentsList($value);
+        $docs = json_decode($value, true);
+        return  new InvoiceDocumentsList($docs);
     }
 
     /**

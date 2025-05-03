@@ -21,6 +21,12 @@ const routes = [
         meta: { requiresAuth: true, title: "Текущие счета (черновики)" },
     },
     {
+        path: "/vat/invoice/:id",
+        name: "vat.invoicePreview",
+        component: () => import("@pages/InvoicePreview.vue"),
+        meta: { requiresAuth: true, title: "Просмотр ЭСЧФ" },
+    },
+    {
         path: "/vat/income/unsigned",
         name: "vat.incomeUnsigned",
         component: () => import("@pages/IncomeUnsignedInvoices.vue"),
