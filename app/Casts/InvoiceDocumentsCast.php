@@ -17,7 +17,7 @@ class InvoiceDocumentsCast implements CastsAttributes
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if(!isset($value)){
-            return [];
+            return  new InvoiceDocumentsList([]);
         }
         $docs = json_decode($value, true);
         return  new InvoiceDocumentsList($docs);

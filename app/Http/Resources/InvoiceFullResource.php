@@ -41,8 +41,6 @@ class InvoiceFullResource extends JsonResource
 
             'delivery_documents' => $this->delivery_documents->toArray(),
             
-
-            //items validation
             'invoice_items' => $this->invoice_items->toArray(),
         ];
     }
