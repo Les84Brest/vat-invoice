@@ -51,10 +51,10 @@
                             <span>Отправеленные</span>
                         </template>
 
-                        <el-menu-item index="/vat/sent/signed" route="/vat/sent/signed">
+                        <el-menu-item index="/vat/send/signed" route="/vat/send/signed">
                             Подписанные
                         </el-menu-item>
-                        <el-menu-item index="/vat/sent/signed" route="/vat/sent/canseled">
+                        <el-menu-item index="/vat/send/canseled" route="/vat/send/canseled">
                             Аннулированные
                         </el-menu-item>
                     </el-sub-menu>

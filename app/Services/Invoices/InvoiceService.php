@@ -103,7 +103,8 @@ class InvoiceService implements InvoiceServiceContract
         ]);
     }
 
-    public function updateInvoice(array $data, Invoice $invoice) {
+    public function updateInvoice(array $data, Invoice $invoice)
+    {
         try {
             DB::beginTransaction();
 
@@ -114,7 +115,34 @@ class InvoiceService implements InvoiceServiceContract
         } catch (\Throwable $th) {
             DB::rollBack();
         }
-    
+    }
+
+    public function cancelInvoice(Invoice $invoice)
+    {
+        try {
+            DB::beginTransaction();
+            $status = $invoice->status;
+
+            if ($status == InvoiceStatus::COMPLETED) {
+                $invoice->status = InvoiceStatus::CANCELLED;
+            }
+
+            if ($status == InvoiceStatus::COMPLETED_SIGNED) {
+                $invoice->status = InvoiceStatus::ON_AGREEMENT_CANCEL;
+            }
+            //когда анулируется счет, предварительно подписанным двумя сторонаями
+            // аннулировала принимающая сторона
+            if ($status == InvoiceStatus::ON_AGREEMENT_CANCEL) {
+                $invoice->status = InvoiceStatus::CANCELLED;
+            }
+
+            $invoice->save();
+
+            DB::commit();
+            return $invoice;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
     }
 
     private function incrementCompanyLastInvoiceNumber(string $stringNumber, int $companyId): void

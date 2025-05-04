@@ -95,4 +95,15 @@ class InvoiceController extends Controller
         }
         
     }
+
+    public function cancelInvoice(InvoiceSubmitRequest $request, InvoiceServiceContract $service){
+        $data = $request->validated();
+        $invoice = Invoice::findOrFail($data['id']);
+
+        if (Gate::allows('submit-invoice', [$invoice])) {
+            $service->cancelInvoice($invoice);
+        }
+
+        return response()->json(['success' => true]);
+    }
 }

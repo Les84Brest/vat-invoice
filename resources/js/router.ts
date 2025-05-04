@@ -39,6 +39,12 @@ const routes = [
         meta: { requiresAuth: true, title: "Входящие неподписанные" },
     },
     {
+        path: "/vat/send/signed",
+        name: "vat.sendUnsigned",
+        component: () => import("@pages/SendSignedInvoices.vue"),
+        meta: { requiresAuth: true, title: "Отправленные неподписанные" },
+    },
+    {
         path: "/user",
         name: "user.dashboard",
         component: () => import("@pages/UserDashboard.vue"),

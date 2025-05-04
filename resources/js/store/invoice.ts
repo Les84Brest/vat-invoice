@@ -100,6 +100,40 @@ export const useInvoiceStore = defineStore("invoice", {
                 throw error;
             }
         },
+
+        //current invoices
+        async fetchSendInvoices(page: number = 0): Promise<Invoice[]> {
+            const auth = useAuthStore();
+
+            const companyId = auth.user?.company.id;
+            if (!companyId) {
+                await auth.fetchAuthUser();
+            }
+
+            try {
+                const response = await axios.get("/api/v1/invoice", {
+                    params: {
+                        sender_company_id: [auth.user?.company.id],
+                        status: [InvoiceStatus.COMPLETED, InvoiceStatus.COMPLETED_SIGNED ],
+                        page,
+                    },
+                });
+
+                this.invoices = response.data.data;
+                const { meta } = response.data;
+
+                this.totalInvoices = meta.total ?? 0;
+
+                this.pageCount = meta.last_page ?? 0;
+                this.lastPage = meta.last_page ?? 0;
+                this.currentPage = meta.current_page ?? 0;
+
+                return response.data.data;
+            } catch (error) {
+                console.error("Не удалось загрузить счета", error);
+                throw error;
+            }
+        },
         async fetchInvoiceById(id: number) {
             try {
                 const response = await axios.get(`/api/v1/invoice/${id}`);
