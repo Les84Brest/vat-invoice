@@ -55,18 +55,30 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import type { DeliveryDocument } from "@/types/invoice";
 import { Plus, Minus } from "@element-plus/icons-vue";
 import type { FormInstance, FormRules } from 'element-plus';
 import { uuid } from 'vue-uuid';
 import { formatDate } from "@/utils/date";
 
+const props = defineProps<{
+    docs?: DeliveryDocument[]; // Optional prop
+}>();
+
 const isAddMode = ref<boolean>(false);
-const deliveryDocuments = reactive<Array<DeliveryDocument>>([]);
+const deliveryDocuments = reactive<DeliveryDocument[]>([]);
 const formRef = ref<FormInstance>();
 
-// const emit = defineEmits(['update-delivery-documents']);
+// Initialize based on props or empty array
+const initializeDocuments = () => {
+    deliveryDocuments.splice(0, deliveryDocuments.length, ...(props.docs || []));
+};
+
+// Watch for prop changes
+watch(() => props.docs, initializeDocuments, { immediate: true });
+
+
 const emit = defineEmits<{
     (e: 'update-delivery-documents', documents: Array<DeliveryDocument>): void
 }>()
@@ -74,7 +86,6 @@ const emit = defineEmits<{
 function toggleAddMode() {
     isAddMode.value = !isAddMode.value;
 }
-
 
 
 //submit document form

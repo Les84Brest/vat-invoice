@@ -10,4 +10,5 @@ interface InvoiceServiceContract
     public function createInvoice(array $data);
     public function createAndSubmit(array $data);
     public function submitInvoice(Invoice $invoice);
+    public function updateInvoice(array $data,Invoice $invoice );
 }

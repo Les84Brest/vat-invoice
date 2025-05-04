@@ -86,8 +86,13 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(InvoiseStoreRequest $request, InvoiceServiceContract $service, Invoice $invoice)
     {
-        //
+        $data = $request->validated();
+
+        if (Gate::allows('create-invoice', [$data])) {
+            $invoice = $service->updateInvoice($data, $invoice);
+        }
+        
     }
 }

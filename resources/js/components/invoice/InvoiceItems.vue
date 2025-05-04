@@ -32,7 +32,7 @@
     </template>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Delete, Edit, Plus } from '@element-plus/icons-vue';
 import AddEditInvoiceItem from './AddEditInvoiceItem.vue';
 import { useInvoiceStore } from "@/store/invoice";
@@ -65,7 +65,7 @@ function getSummaries(param: SummaryMethodProps) {
         }
 
         const colName = col.property as string;
-        
+
         if (NOT_SUMMARIZE_COLUMNS.includes(colName)) {
             return;
         }
@@ -98,12 +98,18 @@ function updateAddItemModalVisible(newVal: boolean) {
 }
 
 const invoiceStore = useInvoiceStore();
-const invoiceItems = invoiceStore.invoiceItems;
+const invoiceItems = ref(invoiceStore.invoiceItems)
 
 const deleteRow = (id: string) => {
     invoiceStore.removeInvoiceItem(id);
 
 }
+
+function updateInvoiceItems() {
+    invoiceItems.value = invoiceStore.invoiceItems;
+}
+
+watch(() => invoiceStore.invoiceItems, updateInvoiceItems, { immediate: true });
 
 const editItem = ref<InvoiceItem | undefined>(undefined);
 const addItemEditMode = ref<boolean>(false);
