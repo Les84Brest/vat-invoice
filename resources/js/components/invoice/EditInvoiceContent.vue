@@ -115,12 +115,12 @@
             </div>
 
             <el-form-item>
-                <el-button type="primary" @click="submitCreate(createFormRef)">
+                <el-button type="primary" @click="submitUpdate(createFormRef)">
                     Сохранить
                 </el-button>
-                <el-button @click="submitCreateAndSend(createFormRef)">
+                <!-- <el-button @click="submitCreateAndSend(createFormRef)">
                     Сохранить и отправить
-                </el-button>
+                </el-button> -->
             </el-form-item>
 
         </el-form>
@@ -226,7 +226,7 @@ const deliveryDocuments = ref<Array<DeliveryDocument>>([]);
 const deliveryDocumentsRef = ref<CustomComponentPublicInstance | null>(null);
 
 // submit invoice
-function submitCreate(formEl: FormInstance | undefined) {
+function submitUpdate(formEl: FormInstance | undefined) {
     if (!formEl) return;
     formEl.validate((valid) => {
         if (valid) {
@@ -240,24 +240,25 @@ function submitCreate(formEl: FormInstance | undefined) {
                 return;
             }
 
-            const newInvoice = buildInvoiceData();
-            const jsonData = JSON.stringify(newInvoice);
+            const editInvoice = buildInvoiceData();
+            const jsonData = JSON.stringify(editInvoice);
 
-            axios.post('/api/v1/invoice', jsonData, {
+            axios.put(`/api/v1/invoice/${route.params.id}}`, jsonData, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 }
             })
                 .then((data) => {
                     ElNotification({
-                        title: 'Счет сохранен',
+                        title: 'Счет обновлен',
                         type: "success",
                     });
                     isSubmitAndSendPressed.value = false;
 
                     setTimeout(() => {
                         router.push('/vat');
-                    }, 2000);
+                    }, 1600);
                 });
         } else {
             console.log('error submit!')
@@ -297,8 +298,8 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
         return;
     }
 
-    const newInvoice = buildInvoiceData();
-    const jsonData = JSON.stringify(newInvoice);
+    const editInvoice = buildInvoiceData();
+    const jsonData = JSON.stringify(editInvoice);
 
     axios.post('/api/v1/invoice/submit-and-store', jsonData, {
         headers: {
@@ -329,7 +330,7 @@ function buildInvoiceData(): NewInvoice | null {
         const invoiceTotals = getInvoiceTotals();
 
         const invoice: NewInvoice = {
-            number: `${invoiceData.number}${invoicePostfix.value}`,
+            number: invoiceData.number,
             creation_date: invoiceData.creation_date,
             action_date: invoiceData.action_date,
             type: invoiceData.type,

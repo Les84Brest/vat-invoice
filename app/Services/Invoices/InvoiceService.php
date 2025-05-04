@@ -103,6 +103,20 @@ class InvoiceService implements InvoiceServiceContract
         ]);
     }
 
+    public function updateInvoice(array $data, Invoice $invoice) {
+        try {
+            DB::beginTransaction();
+
+            $invoice->update($data);
+
+            DB::commit();
+            return $invoice;
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
+    
+    }
+
     private function incrementCompanyLastInvoiceNumber(string $stringNumber, int $companyId): void
     {
         $parts = explode('-', $stringNumber);
