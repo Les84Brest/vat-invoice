@@ -15,8 +15,7 @@ class InvoiceFullResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // dump('deliver docs in cast');
-        // dd($this->delivery_documents);
+
         return [
             'id' => $this->id,
             'number' => $this->number,
@@ -40,7 +39,7 @@ class InvoiceFullResource extends JsonResource
             'contract_date' => Carbon::createFromFormat('Y-m-d', $this->contract_date)->format('d.m.Y'),
 
             'delivery_documents' => $this->delivery_documents->toArray(),
-            
+
             'invoice_items' => $this->invoice_items->toArray(),
         ];
     }

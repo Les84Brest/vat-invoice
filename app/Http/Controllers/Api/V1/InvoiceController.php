@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InvoiceSubmitRequest;
 use App\Http\Requests\InvoiseStoreRequest;
 use App\Http\Requests\ShowInvoiceRequest;
 use App\Http\Resources\InvoiceFullResource;
@@ -50,6 +51,18 @@ class InvoiceController extends Controller
         }
 
         return $invoice;
+    }
+
+    public function submitInvoice(InvoiceSubmitRequest $request, InvoiceServiceContract $service)
+    {
+        $data = $request->validated();
+        $invoice = Invoice::findOrFail($data['id']);
+
+        if (Gate::allows('submit-invoice', [$invoice])) {
+            $service->submitInvoice($invoice);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     /**

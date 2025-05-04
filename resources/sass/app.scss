@@ -96,4 +96,9 @@ body {
     }
 }
 
+.label-text.el-text {
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
 @import "./components/all";

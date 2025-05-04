@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Invoice;
 use App\Models\User;
 use App\Services\Companies\CompanyService;
 use App\Services\Companies\CompanyServiceContract;
@@ -39,6 +40,18 @@ class AppServiceProvider extends ServiceProvider
                 $allow = true;
             }
 
+            return $allow;
+        });
+
+        Gate::define('submit-invoice', function (User $user, Invoice $invoice)  {
+            $invoiceAuthorId = $invoice->author_id;
+            $invoiceCompanyId = $invoice->sender_company_id;
+            $allow = false;
+
+            if ($user->id ===  $invoiceAuthorId && $user->company_id = $invoiceCompanyId) {
+                $allow = true;
+            }
+        
             return $allow;
         });
     }

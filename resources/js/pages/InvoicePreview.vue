@@ -40,19 +40,20 @@
                     <h3>Условия поставки</h3>
                 </el-divider>
                 <div class="invoice-contract">
-                    <el-text>Договор (контракт) напоставку товаров (выполнение работ, оказание услуг), передачу
+                    <el-text type="info" class="label-text">Договор (контракт) на поставку товаров (выполнение работ,
+                        оказание услуг), передачу
                         имущественных прав</el-text>
                     <div><strong>Номер договора:</strong> {{ invoiceStore.currentInvoice.contract_number }}</div>
                     <div><strong>Дата договора:</strong> {{ invoiceStore.currentInvoice.contract_date }}</div>
                 </div>
-                <el-text>
+                <el-text type="info" class="label-text">
                     Документы, подтверждающие поставку товаров (работ, услуг), имущественных прав
                 </el-text>
 
-                <el-table :data="invoiceStore.currentInvoice.delivery_documents" border style="width: 100%">
-                    <el-table-column prop="document_type" label="Вид документа" width="180" />
-                    <el-table-column prop="number" label="Номер" width="180" />
-                    <el-table-column prop="date" label="Дата" />
+                <el-table empty-text="Нет данных" :data="invoiceStore.currentInvoice.delivery_documents" border>
+                    <el-table-column prop="document_type" label="Вид документа" width="250" />
+                    <el-table-column prop="number" label="Номер" width="250" />
+                    <el-table-column prop="date" label="Дата" width="250" />
 
 
                 </el-table>
@@ -61,8 +62,8 @@
                 <el-divider>
                     <h3>Данные по товарам (работам, услугам), имущественным правам</h3>
                 </el-divider>
-                <el-table :data="invoiceStore.currentInvoice.invoice_items" border style="width: 100%" show-summary
-                    :summary-method="getSummaries" sum-text="Всего">
+                <el-table empty-text="Нет данных" :data="invoiceStore.currentInvoice.invoice_items" border
+                    style="width: 100%" show-summary :summary-method="getSummaries" sum-text="Всего">
                     <el-table-column type="index" label="№ п/п" width="70" />
                     <el-table-column prop="name" label=" Наименование товаров (работ, услуг), имущественных прав"
                         width="200" />
@@ -81,17 +82,17 @@
                 <div class="invoice-card__buttons">
                     <ul>
                         <li>
-                            <el-button>
+                            <el-button @click="onSumbitInvoice" type="primary" :disabled="!isButtonEnabled || isProcessing">
                                 Подписать
                             </el-button>
                         </li>
                         <li>
-                            <el-button>
+                            <el-button @click="onEditInvoice">
                                 Редактировать
                             </el-button>
                         </li>
                         <li>
-                            <el-button>
+                            <el-button @click="onCloseInvoice">
                                 Закрыть
                             </el-button>
                         </li>
@@ -99,26 +100,36 @@
                 </div>
             </template>
 
-
         </el-card>
+        <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
+
     </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ElCard, ElDivider, ElTable, ElTableColumn, ElTag } from 'element-plus'
-import InvoiceStatus from '@/components/invoice/InvoiceStatus.vue';
+import { ElCard, ElDivider, ElNotification, ElTable, ElTableColumn, ElTag } from 'element-plus'
+import { InvoiceStatus } from '@/types/invoice';
 import InvoiceType from '@/components/invoice/InvoiceType.vue';
-import InvoiceActions from '@/components/invoice/InvoiceActions.vue';
+import PasswordConfirmDialog from '@/components/invoice/PasswordConfirmDialog.vue';
 import { useInvoiceStore } from '@/store/invoice';
-import { onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref, h } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import type { InvoiceItem } from '@/types/invoice';
 import type { TableColumnCtx } from 'element-plus'
+import axios from 'axios';
+import { useAuthStore } from '@/store/auth';
+import { computed } from 'vue';
 
 const invoiceStore = useInvoiceStore();
-const router = useRoute();
-const invoiceId = router.params.id;
+const authStore = useAuthStore();
+const router = useRouter();
+const route = useRoute();
+const invoiceId = route.params.id;
+
+const isButtonEnabled = computed(() => {
+    return invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGRESS;
+})
 
 interface SummaryMethodProps<T = InvoiceItem> {
     columns: TableColumnCtx<T>[]
@@ -167,13 +178,77 @@ function getSummaries(param: SummaryMethodProps) {
     return sums;
 }
 
-
-
 onMounted(async () => {
-    console.log('%cmounted', 'padding: 5px; background: DarkKhaki; color: Yellow;');
     await invoiceStore.fetchInvoiceById(+invoiceId);
 })
 
+// invoice actions
+const isSubmitButtonPressed = ref<boolean>(false);
+function onSumbitInvoice() {
+    isSubmitButtonPressed.value = true;
+    invoiceStore.togglePasswordConfirmVisible();
+}
+
+function onCloseInvoice() {
+    router.back();
+}
+
+function onEditInvoice() {
+    router.push(`/vat/invoice/${invoiceId}/edit`);
+}
+
+function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
+    if (!isSubmitButtonPressed.value) {
+        return;
+    }
+
+    const { isConfirmed } = payload;
+
+    if (!isConfirmed) {
+        ElNotification({
+            title: 'Пароль не подтвержден',
+            message: h('i', { style: 'color: teal' }, 'Неправильный пароль'),
+            type: 'error',
+        });
+        isSubmitButtonPressed.value = false;
+
+        return;
+    }
+
+    axios.post('/api/v1/invoice/submit-invoice', { id: invoiceId }, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((data) => {
+        ElNotification({
+            title: 'Счет подписан',
+            message: h('i', { style: 'color: teal' }, "Счет подписан и отправлен получателю"),
+            type: "success",
+        });
+        isSubmitButtonPressed.value = false;
+
+    });
+
+    function getSignedBtnDisabledStatus(): boolean {
+        let disableBtn: boolean = true;
+        console.log('%cin disable', 'padding: 5px; background: crimson; color: white;', disableBtn);
+
+        const isOurInvoice = invoiceStore.currentInvoice?.author.id === authStore.user?.id;
+
+        // В случае когда автор счета является текущим пользователем
+        if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS) {
+            disableBtn = false;
+        }
+
+        // 
+        // if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS && isOurInvoice) {
+        //     disableBtn = false;
+        // }
+
+
+        return disableBtn;
+    }
+}
 </script>
 
 
