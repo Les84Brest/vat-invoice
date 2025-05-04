@@ -40,10 +40,13 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu trigger="click">
-                                <el-dropdown-item :icon="View">Просмотр</el-dropdown-item>
-                                <el-dropdown-item :icon="EditPen" divided>Редактировать</el-dropdown-item>
-                                <el-dropdown-item :icon="Select" divided>Подписать</el-dropdown-item>
-                                <el-dropdown-item :icon="Failed" divided>Анулировать</el-dropdown-item>
+                                <el-dropdown-item :icon="View"
+                                    @click="router.push(`invoice/${scope.row.id}`)">Просмотр</el-dropdown-item>
+                                <el-dropdown-item :icon="EditPen" divided
+                                    @click="router.push(`invoice/${scope.row.id}/edit`)">Редактировать</el-dropdown-item>
+                                <el-dropdown-item :icon="Select" divided
+                                    @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item>
+                                <!-- <el-dropdown-item :icon="Failed" divided>Анулировать</el-dropdown-item> -->
 
                             </el-dropdown-menu>
                         </template>
@@ -54,16 +57,19 @@
         <el-pagination background :page-size="10" layout="prev, pager, next" :total="invoiceStore.totalInvoices"
             @current-change="handlePageChange" @size-change="handleSizeChange" hide-on-single-page />
     </el-card>
+    <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useInvoiceStore } from '@/store/invoice';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, h } from 'vue';
 import { MoreFilled, EditPen, View, Select, Failed } from '@element-plus/icons-vue';
 import InvoiceStatus from '@components/invoice/InvoiceStatus.vue';
 import InvoiceType from './InvoiceType.vue';
-
+import PasswordConfirmDialog from './PasswordConfirmDialog.vue';
 import InvoiceActions from './InvoiceActions.vue';
+import { ElNotification } from 'element-plus';
+import axios from 'axios';
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
@@ -77,11 +83,57 @@ function handleSizeChange(page: number) {
     console.log('%cpage', 'padding: 5px; background: DarkKhaki; color: Yellow;', page);
 }
 function handlePageChange(page: number) {
-    console.log('%cpage', 'padding: 5px; background: #3dd; color: #333333;', page);
     invoiceStore.fetchCurrentInvoices(page);
 }
 
 onMounted(() => {
     invoiceStore.fetchCurrentInvoices();
 })
+
+//submit invoice
+const isSubmitButtonPressed = ref<boolean>(false);
+const submittedInvoiceId = ref<number | null>(null);
+
+function onSumbitInvoice(invoiceId: number) {
+    submittedInvoiceId.value = invoiceId;
+    isSubmitButtonPressed.value = true;
+    invoiceStore.togglePasswordConfirmVisible();
+}
+
+
+function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
+    if (!isSubmitButtonPressed.value) {
+        return;
+    }
+
+    const { isConfirmed } = payload;
+
+    if (!isConfirmed) {
+        ElNotification({
+            title: 'Пароль не подтвержден',
+            message: h('i', { style: 'color: teal' }, 'Неправильный пароль'),
+            type: 'error',
+        });
+        isSubmitButtonPressed.value = false;
+
+        return;
+    }
+
+    axios.post('/api/v1/invoice/submit-invoice', { id: submittedInvoiceId.value }, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((data) => {
+        ElNotification({
+            title: 'Счет подписан',
+            message: h('i', { style: 'color: teal' }, "Счет подписан и отправлен получателю"),
+            type: "success",
+        });
+        isSubmitButtonPressed.value = false;
+        setTimeout(() => {
+            invoiceStore.fetchCurrentInvoices();
+        }, 500);
+
+    });
+}
 </script>

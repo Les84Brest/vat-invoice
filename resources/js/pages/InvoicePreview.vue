@@ -227,10 +227,11 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
             type: "success",
         });
         isSubmitButtonPressed.value = false;
+        setTimeout(() => {
+            router.back();
+        }, 1500);
 
     });
-
-    
 }
 </script>
 
