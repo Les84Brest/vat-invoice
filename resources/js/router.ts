@@ -27,6 +27,12 @@ const routes = [
         meta: { requiresAuth: true, title: "Просмотр ЭСЧФ" },
     },
     {
+        path: "/vat/invoice/:id/edit",
+        name: "vat.invoiceEdit",
+        component: () => import("@pages/InvoiceEdit.vue"),
+        meta: { requiresAuth: true, title: "Редактирование ЭСЧФ" },
+    },
+    {
         path: "/vat/income/unsigned",
         name: "vat.incomeUnsigned",
         component: () => import("@pages/IncomeUnsignedInvoices.vue"),

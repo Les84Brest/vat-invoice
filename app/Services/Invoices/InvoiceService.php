@@ -78,6 +78,31 @@ class InvoiceService implements InvoiceServiceContract
         return $savedInvoice;
     }
 
+    public function submitInvoice(Invoice $invoice)
+    {
+        $passwordCacheId = 'password_confirmed_' . Auth::user()->id;
+
+        if (!Cache::has($passwordCacheId)) {
+            return response()->json([
+                'message' => 'Неправильный пароль',
+                'error' => true,
+            ]);
+        }
+
+        $invoice->status = InvoiceStatus::COMPLETED;
+        $invoice->save();
+        // Invoice::where('id', $id)->update(["status" => InvoiceStatus::COMPLETED]);
+
+        // return response()->json([
+        //     'message' => 'Счет подписан',
+        //     'success' => true,
+        // ]);
+        return response()->json([
+            'message' => 'Все отработало',
+            'success' => true,
+        ]);
+    }
+
     private function incrementCompanyLastInvoiceNumber(string $stringNumber, int $companyId): void
     {
         $parts = explode('-', $stringNumber);

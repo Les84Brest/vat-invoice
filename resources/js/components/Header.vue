@@ -2,7 +2,7 @@
     <el-header class="app-header">
         <div class="header__content" v-if="authStore.user">
             <div class="header__left">
-                <el-button :icon="ArrowLeftBold"></el-button>
+                <el-button :icon="ArrowLeftBold" @click="onBackButtonClick"></el-button>
             </div>
             <div class="header__right">
                 <div class="header__company company-header">
@@ -51,6 +51,10 @@ const avatarString = computed(() => {
 
     return '';
 });
+
+function onBackButtonClick() {
+    router.back();
+}
 
 onBeforeMount(async () => {
     if (isLogined && !authStore.user) {
