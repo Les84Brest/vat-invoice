@@ -87,7 +87,7 @@
                             </el-button>
                         </li>
                         <li>
-                            <el-button @click="onEditInvoice">
+                            <el-button @click="onEditInvoice" :disabled="!isButtonEnabled">
                                 Редактировать
                             </el-button>
                         </li>

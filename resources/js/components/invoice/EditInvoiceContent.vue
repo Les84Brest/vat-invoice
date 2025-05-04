@@ -255,6 +255,7 @@ function submitUpdate(formEl: FormInstance | undefined) {
                         type: "success",
                     });
                     isSubmitAndSendPressed.value = false;
+                    invoiceStore.invoiceItems = [];
 
                     setTimeout(() => {
                         router.push('/vat');

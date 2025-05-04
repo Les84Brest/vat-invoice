@@ -254,6 +254,8 @@ function submitCreate(formEl: FormInstance | undefined) {
                         type: "success",
                     });
                     isSubmitAndSendPressed.value = false;
+                    invoiceStore.invoiceItems = [];
+                    authStore.fetchAuthUser();
 
                     setTimeout(() => {
                         router.push('/vat');
@@ -312,6 +314,7 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
                 type: "success",
             });
             isSubmitAndSendPressed.value = false;
+            invoiceStore.invoiceItems = [];
 
             setTimeout(() => {
                 router.push('/vat');
