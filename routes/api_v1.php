@@ -19,3 +19,5 @@ Route::middleware('auth:sanctum')->post('/confirm-password', [PasswordConfirmCon
 
 Route::middleware('auth:sanctum')->post('/invoice/submit-and-store', [App\Http\Controllers\Api\V1\InvoiceController::class, 'storeSubmittedInvoice']);
 Route::post('/register', [App\Http\Controllers\Api\V1\RegisterUserController::class, 'register']);
+
+Route::middleware('auth:sanctum')->get('/dashboard-data', [App\Http\Controllers\Api\V1\VatDashboardController::class, 'dashboardData']);
