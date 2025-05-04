@@ -14,6 +14,7 @@ interface InvoiceState {
     isPasswordConfirmDialogVisible: boolean;
     invoices: Array<Invoice>;
     currentInvoice?: Invoice | null;
+    editedInvoice?: Invoice | null;
     totalInvoices?: number;
     pageCount?: number;
     fistPage?: number;
@@ -32,7 +33,8 @@ export const useInvoiceStore = defineStore("invoice", {
             fistPage: 0,
             lastPage: 0,
             currentPage: 0,
-            currentInvoice: null
+            currentInvoice: null,
+            editedInvoice: null,
         };
     },
     actions: {
@@ -101,15 +103,11 @@ export const useInvoiceStore = defineStore("invoice", {
         async fetchInvoiceById(id: number) {
             try {
                 const response = await axios.get(`/api/v1/invoice/${id}`);
-                console.log(
-                    "%crest",
-                    "padding: 5px; background: hotpink; color: black;",
-                    response
-                );
-                console.log('%cinvoice clean', 'padding: 5px; background: crimson; color: white;', response.data);
                 this.currentInvoice = response.data.data;
-                console.log('%ccur inv', 'padding: 5px; background: DarkGreen; color: MediumSpringGreen;', this);
             } catch (error) {}
+        },
+        setEditInvoice(invoice: Invoice){
+            this.editedInvoice = invoice;
         },
         signInvoice(number: number) {},
         cancelInvoice(number: number) {},

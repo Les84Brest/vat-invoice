@@ -106,22 +106,7 @@ const formatCurrency = (value: number) => {
     }).format(value)
 }
 
-// const loadDashboardData = async () => {
-//     // In a real app, you would fetch this from an API
-//     isLoading.value = true;
 
-//     try {
-//         const response = await axios.get('/api/v1/dashboard-data');
-//     } catch (error) {
-//         console.log('%cerror', 'padding: 5px; background: DarkGreen; color: MediumSpringGreen;', error);
-//     }
-//     setTimeout(() => {
-//         invoiceCount.value = 142;
-//         incomingVAT.value = 8750.42;
-//         outgoingVAT.value = 6420.18;
-//         isLoading.value = false;
-//     }, 1700)
-// }
 
 const loadDashboardData = async (): Promise<void> => {
     isLoading.value = true
