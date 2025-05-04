@@ -82,7 +82,7 @@
                 <div class="invoice-card__buttons">
                     <ul>
                         <li>
-                            <el-button @click="onSumbitInvoice" type="primary" :disabled="!isButtonEnabled || isProcessing">
+                            <el-button @click="onSumbitInvoice" type="primary" :disabled="!isButtonEnabled">
                                 Подписать
                             </el-button>
                         </li>
@@ -109,7 +109,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ElCard, ElDivider, ElNotification, ElTable, ElTableColumn, ElTag } from 'element-plus'
-import { InvoiceStatus } from '@/types/invoice';
+import { InvoiceStatus as InvoiceStatusType } from '@/types/invoice';
+import InvoiceStatus from '@/components/invoice/InvoiceStatus.vue';
 import InvoiceType from '@/components/invoice/InvoiceType.vue';
 import PasswordConfirmDialog from '@/components/invoice/PasswordConfirmDialog.vue';
 import { useInvoiceStore } from '@/store/invoice';
@@ -128,7 +129,7 @@ const route = useRoute();
 const invoiceId = route.params.id;
 
 const isButtonEnabled = computed(() => {
-    return invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGRESS;
+    return invoiceStore.currentInvoice?.status == InvoiceStatusType.IN_PROGRESS;
 })
 
 interface SummaryMethodProps<T = InvoiceItem> {
@@ -229,25 +230,7 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
 
     });
 
-    function getSignedBtnDisabledStatus(): boolean {
-        let disableBtn: boolean = true;
-        console.log('%cin disable', 'padding: 5px; background: crimson; color: white;', disableBtn);
-
-        const isOurInvoice = invoiceStore.currentInvoice?.author.id === authStore.user?.id;
-
-        // В случае когда автор счета является текущим пользователем
-        if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS) {
-            disableBtn = false;
-        }
-
-        // 
-        // if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS && isOurInvoice) {
-        //     disableBtn = false;
-        // }
-
-
-        return disableBtn;
-    }
+    
 }
 </script>
 
