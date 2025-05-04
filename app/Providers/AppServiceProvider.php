@@ -43,15 +43,20 @@ class AppServiceProvider extends ServiceProvider
             return $allow;
         });
 
-        Gate::define('submit-invoice', function (User $user, Invoice $invoice)  {
+        Gate::define('submit-invoice', function (User $user, Invoice $invoice) {
             $invoiceAuthorId = $invoice->author_id;
             $invoiceCompanyId = $invoice->sender_company_id;
+            $invoiceRecipientCompanyId = $invoice->recipient_company_id;
             $allow = false;
 
-            if ($user->id ===  $invoiceAuthorId && $user->company_id = $invoiceCompanyId) {
+            if ($user->company_id == $invoiceCompanyId) {
                 $allow = true;
             }
-        
+
+            if ($user->company_id == $invoiceRecipientCompanyId) {
+                $allow = true;
+            }
+
             return $allow;
         });
     }

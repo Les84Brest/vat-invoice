@@ -89,7 +89,17 @@ class InvoiceService implements InvoiceServiceContract
             ]);
         }
 
-        $invoice->status = InvoiceStatus::COMPLETED;
+        $oldStatus = $invoice->status;
+
+        if ($oldStatus == InvoiceStatus::IN_PROGRESS) {
+            $invoice->status = InvoiceStatus::COMPLETED;
+        }
+
+        if ($oldStatus == InvoiceStatus::COMPLETED) {
+            $invoice->status = InvoiceStatus::COMPLETED_SIGNED;
+        }
+
+
         $invoice->save();
         // Invoice::where('id', $id)->update(["status" => InvoiceStatus::COMPLETED]);
 
