@@ -82,7 +82,7 @@
                 <div class="invoice-card__buttons">
                     <ul>
                         <li>
-                            <el-button @click="onSumbitInvoice" type="primary">
+                            <el-button @click="onSumbitInvoice" type="primary" :disabled="!isButtonEnabled || isProcessing">
                                 Подписать
                             </el-button>
                         </li>
@@ -99,17 +99,17 @@
                     </ul>
                 </div>
             </template>
-            
+
         </el-card>
         <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
-        
+
     </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ElCard, ElDivider, ElNotification, ElTable, ElTableColumn, ElTag } from 'element-plus'
-import InvoiceStatus from '@/components/invoice/InvoiceStatus.vue';
+import { InvoiceStatus } from '@/types/invoice';
 import InvoiceType from '@/components/invoice/InvoiceType.vue';
 import PasswordConfirmDialog from '@/components/invoice/PasswordConfirmDialog.vue';
 import { useInvoiceStore } from '@/store/invoice';
@@ -118,11 +118,18 @@ import { useRouter, useRoute } from 'vue-router';
 import type { InvoiceItem } from '@/types/invoice';
 import type { TableColumnCtx } from 'element-plus'
 import axios from 'axios';
+import { useAuthStore } from '@/store/auth';
+import { computed } from 'vue';
 
 const invoiceStore = useInvoiceStore();
+const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 const invoiceId = route.params.id;
+
+const isButtonEnabled = computed(() => {
+    return invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGRESS;
+})
 
 interface SummaryMethodProps<T = InvoiceItem> {
     columns: TableColumnCtx<T>[]
@@ -172,7 +179,6 @@ function getSummaries(param: SummaryMethodProps) {
 }
 
 onMounted(async () => {
-    console.log('%cmounted', 'padding: 5px; background: DarkKhaki; color: Yellow;');
     await invoiceStore.fetchInvoiceById(+invoiceId);
 })
 
@@ -220,13 +226,28 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
             type: "success",
         });
         isSubmitButtonPressed.value = false;
-        console.log('%cdata', 'padding: 5px; background: DarkKhaki; color: Yellow;', data);
 
-        // setTimeout(() => {
-        //     router.push('/vat');
-        // }, 1500);
-    })
-        ;
+    });
+
+    function getSignedBtnDisabledStatus(): boolean {
+        let disableBtn: boolean = true;
+        console.log('%cin disable', 'padding: 5px; background: crimson; color: white;', disableBtn);
+
+        const isOurInvoice = invoiceStore.currentInvoice?.author.id === authStore.user?.id;
+
+        // В случае когда автор счета является текущим пользователем
+        if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS) {
+            disableBtn = false;
+        }
+
+        // 
+        // if (invoiceStore.currentInvoice?.status == InvoiceStatus.IN_PROGESS && isOurInvoice) {
+        //     disableBtn = false;
+        // }
+
+
+        return disableBtn;
+    }
 }
 </script>
 
