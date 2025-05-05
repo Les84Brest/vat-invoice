@@ -1,7 +1,7 @@
 <template>
     <InvoiceActions />
     <el-card>
-        <h3>Входящие неподписанные ЭСЧФ</h3>
+        <h3>Входящие подписанные ЭСЧФ</h3>
 
         <el-table :data="invoiceStore.invoices" v-loading="isLoading" style="width: 100%" border empty-text="Нет данных">
             <el-table-column type="index" :index="startingIndex" label="№ п/п" width="45" />
@@ -44,8 +44,8 @@
                                     @click="router.push(`/vat/invoice-income/${scope.row.id}`)">Просмотр</el-dropdown-item>
                                 <!-- <el-dropdown-item :icon="EditPen" divided
                                     @click="router.push(`invoice/${scope.row.id}/edit`)">Редактировать</el-dropdown-item> -->
-                                <el-dropdown-item :icon="Select" divided
-                                    @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item>
+                                <!-- <el-dropdown-item :icon="Select" divided
+                                    @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item> -->
                                 <el-dropdown-item :icon="Failed" divided @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
 
                             </el-dropdown-menu>
@@ -85,11 +85,11 @@ function handleSizeChange(page: number) {
     console.log('%cpage', 'padding: 5px; background: DarkKhaki; color: Yellow;', page);
 }
 function handlePageChange(page: number) {
-    invoiceStore.fetchIncomeUnsignedInvoices(page);
+    invoiceStore.fetchIncomeSignedInvoices(page);
 }
 
 onMounted(() => {
-    invoiceStore.fetchIncomeUnsignedInvoices();
+    invoiceStore.fetchIncomeSignedInvoices();
 })
 
 //submit invoice

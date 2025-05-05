@@ -117,6 +117,7 @@ export const useInvoiceStore = defineStore("invoice", {
                         status: [
                             InvoiceStatus.COMPLETED,
                             InvoiceStatus.COMPLETED_SIGNED,
+                            InvoiceStatus.ON_AGREEMENT_CANCEL,
                         ],
                         page,
                     },
@@ -151,8 +152,7 @@ export const useInvoiceStore = defineStore("invoice", {
                     params: {
                         sender_company_id: [auth.user?.company.id],
                         status: [
-                            InvoiceStatus.CANCELLED,
-                            InvoiceStatus.ON_AGREEMENT,
+                            InvoiceStatus.CANCELLED,                            
                         ],
                         page,
                     },
@@ -187,6 +187,41 @@ export const useInvoiceStore = defineStore("invoice", {
                         recipient_company_id: [auth.user?.company.id],
                         status: [
                             InvoiceStatus.COMPLETED,
+                        ],
+                        page,
+                    },
+                });
+
+                this.invoices = response.data.data;
+                const { meta } = response.data;
+
+                this.totalInvoices = meta.total ?? 0;
+
+                this.pageCount = meta.last_page ?? 0;
+                this.lastPage = meta.last_page ?? 0;
+                this.currentPage = meta.current_page ?? 0;
+
+                return response.data.data;
+            } catch (error) {
+                console.error("Не удалось загрузить счета", error);
+                throw error;
+            }
+        },
+        async fetchIncomeSignedInvoices(page: number = 0): Promise<Invoice[]>{
+            const auth = useAuthStore();
+
+            const companyId = auth.user?.company.id;
+            if (!companyId) {
+                await auth.fetchAuthUser();
+            }
+
+            try {
+                const response = await axios.get("/api/v1/invoice", {
+                    params: {
+                        recipient_company_id: [auth.user?.company.id],
+                        status: [
+                            InvoiceStatus.COMPLETED_SIGNED, 
+                            InvoiceStatus.ON_AGREEMENT_CANCEL, 
                         ],
                         page,
                     },
