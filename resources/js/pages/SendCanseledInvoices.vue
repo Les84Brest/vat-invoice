@@ -1,10 +1,10 @@
 <template>
     <AppLayout>
-        <IncomeUnsignedContent />
+        <SendCanseledContent />
     </AppLayout>
 </template>
 
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import IncomeUnsignedContent from '@/components/invoice/IncomeUnsignedContent.vue';
+import SendCanseledContent from '@/components/invoice/SendCanseledContent.vue';
 </script>

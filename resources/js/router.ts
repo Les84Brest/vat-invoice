@@ -27,6 +27,14 @@ const routes = [
         meta: { requiresAuth: true, title: "Просмотр ЭСЧФ" },
     },
     {
+        path: "/vat/invoice-income/:id",
+        name: "vat.invoiceIncomePreview",
+        component: () => import("@pages/InvoicePreviewIn.vue"),
+        meta: { requiresAuth: true, title: "Просмотр входящего ЭСЧФ" },
+    },
+
+
+    {
         path: "/vat/invoice/:id/edit",
         name: "vat.invoiceEdit",
         component: () => import("@pages/InvoiceEdit.vue"),
@@ -39,10 +47,28 @@ const routes = [
         meta: { requiresAuth: true, title: "Входящие неподписанные" },
     },
     {
+        path: "/vat/income/canseled",
+        name: "vat.incomeCanseled",
+        component: () => import("@pages/IncomeCanseledInvoices.vue"),
+        meta: { requiresAuth: true, title: "Входящие аннулированные" },
+    },
+    {
+        path: "/vat/income/signed",
+        name: "vat.incomeSigned",
+        component: () => import("@pages/IncomeSignedInvoices.vue"),
+        meta: { requiresAuth: true, title: "Входящие подписанные" },
+    },
+    {
         path: "/vat/send/signed",
         name: "vat.sendUnsigned",
         component: () => import("@pages/SendSignedInvoices.vue"),
         meta: { requiresAuth: true, title: "Отправленные неподписанные" },
+    },
+    {
+        path: "/vat/send/canseled",
+        name: "vat.sendCanseled",
+        component: () => import("@pages/SendCanseledInvoices.vue"),
+        meta: { requiresAuth: true, title: "Отправленные аннулированные" },
     },
     {
         path: "/user",

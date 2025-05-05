@@ -24,8 +24,9 @@ const tagType = computed(() => {
         case InvoiceStatus.COMPLETED:
             return 'warning'
         case InvoiceStatus.ON_AGREEMENT_CANCEL:
-            return "";
+            return "danger";
         case InvoiceStatus.CANCELLED:
+            return "danger";
         default: return "success";
     }
 });
@@ -51,6 +52,7 @@ function getStatusText(status: string): string {
         case InvoiceStatus.ON_AGREEMENT_CANCEL:
             return "Выставлен. Аннулирован поставщиком";
         case InvoiceStatus.CANCELLED:
+            return "Аннулирован";
         default: return "";
     }
 }
