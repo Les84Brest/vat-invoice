@@ -47,6 +47,12 @@ const routes = [
         meta: { requiresAuth: true, title: "Входящие неподписанные" },
     },
     {
+        path: "/vat/income/canseled",
+        name: "vat.incomeCanseled",
+        component: () => import("@pages/IncomeCanseledInvoices.vue"),
+        meta: { requiresAuth: true, title: "Входящие аннулированные" },
+    },
+    {
         path: "/vat/income/signed",
         name: "vat.incomeSigned",
         component: () => import("@pages/IncomeSignedInvoices.vue"),
