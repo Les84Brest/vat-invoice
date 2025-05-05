@@ -37,6 +37,7 @@ const confirmForm = reactive({
 
 const emit = defineEmits<{
     (e: 'user-password-confirmed', payload: { isConfirmed: boolean }): void
+    (e: 'user-password-confirmed-cansel', payload: { isConfirmed: boolean }): void
 }>();
 
 function closeConfirmDialog() {
@@ -57,11 +58,13 @@ function submitPasswordConfirmation(formEl: FormInstance | undefined) {
                     if (response?.status == 200) {
                         formEl.resetFields();
                         emit('user-password-confirmed', { isConfirmed: true });
+                        emit('user-password-confirmed-cansel', { isConfirmed: true });
                     }
                 })
                 .catch((error) => {
                     formEl.resetFields();
                     emit('user-password-confirmed', { isConfirmed: false });
+                    emit('user-password-confirmed-cansel', { isConfirmed: false });
                 })
         }
     });

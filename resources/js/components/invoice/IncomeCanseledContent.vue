@@ -9,7 +9,7 @@
             <el-table-column prop="recipient_company.title" label="Наименование получателя" />
             <el-table-column prop="number" label="Номер">
                 <template #default="scope">
-                    <router-link :to="`/vat/invoice/${scope.row.id}`">{{ scope.row.number }}</router-link>
+                    <router-link :to="`/vat/invoice-income/${scope.row.id}`">{{ scope.row.number }}</router-link>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="Статус">

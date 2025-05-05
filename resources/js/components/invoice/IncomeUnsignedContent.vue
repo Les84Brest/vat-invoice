@@ -9,7 +9,7 @@
             <el-table-column prop="recipient_company.title" label="Наименование получателя" />
             <el-table-column prop="number" label="Номер">
                 <template #default="scope">
-                    <router-link :to="`/vat/invoice/${scope.row.id}`">{{ scope.row.number }}</router-link>
+                    <router-link :to="`/vat/invoice-income/${scope.row.id}`">{{ scope.row.number }}</router-link>
                 </template>
             </el-table-column>
             <el-table-column prop="status" label="Статус">
@@ -44,8 +44,8 @@
                                     @click="router.push(`/vat/invoice-income/${scope.row.id}`)">Просмотр</el-dropdown-item>
                                 <!-- <el-dropdown-item :icon="EditPen" divided
                                     @click="router.push(`invoice/${scope.row.id}/edit`)">Редактировать</el-dropdown-item> -->
-                                <el-dropdown-item :icon="Select" divided
-                                    @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item>
+                                <!-- <el-dropdown-item :icon="Select" divided
+                                    @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item> -->
                                 <el-dropdown-item :icon="Failed" divided @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
 
                             </el-dropdown-menu>
@@ -58,7 +58,7 @@
             @current-change="handlePageChange" @size-change="handleSizeChange" hide-on-single-page />
     </el-card>
     <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
-    <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmedCanselInvoice" />
+    <PasswordConfirmDialog @user-password-confirmed-cansel="handlePasswordConfirmedCanselInvoice" />
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
