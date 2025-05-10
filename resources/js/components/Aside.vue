@@ -1,10 +1,14 @@
 <template>
     <el-aside class="app-aside">
         <div class="app-logo">
-            <a href="#" class="app-logo__link">
+            <router-link :to="'/vat'"  class="app-logo__link">
                 <img src="@assets/images/vat-invoice-logo-light.svg" alt="Логотип приложения">
                 <span class="app-logo__text">Счета по НДС</span>
-            </a>
+            </router-link>
+            <!-- <a href="#" class="app-logo__link">
+                <img src="@assets/images/vat-invoice-logo-light.svg" alt="Логотип приложения">
+                <span class="app-logo__text">Счета по НДС</span>
+            </a> -->
             <el-button :icon="DArrowLeft" class="toggle-menu" @click="handleToggleMenu"></el-button>
         </div>
         <el-scrollbar>
