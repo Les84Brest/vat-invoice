@@ -78,17 +78,21 @@
                 </el-autocomplete>
             </el-form-item>
             <template v-if="invoiceReciever">
-                <el-row>
-                    <el-col :span=8>Получатель</el-col>
+                <el-row class="invoice-reciever__row">
+                    <el-col :span=6><el-text>Получатель</el-text></el-col>
+                    <el-col :span="2"></el-col>
                     <el-col :span=8>
-                        {{ invoiceReciever.title }}
+                        <el-text> {{ invoiceReciever.title }}</el-text>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span=8>Юридический адрес (адрес места жительства индивидуального
-                        предпринимателя)</el-col>
+                <el-row class="invoice-reciever__row">
+                    <el-col :span=6><el-text>
+                        Юридический адрес (адрес места жительства индивидуального
+                            предпринимателя)
+                    </el-text></el-col>
+                    <el-col :span="2"></el-col>
                     <el-col :span=8>
-                        {{ invoiceReciever.address }}
+                        <el-text>{{ invoiceReciever.address }}</el-text>
                     </el-col>
                 </el-row>
             </template>
@@ -430,5 +434,9 @@ const invoiceRules = reactive<FormRules>({
     .company-title {
         font-size: 12px;
     }
+}
+
+.invoice-reciever__row {
+    margin-bottom: 16px;
 }
 </style>
