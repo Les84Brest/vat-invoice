@@ -61,7 +61,7 @@ function getSummaries(param: SummaryMethodProps) {
 
     columns.forEach((col, index) => {
         if (index === 0) {
-            sums[index] = "Всего";
+            sums[index] = "total";
         }
 
         const colName = col.property as string;

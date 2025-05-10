@@ -55,7 +55,7 @@ class InvoiseStoreRequest extends FormRequest
             'invoice_items.*.count' => ['required', 'numeric'],
             'invoice_items.*.price' => ['required', 'numeric', 'min:0'],
             'invoice_items.*.cost' => ['required', 'numeric', 'min:0'],
-            'invoice_items.*.vat_rate' => ['required', 'numeric', 'between:0,1'],
+            'invoice_items.*.vat_rate' => ['required'],
             'invoice_items.*.vat_sum' => ['required', 'numeric', 'min:0'],
             'invoice_items.*.cost_vat' => ['required', 'numeric', 'min:0'],
         ];

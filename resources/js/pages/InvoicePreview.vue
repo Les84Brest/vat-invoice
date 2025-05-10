@@ -52,10 +52,8 @@
 
                 <el-table empty-text="Нет данных" :data="invoiceStore.currentInvoice.delivery_documents" border>
                     <el-table-column prop="document_type" label="Вид документа" width="250" />
-                    <el-table-column prop="number" label="Номер" width="250" />
+                    <el-table-column prop="number" label="Серия, номер" width="250" />
                     <el-table-column prop="date" label="Дата" width="250" />
-
-
                 </el-table>
 
                 <!-- Позиции счета -->
@@ -63,20 +61,40 @@
                     <h3>Данные по товарам (работам, услугам), имущественным правам</h3>
                 </el-divider>
                 <el-table empty-text="Нет данных" :data="invoiceStore.currentInvoice.invoice_items" border
-                    style="width: 100%" show-summary :summary-method="getSummaries" sum-text="Всего">
+                    style="width: 100%" show-summary :summary-method="getTableSummaries" sum-text="Всего">
                     <el-table-column type="index" label="№ п/п" width="70" />
                     <el-table-column prop="name" label=" Наименование товаров (работ, услуг), имущественных прав"
                         width="200" />
                     <el-table-column prop="dimension" label="Единица измерения" width="70" />
                     <el-table-column prop="count" label="Количество (объем)" width="100" />
                     <el-table-column prop="price"
-                        label="Цена (тариф) за единицу товара (работы, услуги), имущественных прав без учета НДС, руб." />
+                        label="Цена (тариф) за единицу товара (работы, услуги), имущественных прав без учета НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.price) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="cost"
-                        label="Стоимость товаров (работ, услуг), имущественных прав без учета НДС, руб." />
-                    <el-table-column prop="vat_rate" label="НДС ставка, %" width="100" />
-                    <el-table-column prop="vat_sum" label="НДС сумма, руб." />
+                        label="Стоимость товаров (работ, услуг), имущественных прав без учета НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.cost) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vat_rate" label="НДС ставка, %" width="100">
+                        <template #default="scope">
+                            {{ formatVatRate(scope.row.vat_rate) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vat_sum" label="НДС сумма, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.vat_sum) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="cost_vat"
-                        label=" Стоимость товаров (работ, услуг), имущественных прав с учетом НДС, руб." />
+                        label=" Стоимость товаров (работ, услуг), имущественных прав с учетом НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.cost_vat) }}
+                        </template>
+                    </el-table-column>
                 </el-table>
 
                 <div class="invoice-card__buttons">
@@ -119,11 +137,11 @@ import { useRouter, useRoute } from 'vue-router';
 import type { InvoiceItem } from '@/types/invoice';
 import type { TableColumnCtx } from 'element-plus'
 import axios from 'axios';
-import { useAuthStore } from '@/store/auth';
 import { computed } from 'vue';
+import { formatVatRate, formatCurrency } from '@/utils/format';
+import useVatTableSummaries from "@/composables/useVatTableSummaries";
 
 const invoiceStore = useInvoiceStore();
-const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 const invoiceId = route.params.id;
@@ -132,10 +150,6 @@ const isButtonEnabled = computed(() => {
     return invoiceStore.currentInvoice?.status == InvoiceStatusType.IN_PROGRESS;
 })
 
-interface SummaryMethodProps<T = InvoiceItem> {
-    columns: TableColumnCtx<T>[]
-    data: T[]
-}
 
 const NOT_SUMMARIZE_COLUMNS = [
     'count',
@@ -145,39 +159,7 @@ const NOT_SUMMARIZE_COLUMNS = [
     'vat_rate'
 ];
 
-
-function getSummaries(param: SummaryMethodProps) {
-    const { columns, data } = param;
-    const sums: Array<string> = [];
-
-    columns.forEach((col, index) => {
-        if (index === 0) {
-            sums[index] = "Всего";
-        }
-
-        const colName = col.property as string;
-
-        if (NOT_SUMMARIZE_COLUMNS.includes(colName)) {
-            return;
-        }
-
-        const values = data.map((item) => Number(item[colName as keyof InvoiceItem]));
-        if (!values.every((value) => Number.isNaN(value))) {
-            sums[index] = `${values.reduce((prev, curr) => {
-                const value = Number(curr)
-                if (!Number.isNaN(value)) {
-                    return prev + curr
-                } else {
-                    return prev
-                }
-            }, 0)}`
-        } else {
-            sums[index] = '';
-        }
-    })
-
-    return sums;
-}
+const getTableSummaries = useVatTableSummaries(NOT_SUMMARIZE_COLUMNS, "Всего");
 
 onMounted(async () => {
     await invoiceStore.fetchInvoiceById(+invoiceId);
