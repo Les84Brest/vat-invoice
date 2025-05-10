@@ -6,15 +6,23 @@
                 <div class="invoice-header">
                     <h2>Счет № {{ invoiceStore.currentInvoice.number }}</h2>
                     <div class="invoice-meta">
-                        <div><strong>Дата выставления:</strong> {{ invoiceStore.currentInvoice.creation_date
-                        }}</div>
-                        <div><strong>Дата совершения:</strong> {{ invoiceStore.currentInvoice.action_date
-                        }}</div>
-                        <div><strong>Статус:</strong>
-                            <InvoiceStatus :status="invoiceStore.currentInvoice.status" />
+                        <div class="invoice-meta__item">
+                            <strong>Дата выставления:</strong> <span>{{ invoiceStore.currentInvoice.creation_date }}</span>
                         </div>
-                        <div><strong>Тип счета:</strong>
-                            <InvoiceType :type="invoiceStore.currentInvoice.type" />
+                        <div class="invoice-meta__item">
+                            <strong>Дата совершения:</strong> <span>{{ invoiceStore.currentInvoice.action_date }}</span>
+                        </div>
+                        <div class="invoice-meta__item">
+                            <strong>Статус:</strong>
+                            <span>
+                                <InvoiceStatus :status="invoiceStore.currentInvoice.status" />
+                            </span>
+                        </div>
+                        <div class="invoice-meta__item">
+                            <strong>Тип счета:</strong>
+                            <span>
+                                <InvoiceType :type="invoiceStore.currentInvoice.type" />
+                            </span>
                         </div>
                     </div>
 
@@ -23,17 +31,17 @@
                     <h3>Реквизиты поставщика</h3>
                 </el-divider>
                 <div class="invoice-party">
-                    <div><strong>УНП:</strong> {{ invoiceStore.currentInvoice.sender_company.tax_id }}</div>
-                    <div><strong>Поставщик:</strong> {{ invoiceStore.currentInvoice.sender_company.title }}</div>
-                    <div><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.sender_company.address }}</div>
+                    <div class="invoice-party__item"><strong>УНП:</strong> {{ invoiceStore.currentInvoice.sender_company.tax_id }}</div>
+                    <div class="invoice-party__item"><strong>Поставщик:</strong> {{ invoiceStore.currentInvoice.sender_company.title }}</div>
+                    <div class="invoice-party__item"><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.sender_company.address }}</div>
                 </div>
                 <el-divider>
                     <h3>Реквизиты Получателя</h3>
                 </el-divider>
                 <div class="invoice-party">
-                    <div><strong>УНП:</strong> {{ invoiceStore.currentInvoice.recipient_company.tax_id }}</div>
-                    <div><strong>Получатель:</strong> {{ invoiceStore.currentInvoice.recipient_company.title }}</div>
-                    <div><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.recipient_company.address }}</div>
+                    <div class="invoice-party__item"><strong>УНП:</strong> {{ invoiceStore.currentInvoice.recipient_company.tax_id }}</div>
+                    <div class="invoice-party__item"><strong>Получатель:</strong> {{ invoiceStore.currentInvoice.recipient_company.title }}</div>
+                    <div class="invoice-party__item"><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.recipient_company.address }}</div>
                 </div>
                 <!-- Информация о договоре -->
                 <el-divider>
@@ -43,8 +51,8 @@
                     <el-text type="info" class="label-text">Договор (контракт) на поставку товаров (выполнение работ,
                         оказание услуг), передачу
                         имущественных прав</el-text>
-                    <div><strong>Номер договора:</strong> {{ invoiceStore.currentInvoice.contract_number }}</div>
-                    <div><strong>Дата договора:</strong> {{ invoiceStore.currentInvoice.contract_date }}</div>
+                    <div class="invoice-contract__item"><strong>Номер договора:</strong> {{ invoiceStore.currentInvoice.contract_number }}</div>
+                    <div class="invoice-contract__item"><strong>Дата договора:</strong> {{ invoiceStore.currentInvoice.contract_date }}</div>
                 </div>
                 <el-text type="info" class="label-text">
                     Документы, подтверждающие поставку товаров (работ, услуг), имущественных прав
@@ -239,8 +247,17 @@ function handlePasswordConfirmed(payload: { isConfirmed: boolean }) {
     margin-top: 15px;
 }
 
+.invoice-meta__item strong {
+    display: inline-block;
+    margin-right: 12px;
+}
+
 .invoice-party {
     margin: 15px 0;
+}
+.invoice-party__item:not(:last-child),
+.invoice-contract__item:not(:last-child){
+margin-bottom: 12px;
 }
 
 .invoice-contract {
