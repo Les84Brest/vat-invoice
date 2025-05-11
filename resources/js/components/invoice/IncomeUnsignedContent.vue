@@ -1,12 +1,13 @@
 <template>
     <InvoiceActions />
-    <el-card>
+    <el-card class="invoices-table-card">
         <h3>Входящие неподписанные ЭСЧФ</h3>
 
-        <el-table :data="invoiceStore.invoices" v-loading="isLoading" style="width: 100%" border empty-text="Нет данных">
+        <el-table :data="invoiceStore.invoices" v-loading="isLoading" style="width: 100%" border empty-text="Нет данных"
+            show-summary :summary-method="tableSumFunction">
             <el-table-column type="index" :index="startingIndex" label="№ п/п" width="45" />
-            <el-table-column prop="recipient_company.tax_id" label="УНП получателя" width="100" />
-            <el-table-column prop="recipient_company.title" label="Наименование получателя" />
+            <el-table-column prop="sender_company.tax_id" label="УНП отправителя" width="100" />
+            <el-table-column prop="sender_company.title" label="Наименование отправителя" />
             <el-table-column prop="number" label="Номер">
                 <template #default="scope">
                     <router-link :to="`/vat/invoice-income/${scope.row.id}`">{{ scope.row.number }}</router-link>
@@ -26,17 +27,29 @@
             <el-table-column prop="action_date" label="Дата совершения" width="100" />
             <el-table-column prop="creation_date" label="Дата выставления" width="100" />
             <el-table-column prop="author.full_name" label="Автор" width="120" />
-            <el-table-column prop="total_wo_vat" label="Итоговая сумма НДС, рублей" />
-            <el-table-column prop="total" label="Итоговая сумма с НДС, рублей" />
+            <el-table-column prop="total_wo_vat" label="Итоговая сумма без НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total_wo_vat) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="total_vat" label="Cумма  НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total_vat) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="total" label="Итоговая сумма с НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total) }}
+                </template>
+            </el-table-column>
 
             <el-table-column min-width="70" label="Действия">
                 <template #default="scope">
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
-                            <el-icon>
-                                <MoreFilled />
-                            </el-icon>
-
+                            <span class="el-dropdown-link">
+                                <el-button :icon="MoreFilled" />
+                            </span>
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu trigger="click">
@@ -46,7 +59,8 @@
                                     @click="router.push(`invoice/${scope.row.id}/edit`)">Редактировать</el-dropdown-item> -->
                                 <!-- <el-dropdown-item :icon="Select" divided
                                     @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item> -->
-                                <el-dropdown-item :icon="Failed" divided @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
+                                <el-dropdown-item :icon="Failed" divided
+                                    @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
 
                             </el-dropdown-menu>
                         </template>
@@ -70,7 +84,22 @@ import InvoiceType from './InvoiceType.vue';
 import PasswordConfirmDialog from './PasswordConfirmDialog.vue';
 import InvoiceActions from './InvoiceActions.vue';
 import { ElNotification } from 'element-plus';
+import { formatCurrency } from '@/utils/format';
 import axios from 'axios';
+import useVatTableSummaries from '@/composables/useVatTableSummaries';
+
+const NOT_SUMMARIZED_COLUMNS = [
+    'author.full_name',
+    'creation_date',
+    'action_date',
+    'type',
+    'status',
+    'number',
+    'sender_company.title',
+    'sender_company.tax_id',
+];
+
+const tableSumFunction = useVatTableSummaries(NOT_SUMMARIZED_COLUMNS, " ");
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
@@ -103,7 +132,7 @@ function onSumbitInvoice(invoiceId: number) {
     invoiceStore.togglePasswordConfirmVisible();
 }
 
-function onCancelInvoice(id:number){
+function onCancelInvoice(id: number) {
     canseledInvoiceId.value = id;
     isSubmitButtonPressed.value = true;
     invoiceStore.togglePasswordConfirmVisible();

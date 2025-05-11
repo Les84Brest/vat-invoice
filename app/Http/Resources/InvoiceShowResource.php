@@ -28,7 +28,9 @@ class InvoiceShowResource extends JsonResource
             'total_vat' => $this->total_vat,
 
             'author' => new UserLightResource($this->author),
+            
             'recipient_company' => new CompanyShowResource($this->recipient_company),
+            'sender_company' => new CompanyShowResource($this->sender_company),
         ];
     }
 }
