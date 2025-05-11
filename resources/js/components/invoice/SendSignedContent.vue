@@ -46,7 +46,8 @@
                                     @click="router.push(`invoice/${scope.row.id}/edit`)">Редактировать</el-dropdown-item> -->
                                 <!-- <el-dropdown-item :icon="Select" divided
                                     @click="onSumbitInvoice(scope.row.id)">Подписать</el-dropdown-item> -->
-                                <el-dropdown-item :icon="Failed" divided @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
+                                <el-dropdown-item :icon="Failed" divided
+                                    @click="onCancelInvoice(scope.row.id)">Анулировать</el-dropdown-item>
 
                             </el-dropdown-menu>
                         </template>
@@ -56,6 +57,10 @@
         </el-table>
         <el-pagination background :page-size="10" layout="prev, pager, next" :total="invoiceStore.totalInvoices"
             @current-change="handlePageChange" @size-change="handleSizeChange" hide-on-single-page />
+
+        <el-divider content-position="left">Компонент таблицы</el-divider>
+        <SendedInvoicesTable :invoicesList="invoiceStore.invoices" :isLoading="isLoading"
+            :allowedActions="ALLOWED_ACTIONS" />
     </el-card>
     <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
 </template>
@@ -69,7 +74,14 @@ import InvoiceType from './InvoiceType.vue';
 import PasswordConfirmDialog from './PasswordConfirmDialog.vue';
 import InvoiceActions from './InvoiceActions.vue';
 import { ElNotification } from 'element-plus';
+import SendedInvoicesTable from './SendedInvoicesTable.vue';
+import { InvoiceAlowedActions } from '@/types/invoiceTable';
 import axios from 'axios';
+
+const ALLOWED_ACTIONS = [
+    InvoiceAlowedActions.PREVIEW_INVOICE,
+    InvoiceAlowedActions.CANCEL_INVOICE
+];
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
@@ -85,6 +97,7 @@ function handleSizeChange(page: number) {
 function handlePageChange(page: number) {
     invoiceStore.fetchCurrentInvoices(page);
 }
+
 
 onMounted(() => {
     invoiceStore.fetchSendInvoices();
