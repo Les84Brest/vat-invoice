@@ -46,12 +46,7 @@
                 <template #default="scope">
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
-                            <!-- <el-icon>
-                                <MoreFilled />
-                            </el-icon> -->
-
                             <el-button :icon="MoreFilled" />
-
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu trigger="click">

@@ -27,12 +27,12 @@
             <el-table-column prop="action_date" label="Дата совершения" width="100" />
             <el-table-column prop="creation_date" label="Дата выставления" width="100" />
             <el-table-column prop="author.full_name" label="Автор" width="120" />
-            <el-table-column prop="total_wo_vat" label="Итоговая сумма НДС, рублей">
+            <el-table-column prop="total_wo_vat" label="Итоговая сумма без НДС, рублей">
                 <template #default="scope">
                     {{ formatCurrency(scope.row.total_wo_vat) }}
                 </template>
             </el-table-column>
-            <el-table-column prop="total_vat" label="Cумма НДС, рублей">
+            <el-table-column prop="total_vat" label="Cумма  НДС, рублей">
                 <template #default="scope">
                     {{ formatCurrency(scope.row.total_vat) }}
                 </template>
@@ -47,10 +47,9 @@
                 <template #default="scope">
                     <el-dropdown trigger="click">
                         <span class="el-dropdown-link">
-                            <el-icon>
-                                <MoreFilled />
-                            </el-icon>
-
+                            <span class="el-dropdown-link">
+                                <el-button :icon="MoreFilled" />
+                            </span>
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu trigger="click">

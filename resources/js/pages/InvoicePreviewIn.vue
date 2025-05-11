@@ -6,15 +6,23 @@
                 <div class="invoice-header">
                     <h2>Счет № {{ invoiceStore.currentInvoice.number }}</h2>
                     <div class="invoice-meta">
-                        <div><strong>Дата выставления:</strong> {{ invoiceStore.currentInvoice.creation_date
-                        }}</div>
-                        <div><strong>Дата совершения:</strong> {{ invoiceStore.currentInvoice.action_date
-                        }}</div>
-                        <div><strong>Статус:</strong>
-                            <InvoiceStatus :status="invoiceStore.currentInvoice.status" />
+                        <div class="invoice-meta__item">
+                            <strong>Дата выставления:</strong> <span>{{ invoiceStore.currentInvoice.creation_date }}</span>
                         </div>
-                        <div><strong>Тип счета:</strong>
-                            <InvoiceType :type="invoiceStore.currentInvoice.type" />
+                        <div class="invoice-meta__item">
+                            <strong>Дата совершения:</strong> <span>{{ invoiceStore.currentInvoice.action_date }}</span>
+                        </div>
+                        <div class="invoice-meta__item">
+                            <strong>Статус:</strong>
+                            <span>
+                                <InvoiceStatus :status="invoiceStore.currentInvoice.status" />
+                            </span>
+                        </div>
+                        <div class="invoice-meta__item">
+                            <strong>Тип счета:</strong>
+                            <span>
+                                <InvoiceType :type="invoiceStore.currentInvoice.type" />
+                            </span>
                         </div>
                     </div>
 
@@ -23,17 +31,23 @@
                     <h3>Реквизиты поставщика</h3>
                 </el-divider>
                 <div class="invoice-party">
-                    <div><strong>УНП:</strong> {{ invoiceStore.currentInvoice.sender_company.tax_id }}</div>
-                    <div><strong>Поставщик:</strong> {{ invoiceStore.currentInvoice.sender_company.title }}</div>
-                    <div><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.sender_company.address }}</div>
+                    <div class="invoice-party__item"><strong>УНП:</strong> {{
+                        invoiceStore.currentInvoice.sender_company.tax_id }}</div>
+                    <div class="invoice-party__item"><strong>Поставщик:</strong> {{
+                        invoiceStore.currentInvoice.sender_company.title }}</div>
+                    <div class="invoice-party__item"><strong>Адрес:</strong> {{
+                        invoiceStore.currentInvoice.sender_company.address }}</div>
                 </div>
                 <el-divider>
                     <h3>Реквизиты Получателя</h3>
                 </el-divider>
                 <div class="invoice-party">
-                    <div><strong>УНП:</strong> {{ invoiceStore.currentInvoice.recipient_company.tax_id }}</div>
-                    <div><strong>Получатель:</strong> {{ invoiceStore.currentInvoice.recipient_company.title }}</div>
-                    <div><strong>Адрес:</strong> {{ invoiceStore.currentInvoice.recipient_company.address }}</div>
+                    <div class="invoice-party__item"><strong>УНП:</strong> {{
+                        invoiceStore.currentInvoice.recipient_company.tax_id }}</div>
+                    <div class="invoice-party__item"><strong>Получатель:</strong> {{
+                        invoiceStore.currentInvoice.recipient_company.title }}</div>
+                    <div class="invoice-party__item"><strong>Адрес:</strong> {{
+                        invoiceStore.currentInvoice.recipient_company.address }}</div>
                 </div>
                 <!-- Информация о договоре -->
                 <el-divider>
@@ -43,8 +57,10 @@
                     <el-text type="info" class="label-text">Договор (контракт) на поставку товаров (выполнение работ,
                         оказание услуг), передачу
                         имущественных прав</el-text>
-                    <div><strong>Номер договора:</strong> {{ invoiceStore.currentInvoice.contract_number }}</div>
-                    <div><strong>Дата договора:</strong> {{ invoiceStore.currentInvoice.contract_date }}</div>
+                    <div class="invoice-contract__item"><strong>Номер договора:</strong> {{
+                        invoiceStore.currentInvoice.contract_number }}</div>
+                    <div class="invoice-contract__item"><strong>Дата договора:</strong> {{
+                        invoiceStore.currentInvoice.contract_date }}</div>
                 </div>
                 <el-text type="info" class="label-text">
                     Документы, подтверждающие поставку товаров (работ, услуг), имущественных прав
@@ -63,20 +79,40 @@
                     <h3>Данные по товарам (работам, услугам), имущественным правам</h3>
                 </el-divider>
                 <el-table empty-text="Нет данных" :data="invoiceStore.currentInvoice.invoice_items" border
-                    style="width: 100%" show-summary :summary-method="getSummaries" sum-text="Всего">
+                    style="width: 100%" show-summary :summary-method="getTableSummaries" sum-text="Всего">
                     <el-table-column type="index" label="№ п/п" width="70" />
                     <el-table-column prop="name" label=" Наименование товаров (работ, услуг), имущественных прав"
                         width="200" />
                     <el-table-column prop="dimension" label="Единица измерения" width="70" />
                     <el-table-column prop="count" label="Количество (объем)" width="100" />
                     <el-table-column prop="price"
-                        label="Цена (тариф) за единицу товара (работы, услуги), имущественных прав без учета НДС, руб." />
+                        label="Цена (тариф) за единицу товара (работы, услуги), имущественных прав без учета НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.price) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="cost"
-                        label="Стоимость товаров (работ, услуг), имущественных прав без учета НДС, руб." />
-                    <el-table-column prop="vat_rate" label="НДС ставка, %" width="100" />
-                    <el-table-column prop="vat_sum" label="НДС сумма, руб." />
+                        label="Стоимость товаров (работ, услуг), имущественных прав без учета НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.cost) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vat_rate" label="НДС ставка, %" width="100">
+                        <template #default="scope">
+                            {{ formatVatRate(scope.row.vat_rate) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="vat_sum" label="НДС сумма, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.vat_sum) }}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="cost_vat"
-                        label=" Стоимость товаров (работ, услуг), имущественных прав с учетом НДС, руб." />
+                        label=" Стоимость товаров (работ, услуг), имущественных прав с учетом НДС, руб.">
+                        <template #default="scope">
+                            {{ formatCurrency(scope.row.cost_vat) }}
+                        </template>
+                    </el-table-column>
                 </el-table>
 
                 <div class="invoice-card__buttons">
@@ -117,6 +153,8 @@ import type { TableColumnCtx } from 'element-plus'
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth';
 import { computed } from 'vue';
+import { formatCurrency, formatVatRate } from '@/utils/format';
+import useVatTableSummaries from "@/composables/useVatTableSummaries";
 
 const invoiceStore = useInvoiceStore();
 const authStore = useAuthStore();
@@ -140,6 +178,8 @@ const NOT_SUMMARIZE_COLUMNS = [
     'price',
     'vat_rate'
 ];
+
+const getTableSummaries = useVatTableSummaries(NOT_SUMMARIZE_COLUMNS, "Всего");
 
 
 function getSummaries(param: SummaryMethodProps) {
