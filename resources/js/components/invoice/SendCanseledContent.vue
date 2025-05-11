@@ -1,9 +1,9 @@
 <template>
     <InvoiceActions />
-    <el-card>
+    <el-card class="invoices-table-card">
         <h3>Отправленные аннулированные ЭСЧФ</h3>
 
-        <el-table :data="invoiceStore.invoices" v-loading="isLoading" style="width: 100%" border empty-text="Нет данных">
+        <el-table :data="invoiceStore.invoices" v-loading="isLoading" style="width: 100%" border empty-text="Нет данных" show-summary :summary-method="tableSumFunction">
             <el-table-column type="index" :index="startingIndex" label="№ п/п" width="45" />
             <el-table-column prop="recipient_company.tax_id" label="УНП получателя" width="100" />
             <el-table-column prop="recipient_company.title" label="Наименование получателя" />
@@ -26,8 +26,21 @@
             <el-table-column prop="action_date" label="Дата совершения" width="100" />
             <el-table-column prop="creation_date" label="Дата выставления" width="100" />
             <el-table-column prop="author.full_name" label="Автор" width="120" />
-            <el-table-column prop="total_wo_vat" label="Итоговая сумма НДС, рублей" />
-            <el-table-column prop="total" label="Итоговая сумма с НДС, рублей" />
+            <el-table-column prop="total_wo_vat" label="Итоговая сумма без НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total_wo_vat) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="total_vat" label="Cумма НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total_vat) }}
+                </template>
+            </el-table-column>
+            <el-table-column prop="total" label="Итоговая сумма с НДС, рублей">
+                <template #default="scope">
+                    {{ formatCurrency(scope.row.total) }}
+                </template>
+            </el-table-column>
 
             <el-table-column min-width="70" label="Действия">
                 <template #default="scope">
@@ -69,7 +82,22 @@ import InvoiceType from './InvoiceType.vue';
 import PasswordConfirmDialog from './PasswordConfirmDialog.vue';
 import InvoiceActions from './InvoiceActions.vue';
 import { ElNotification } from 'element-plus';
+import { formatCurrency } from '@/utils/format';
 import axios from 'axios';
+import useVatTableSummaries from '@/composables/useVatTableSummaries';
+
+const NOT_SUMMARIZED_COLUMNS = [
+    'author.full_name',
+    'creation_date',
+    'action_date',
+    'type',
+    'status',
+    'number',
+    'recipient_company.title',
+    'recipient_company.tax_id',
+];
+
+const tableSumFunction = useVatTableSummaries(NOT_SUMMARIZED_COLUMNS, " ");
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
