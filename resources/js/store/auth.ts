@@ -3,7 +3,11 @@ import type { User } from "../types/user";
 import { fetchCsrfTocken } from "../utils/token";
 import axios, { AxiosResponse } from "axios";
 import { ILoginForm, IRegisterForm } from "../types/user";
-import { setAuthStatus } from "@/utils/auth";
+import {
+    canselCompanyAssigned,
+    setAuthStatus,
+    setCompanyAssigned,
+} from "@/utils/auth";
 import { useRouter } from "vue-router";
 
 interface AuthState {
@@ -71,7 +75,10 @@ export const useAuthStore = defineStore("auth", {
                 );
 
                 this.$reset();
+
+                // remove auth statuses from localStorage
                 window.localStorage.removeItem("auth");
+                canselCompanyAssigned();
             } catch (error) {
                 console.error("Logout failed:", error);
             }
@@ -81,8 +88,10 @@ export const useAuthStore = defineStore("auth", {
                 const isTokenFetched = await fetchCsrfTocken();
 
                 if (isTokenFetched) {
-                    const response = await axios.post('/api/v1/register', registerData);
-                    console.log('%cresponse', 'padding: 5px; background: DarkKhaki; color: Yellow;', response);
+                    const response = await axios.post(
+                        "/api/v1/register",
+                        registerData
+                    );
                 }
             } catch (error) {
                 throw new Error("Ошибка при регистрации пользователя");
@@ -91,11 +100,15 @@ export const useAuthStore = defineStore("auth", {
 
         async fetchAuthUser(): Promise<void> {
             try {
-                console.log('%cin fetch auth user', 'padding: 5px; background: hotpink; color: black;');
                 const response = await axios.get("/api/v1/auth_user");
                 const authUser = response.data.data;
 
                 this.user = authUser;
+
+                // assigned company status
+                if (authUser.company) {
+                    setCompanyAssigned();
+                }
             } catch (error) {
                 throw new Error("Ошибка получения данных пользователя");
             }

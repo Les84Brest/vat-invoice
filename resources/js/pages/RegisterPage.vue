@@ -85,8 +85,8 @@ const rules = reactive<FormRules<IRegisterForm>>({
             trigger: 'change',
         },
         {
-            min: 6,
-            message: "Длина пароля должна быть больше шести знаков",
+            min: 8,
+            message: "Длина пароля больше 8 знаков",
             trigger: 'blur'
         }
     ],

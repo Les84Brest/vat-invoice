@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getAuthStatus } from "./utils/auth";
+import { getAuthStatus, getCompanyAssigmentStatus } from "./utils/auth";
+import { useAuthStore } from "./store/auth";
 
 const routes = [
     {
@@ -32,7 +33,6 @@ const routes = [
         component: () => import("@pages/InvoicePreviewIn.vue"),
         meta: { requiresAuth: true, title: "Просмотр входящего ЭСЧФ" },
     },
-
 
     {
         path: "/vat/invoice/:id/edit",
@@ -70,38 +70,32 @@ const routes = [
         component: () => import("@pages/SendCanseledInvoices.vue"),
         meta: { requiresAuth: true, title: "Отправленные аннулированные" },
     },
-    {
-        path: "/user",
-        name: "user.dashboard",
-        component: () => import("@pages/UserDashboard.vue"),
-    },
-    {
-        path: "/welcome",
-        name: "welcome",
-        component: () => import("@pages/WelcomePage.vue"),
-    },
+
     {
         path: "/register",
         name: "register",
         component: () => import("@pages/RegisterPage.vue"),
-        meta: { requiresGuest: true, title: "Регистрация" },
+        meta: {
+            requiresGuest: true,
+            requiresCompany: false,
+            title: "Регистрация",
+        },
     },
     {
         path: "/login",
         name: "login",
         component: () => import("@pages/LoginPage.vue"),
-        meta: { requiresGuest: true, title: "Вход" },
+        meta: { requiresGuest: true, requiresCompany: false, title: "Вход" },
     },
     {
-        path: "/welcome/test",
-        name: "welcome.test",
-        component: () => import("@pages/Test.vue"),
-    },
-
-    {
-        path: "/welcome/personal",
-        name: "welcome.personal",
-        component: () => import("@pages/WelcomePersonalPage.vue"),
+        path: "/vat/nocompany",
+        name: "vat.noCompany",
+        component: () => import("@pages/NoCompany.vue"),
+        meta: {
+            requiresCompany: false,
+            requiresAuth: true,
+            title: "Не назначена  компания",
+        },
     },
 ];
 
@@ -112,6 +106,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const authStatus = getAuthStatus();
+    const authStore = useAuthStore();
+    const isCompanyAssigned = getCompanyAssigmentStatus();
 
     const pageTitle = to.meta.title as string;
     document.title = pageTitle || "Работа с ЭСЧФ";
@@ -122,12 +118,13 @@ router.beforeEach((to, from, next) => {
     } else if (to.meta.requiresAuth && !authStatus) {
         // If the user is not logged in and tries to access a protected route, redirect to login
         next({ name: "login" });
+    } else if (to.meta.requiresCompany !== false && !isCompanyAssigned) {
+        next({ name: "vat.noCompany" });
     } else {
         // Otherwise, allow access
         next();
     }
 
-    return next();
 });
 
 export default router;

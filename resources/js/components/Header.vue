@@ -5,10 +5,12 @@
                 <el-button :icon="ArrowLeftBold" @click="onBackButtonClick"></el-button>
             </div>
             <div class="header__right">
-                <div class="header__company company-header">
-                    <div class="company-header__name"><el-text>{{ authStore.user.company.title }}</el-text></div>
-                    <div class="company-header__taxid"><el-text>УНП: {{ authStore.user.company.tax_id }}</el-text></div>
-                </div>
+                <template v-if="authStore.user?.company">
+                    <div class="header__company company-header">
+                        <div class="company-header__name"><el-text>{{ authStore.user.company?.title }}</el-text></div>
+                        <div class="company-header__taxid"><el-text>УНП: {{ authStore.user.company.tax_id }}</el-text></div>
+                    </div>
+                </template>
                 <div class="header__user user-header">
                     <div class="user-header__name">{{ authStore.user.full_name }}</div>
                     <el-dropdown @command="handleUserDropdown">
