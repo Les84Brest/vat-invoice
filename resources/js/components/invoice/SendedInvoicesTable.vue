@@ -27,7 +27,7 @@
 
         <el-table-column min-width="70" label="Действия">
             <template #default="scope">
-                <InvoiceTableRowActions invoiceId="scope.row.id" :alowedActions="props.allowedActions" />
+                <InvoiceTableRowActions :invoiceId="scope.row.id" :alowedActions="props.allowedActions" />
             </template>
         </el-table-column>
     </el-table>

@@ -5,15 +5,20 @@
         </span>
         <template #dropdown>
             <el-dropdown-menu trigger="click">
-
-                <el-dropdown-item :icon="More" @click="onInvoicePreview">Просмотр</el-dropdown-item>
+                <template v-if="isItemVisible(InvoiceAlowedActions.PREVIEW_INVOICE)">
+                    <el-dropdown-item :icon="DocumentChecked" @click="onInvoicePreview">Просмотр</el-dropdown-item>
+                </template>
                 <template v-if="isItemVisible(InvoiceAlowedActions.EDIT_INVOICE)">
                     <el-dropdown-item :icon="EditPen" divided @click="onInvoiceEdit">Редактировать</el-dropdown-item>
                 </template>
-                <el-dropdown-item :icon="Select" divided @click="onInvoiceSubmit">
-                    Подписать</el-dropdown-item>
-                <el-dropdown-item :icon="Failed" divided @click="onInvoiceCancel">
-                    Анулировать</el-dropdown-item>
+                <template v-if="isItemVisible(InvoiceAlowedActions.SIGN_INVOICE)">
+                    <el-dropdown-item :icon="Edit" divided @click="onInvoiceSubmit">
+                        Подписать</el-dropdown-item>
+                </template>
+                <template v-if="isItemVisible(InvoiceAlowedActions.CANCEL_INVOICE)">
+                    <el-dropdown-item :icon="Failed" divided @click="onInvoiceCancel">
+                        Аннулировать</el-dropdown-item>
+                </template>
 
             </el-dropdown-menu>
         </template>
@@ -23,7 +28,7 @@
 <script setup lang="ts">
 import useTableActions from '@/composables/useTableActions';
 import { InvoiceAlowedActions } from '@/types/invoiceTable';
-import { More, EditPen, Failed, Select, } from "@element-plus/icons-vue"
+import { More, EditPen, Failed,  DocumentChecked, Edit } from "@element-plus/icons-vue"
 
 const props = defineProps<{
     invoiceId: number,

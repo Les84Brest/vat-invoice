@@ -80,7 +80,8 @@ import axios from 'axios';
 
 const ALLOWED_ACTIONS = [
     InvoiceAlowedActions.PREVIEW_INVOICE,
-    InvoiceAlowedActions.CANCEL_INVOICE
+    InvoiceAlowedActions.CANCEL_INVOICE,
+    InvoiceAlowedActions.SIGN_INVOICE,
 ];
 
 const router = useRouter();
