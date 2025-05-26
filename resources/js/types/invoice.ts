@@ -103,3 +103,4 @@ export function toInvoiceStatus(value: string): InvoiceStatus {
     }
     throw new Error(`Invalid InvoiceStatus: ${value}`);
 }
+

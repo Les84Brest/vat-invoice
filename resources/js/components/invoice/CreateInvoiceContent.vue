@@ -439,4 +439,6 @@ const invoiceRules = reactive<FormRules>({
 .invoice-reciever__row {
     margin-bottom: 16px;
 }
+
+
 </style>

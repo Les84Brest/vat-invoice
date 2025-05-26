@@ -18,7 +18,6 @@ export const formatVatRate = (rate: string): string => {
 };
 
 export const formatCurrency = (sum: number) => {
-    
     const currencyFormatter = new Intl.NumberFormat('ru-RU', {
         style: 'decimal',
         minimumFractionDigits: 2,
