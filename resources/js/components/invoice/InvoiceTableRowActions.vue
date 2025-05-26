@@ -28,7 +28,8 @@
 <script setup lang="ts">
 import useTableActions from '@/composables/useTableActions';
 import { InvoiceAlowedActions } from '@/types/invoiceTable';
-import { More, EditPen, Failed,  DocumentChecked, Edit } from "@element-plus/icons-vue"
+import { DocumentChecked, Edit, EditPen, Failed, More } from "@element-plus/icons-vue";
+
 
 const props = defineProps<{
     invoiceId: number,
@@ -42,7 +43,7 @@ function isItemVisible(action: InvoiceAlowedActions) {
 
     return props.alowedActions.includes(action);
 }
-const { previewInvoice, editInvoice, previewIncomeInvoice } = useTableActions();
+const { previewInvoice, editInvoice, submitInvoice, cancelInvoice } = useTableActions();
 
 const onInvoicePreview = () => {
     previewInvoice(props.invoiceId);
@@ -53,11 +54,11 @@ const onInvoiceEdit = () => {
 }
 
 const onInvoiceSubmit = () => {
-    console.log('%cподписать счет', 'padding: 5px; background: crimson; color: white;');
+    submitInvoice(props.invoiceId);
 }
 
 const onInvoiceCancel = () => {
-    console.log('%cаннулировать счет', 'padding: 5px; background: DarkKhaki; color: Yellow;');
+    cancelInvoice(props.invoiceId);
 }
 
 </script>

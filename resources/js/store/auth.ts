@@ -91,7 +91,6 @@ export const useAuthStore = defineStore("auth", {
 
         async fetchAuthUser(): Promise<void> {
             try {
-                console.log('%cin fetch auth user', 'padding: 5px; background: hotpink; color: black;');
                 const response = await axios.get("/api/v1/auth_user");
                 const authUser = response.data.data;
 
