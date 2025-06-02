@@ -33,7 +33,7 @@ import { DocumentChecked, Edit, EditPen, Failed, More } from "@element-plus/icon
 
 const props = defineProps<{
     invoiceId: number,
-    alowedActions?: Array<InvoiceAlowedActions>
+    alowedActions?: Array<InvoiceAlowedActions>,
 }>();
 
 function isItemVisible(action: InvoiceAlowedActions) {

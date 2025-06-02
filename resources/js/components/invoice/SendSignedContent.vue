@@ -25,6 +25,7 @@ const isLoading = ref<boolean>(false);
 
 onMounted(() => {
     invoiceStore.fetchSendInvoices();
+    invoiceStore.currentFetchFunctionName = 'fetchSendInvoices';
 })
 
 </script>

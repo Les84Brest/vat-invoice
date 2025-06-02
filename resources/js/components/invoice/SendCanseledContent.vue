@@ -24,5 +24,6 @@ const isLoading = ref<boolean>(false);
 
 onMounted(() => {
     invoiceStore.fetchSendCanseledInvoices();
+    invoiceStore.currentFetchFunctionName = 'fetchSendCanseledInvoices';
 })
 </script>

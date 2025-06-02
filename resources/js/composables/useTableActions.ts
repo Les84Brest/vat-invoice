@@ -13,6 +13,17 @@ export default function useTableActions() {
     const router = useRouter();
     const uiStore = useUiStore();
     const invoiceStore = useInvoiceStore();
+    const fetchInvoicesMap: Record<string, () => void> = {
+        fetchCurrentInvoices: () => {
+            invoiceStore.fetchCurrentInvoices();
+        },
+        fetchSendInvoices: () => {
+            invoiceStore.fetchSendInvoices();
+        },
+        fetchSendCanseledInvoices: () => {
+            invoiceStore.fetchSendCanseledInvoices();
+        },
+    };
 
     const submitInvoice = (id: number) => {
         uiStore.togglePasswordConfirm();
@@ -31,6 +42,26 @@ export default function useTableActions() {
                                 },
                             }
                         );
+
+                        if (response.status == 200) {
+                            ElNotification({
+                                title: "Счет подписан",
+                                message: h(
+                                    "i",
+                                    { style: "color: teal" },
+                                    "Счет перемещен в разел Отправленные/Подписанные"
+                                ),
+                                type: "success",
+                            });
+                            const fetchFunction =
+                                fetchInvoicesMap[
+                                    invoiceStore.currentFetchFunctionName
+                                ];
+
+                            setTimeout(() => {
+                                fetchFunction();
+                            }, 500);
+                        }
                     } catch (error) {
                         ElNotification({
                             title: "Ошибка при подписании счета",
@@ -66,12 +97,17 @@ export default function useTableActions() {
                                 message: h(
                                     "i",
                                     { style: "color: teal" },
-                                    "Счет перемещен в разел Отправленные/Анулированые"
+                                    "Счет перемещен в разел Отправленные/Аннулированые"
                                 ),
                                 type: "success",
                             });
+                            const fetchFunction =
+                                fetchInvoicesMap[
+                                    invoiceStore.currentFetchFunctionName
+                                ];
+
                             setTimeout(() => {
-                                invoiceStore.fetchSendInvoices();
+                                fetchFunction();
                             }, 500);
                         }
                     } catch (error) {

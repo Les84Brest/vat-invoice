@@ -20,6 +20,7 @@ interface InvoiceState {
     fistPage?: number;
     lastPage?: number;
     currentPage: number;
+    currentFetchFunctionName: string;
 }
 
 export const useInvoiceStore = defineStore("invoice", {
@@ -35,6 +36,7 @@ export const useInvoiceStore = defineStore("invoice", {
             currentPage: 0,
             currentInvoice: null,
             editedInvoice: null,
+            currentFetchFunctionName: ''
         };
     },
     actions: {

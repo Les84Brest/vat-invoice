@@ -32,7 +32,7 @@ export type NewInvoice = Omit<
     author_id: number;
 };
 
-// type for showing invoices list in table  
+// type for showing invoices list in table
 export type InvoiceListItem = Omit<
     Invoice,
     | "contract_date"
@@ -42,8 +42,8 @@ export type InvoiceListItem = Omit<
     | "parent_invoice"
     | "signatory"
 > & {
-    author_name: string,
-    signatory_name?: string
+    author_name: string;
+    signatory_name?: string;
 };
 
 export type DeliveryDocument = {
@@ -104,3 +104,7 @@ export function toInvoiceStatus(value: string): InvoiceStatus {
     throw new Error(`Invalid InvoiceStatus: ${value}`);
 }
 
+export enum InvoiceFetchFunctions {
+    FETCH_SEND_INVOICES = "fetchSendInvoices",
+    FETCH_CURRENT_INVOICES = "fetchCurrentInvoices",
+}
