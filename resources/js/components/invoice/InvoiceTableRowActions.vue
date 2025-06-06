@@ -8,6 +8,9 @@
                 <template v-if="isItemVisible(InvoiceAlowedActions.PREVIEW_INVOICE)">
                     <el-dropdown-item :icon="DocumentChecked" @click="onInvoicePreview">Просмотр</el-dropdown-item>
                 </template>
+                <template v-if="isItemVisible(InvoiceAlowedActions.PREVIEW_INCOME_INVOICE)">
+                    <el-dropdown-item :icon="DocumentChecked" @click="onIncomeInvoicePreview">Просмотр</el-dropdown-item>
+                </template>
                 <template v-if="isItemVisible(InvoiceAlowedActions.EDIT_INVOICE)">
                     <el-dropdown-item :icon="EditPen" divided @click="onInvoiceEdit">Редактировать</el-dropdown-item>
                 </template>
@@ -43,10 +46,13 @@ function isItemVisible(action: InvoiceAlowedActions) {
 
     return props.alowedActions.includes(action);
 }
-const { previewInvoice, editInvoice, submitInvoice, cancelInvoice } = useTableActions();
+const { previewInvoice, previewIncomeInvoice, editInvoice, submitInvoice, cancelInvoice } = useTableActions();
 
 const onInvoicePreview = () => {
     previewInvoice(props.invoiceId);
+}
+const onIncomeInvoicePreview = () => {
+    previewIncomeInvoice(props.invoiceId);
 }
 
 const onInvoiceEdit = () => {

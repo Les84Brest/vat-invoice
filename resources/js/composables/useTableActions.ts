@@ -124,6 +124,7 @@ export default function useTableActions() {
 
     return {
         previewInvoice: (id: number) => router.push(`/vat/invoice/${id}`),
+        previewInvcomeInvoice: (id: number) => router.push(`/vat/invoice-income/${id}`),
         previewIncomeInvoice: (id: number) =>
             router.push(`/vat/invoice-income/${id}`),
         editInvoice: (id: number) => router.push(`invoice/${id}/edit`),
