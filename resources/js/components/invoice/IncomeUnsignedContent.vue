@@ -5,8 +5,6 @@
         <IncomeInvoicesTable :invoices-list="invoiceStore.invoices" :isLoading="isLoading"
             :allowedActions="allowedActions" />
     </el-card>
-    <!-- <PasswordConfirmDialog @user-password-confirmed="handlePasswordConfirmed" />
-    <PasswordConfirmDialog @user-password-confirmed-cansel="handlePasswordConfirmedCanselInvoice" /> -->
 </template>
 <script setup lang="ts">
 import { useInvoiceStore } from '@/store/invoice';
