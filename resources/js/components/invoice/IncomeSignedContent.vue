@@ -17,6 +17,7 @@ import IncomeInvoicesTable from './IncomeInvoicesTable.vue';
 
 const allowedActions: Array<InvoiceAlowedActions> = [
     InvoiceAlowedActions.PREVIEW_INCOME_INVOICE,
+    InvoiceAlowedActions.CONFIRM_CANCELLATION,
 ];
 
 const invoiceStore = useInvoiceStore();

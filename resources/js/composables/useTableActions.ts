@@ -5,6 +5,7 @@ import { ConfirmPasswordStatus } from "@/types/ui";
 import axios from "axios";
 import { ElNotification } from "element-plus";
 import { useInvoiceStore } from "@/store/invoice";
+import { InvoiceStatus } from "@/types/invoice";
 
 const SUBMIT_INVOICE_URL = "/api/v1/invoice/submit-invoice";
 const CANCEL_INVOICE_URL = "/api/v1/invoice/cancel-invoice";
@@ -23,6 +24,14 @@ export default function useTableActions() {
         fetchSendCanseledInvoices: () => {
             invoiceStore.fetchSendCanseledInvoices();
         },
+    };
+
+    const isCancelConfirmationStatusEnabled = (id: number): boolean => {
+        const [currentInvoice] = invoiceStore.invoices.filter(
+            (item) => item.id === id
+        );
+
+        return currentInvoice.status === InvoiceStatus.ON_AGREEMENT_CANCEL;
     };
 
     const submitInvoice = (id: number) => {
@@ -122,13 +131,20 @@ export default function useTableActions() {
         );
     };
 
+    const confirmInvoiceCancelConfirmation = (id: number) => {
+        uiStore.togglePasswordConfirm();
+    };
+
     return {
         previewInvoice: (id: number) => router.push(`/vat/invoice/${id}`),
-        previewInvcomeInvoice: (id: number) => router.push(`/vat/invoice-income/${id}`),
+        previewInvcomeInvoice: (id: number) =>
+            router.push(`/vat/invoice-income/${id}`),
         previewIncomeInvoice: (id: number) =>
             router.push(`/vat/invoice-income/${id}`),
         editInvoice: (id: number) => router.push(`invoice/${id}/edit`),
         submitInvoice,
         cancelInvoice,
+        confirmInvoiceCancelConfirmation,
+        isCancelConfirmationStatusEnabled,
     };
 }

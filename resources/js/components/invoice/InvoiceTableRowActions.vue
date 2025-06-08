@@ -22,6 +22,10 @@
                     <el-dropdown-item :icon="Failed" divided @click="onInvoiceCancel">
                         Аннулировать</el-dropdown-item>
                 </template>
+                <template v-if="isItemVisible(InvoiceAlowedActions.CONFIRM_CANCELLATION)">
+                    <el-dropdown-item :icon="Failed" divided @click="onInvoiceCancel" :disabled="!isConfirmCancelEnabled">
+                        Аннулировать получателем</el-dropdown-item>
+                </template>
 
             </el-dropdown-menu>
         </template>
@@ -46,7 +50,15 @@ function isItemVisible(action: InvoiceAlowedActions) {
 
     return props.alowedActions.includes(action);
 }
-const { previewInvoice, previewIncomeInvoice, editInvoice, submitInvoice, cancelInvoice } = useTableActions();
+const { previewInvoice,
+    previewIncomeInvoice,
+    editInvoice,
+    submitInvoice,
+    cancelInvoice,
+    isCancelConfirmationStatusEnabled
+} = useTableActions();
+
+const isConfirmCancelEnabled = isCancelConfirmationStatusEnabled(props.invoiceId);
 
 const onInvoicePreview = () => {
     previewInvoice(props.invoiceId);
