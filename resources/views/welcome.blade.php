@@ -75,7 +75,7 @@
                     Начать работу
                 </a>
             </div>
-
+            <div class="app-version">v. 1.0.1</div>
         </div>
     </main>
 

@@ -9,7 +9,10 @@
                     <el-option label="штука" value="шт." />
                     <el-option label="метр" value="м." />
                     <el-option label="метр погонный" value="м.п." />
+                    <el-option label="метр квадратный" value="м2" />
+                    <el-option label="метр кубический" value="м3" />
                     <el-option label="килограмм" value="кг." />
+                    <el-option label="литр" value="л." />
                     <el-option label="центнер" value="ц." />
                     <el-option label="тонна" value="тн." />
                     <el-option label="час" value="ч." />
@@ -30,6 +33,7 @@
                     <el-option label="10%" value="0.1" />
                     <el-option label="0%" value="0" />
                     <el-option label="Без НДС" :value="RATE_NO_VAT" />
+                    <el-option label="25%" value="0.25" />
                 </el-select>
             </el-form-item>
             <el-form-item label="Сумма НДС, руб.коп." prop="vat_sum">
