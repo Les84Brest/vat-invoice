@@ -17,7 +17,10 @@
                 <p class="login-box-msg">Введите email и пароль для входа</p>
 
                 <div class="alert alert-danger alert-dismissible visually-hidden js-wrong-pass-alert">
-                    <div><i class="icon fas fa-ban"></i> Неправильный пароль</div>
+                    <div>
+                        <i class="icon fas fa-ban"></i>
+                        <span class="js-error-label"></span>
+                    </div>
                 </div>
 
                 <form id='admin-login-form'>

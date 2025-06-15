@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -26,9 +27,22 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        $user = User::where('email', $request->email)->first();
+
+        if (!isset($user)) {
+            return response()->json([
+                "error" => "Неправильные реквизиты",
+            ], 401);
+        }
+
+        if ($user->role != User::ROLE_ADMIN) {
+            return response()->json([
+                "error" => "Только администратор имеет право пользоваться админ панелью",
+            ], 401);
+        }
+
         if (Auth::attempt($authCredentials)) {
             $request->session()->regenerate();
-            $user = User::where('email', $request->email)->first();
             $token = $user->createToken('api-token')->plainTextToken;
 
             return response()->json([
@@ -37,7 +51,6 @@ class AuthController extends Controller
                 'token' => $token
             ], 200);
         }
-
 
         return response()->json([
             "error" => "Неправильные реквизиты",
