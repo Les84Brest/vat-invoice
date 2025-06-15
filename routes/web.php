@@ -7,20 +7,19 @@ $getVueTemplate = function () {
 };
 
 
-Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome'] );
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome']);
 
-Route::group(['prefix' => 'admin'], function () {
+Route::get('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
+Route::post('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'loginUser']);
+Route::get('/admin/register', [App\Http\Controllers\Admin\AuthController::class, 'register'])->name('admin.register')->middleware('guest');
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum', 'verified'], function () {
     Route::get('/', App\Http\Controllers\Admin\MainController::class)->name('admin.dashboard');
-    Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
-    Route::get('/register', [App\Http\Controllers\Admin\AuthController::class, 'register'])->name('admin.register');
-
     Route::resource('/user', App\Http\Controllers\Admin\UserController::class);
     Route::resource('/company', App\Http\Controllers\Admin\CompanyController::class);
 });
 
-Route::group(['prefix' => 'user'], function () use ($getVueTemplate) {
-    Route::get('/', $getVueTemplate);
-});
+
 Auth::routes();
 
 
@@ -31,6 +30,4 @@ Route::get('/register', [App\Http\Controllers\Vat\VatController::class, 'registe
 Route::group(['prefix' => 'vat', 'middleware' => 'auth:sanctum'], function () use ($getVueTemplate) {
     Route::get('/', $getVueTemplate);
     Route::get('/{all}', $getVueTemplate)->where('all', '.*');
-    
 });
-

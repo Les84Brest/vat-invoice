@@ -12,6 +12,10 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'verified']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -60,7 +64,7 @@ class CompanyController extends Controller
     public function update(UpdateCompanyRequest $request, Company $company, CompanyServiceContract $service)
     {
         $data = $request->validated();
-  
+
 
         $updatedCompany = $service->update($company, $data);
 

@@ -19,6 +19,7 @@
 
 <body class="hold-transition @yield('body-class')">
     @yield('auth-content')
+    @yield('auth-scripts')
 </body>
 
 </html>
