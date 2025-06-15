@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('assets/admin/dist/css/adminlte.min.css') }}">
+
+    @vite(['resources/sass/admin/style.scss'])
 </head>
 
 <body class="hold-transition @yield('body-class')">
