@@ -17,6 +17,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum', 'verified'], 
     Route::get('/', App\Http\Controllers\Admin\MainController::class)->name('admin.dashboard');
     Route::resource('/user', App\Http\Controllers\Admin\UserController::class);
     Route::resource('/company', App\Http\Controllers\Admin\CompanyController::class);
+    Route::resource('/invoice', App\Http\Controllers\Admin\InvoiceAdminController::class);
 });
 
 

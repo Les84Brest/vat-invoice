@@ -26,16 +26,4 @@ const props = defineProps<
     }
 >();
 
-function getTypeText(status: string): string {
-    switch (status) {
-        case InvoiceType.ORIGINAL:
-            return "Исходный";
-        case InvoiceType.CORRECTED:
-            return "Исправленный";
-
-        default: return "";
-    }
-}
-
-
 </script>

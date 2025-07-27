@@ -17,22 +17,9 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <span class="d-block">Админстратор</span>
+                <span class="d-block js-admin-name">Админстратор</span>
             </div>
         </div>
-
-        <!-- SidebarSearch Form -->
-        {{-- <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                    aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div> --}}
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
@@ -46,42 +33,14 @@
                         </p>
                     </a>
                 </li>
+               
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('invoice.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-copy"></i>
                         <p>
-                            ЭСЧФ
-                            <i class="fas fa-angle-left right"></i>
-                            <span class="badge badge-info right">6</span>
+                            Счета-фактуры
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/layout/top-nav.html" class="nav-link">
-                                <i class="nav-icon fas fa-list-ul"></i>
-                                <p>Все</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                                <i class="nav-icon fas fa-edit"></i>
-                                <p>В работе (черновики)</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/layout/boxed.html" class="nav-link">
-                                <i class="far fa-paper-plane nav-icon"></i>
-                                <p>Отправленные</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/layout/fixed-sidebar.html" class="nav-link">
-                                <i class="far fa-handshake nav-icon"></i>
-                                <p>Подписанные</p>
-                            </a>
-                        </li>
-
-                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('company.index') }}" class="nav-link">
