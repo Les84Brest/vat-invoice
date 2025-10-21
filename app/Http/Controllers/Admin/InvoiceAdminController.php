@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InvoiceAdminController extends Controller
@@ -12,7 +14,12 @@ class InvoiceAdminController extends Controller
      */
     public function index()
     {
-        return view('admin.invoice.index');
+        $users = User::where('role', User::ROLE_USER)
+            ->get();
+
+        $companies = Company::all();
+
+        return view('admin.invoice.index', compact('users', 'companies'));
     }
 
     /**

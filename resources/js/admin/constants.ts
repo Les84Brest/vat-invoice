@@ -6,4 +6,5 @@ export const LOGIN_ERROR_CLASS  = '.js-wrong-pass-alert';
 
 //invoices
 
-export const INVOICE_TABLE_WRAP_SELECTOR = '.js-invoices-table-dt';
+export const INVOICE_TABLE_WRAP_SELECTOR = '.js-invoice-table-wrap';
+export const MULTIPLE_SELECT_SELECTOR = '.js-select-multiple';

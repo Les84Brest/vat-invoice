@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 import { InvoiceType } from '@/types/invoice';
+import { getTypeText } from '@/utils/invoice';
 import { computed, ref } from 'vue';
 
 const typeText = computed(() => getTypeText(props.type));
