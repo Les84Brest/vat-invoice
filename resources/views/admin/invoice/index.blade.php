@@ -60,7 +60,7 @@
                                 <label>Автор счета</label>
                                 <div class="select2-purple">
                                     <select class="js-select-multiple" multiple="multiple"
-                                        data-placeholder="Выберите компанию" data-dropdown-css-class="select2-purple"
+                                        data-placeholder="Выберите автора" data-dropdown-css-class="select2-purple"
                                         style="width: 100%;" data-filter-name="author_id">
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->full_name }}</option>
@@ -74,7 +74,7 @@
                                 <label>Подписант счета</label>
                                 <div class="select2-purple">
                                     <select class="js-select-multiple" multiple="multiple"
-                                        data-placeholder="Выберите компанию" data-dropdown-css-class="select2-purple"
+                                        data-placeholder="Выберите" data-dropdown-css-class="select2-purple"
                                         style="width: 100%;" data-filter-name="signatory_id">
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->full_name }}</option>

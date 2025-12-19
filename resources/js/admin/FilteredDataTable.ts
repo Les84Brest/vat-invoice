@@ -4,7 +4,6 @@ import { InvoiceListItem } from "@/types/invoice";
 import { getStatusText, getTypeText } from "@/utils/invoice";
 import { formatCurrency } from "@/utils/format";
 import { MULTIPLE_SELECT_SELECTOR } from "./constants";
-import { valHooks } from "jquery";
 
 export class FilteredDataTable {
     dataTable: DataTables.Api | null;
@@ -22,27 +21,6 @@ export class FilteredDataTable {
     }
 
     private initializeTable = (): void => {
-        // this.dataTable = $(tableSelector).DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     ajax: (data, callback) => this.fetchData(data, callback),
-        //     columns: [
-        //         { data: "id", title: "ID" },
-        //         { data: "name", title: "Name" },
-        //         { data: "position", title: "Position" },
-        //         { data: "department", title: "Department" },
-        //         {
-        //             data: "status",
-        //             title: "Status",
-        //             render: (data: string) =>
-        //                 `<span class="badge ${
-        //                     data === "active" ? "bg-success" : "bg-danger"
-        //                 }">${data}</span>`,
-        //         },
-        //         { data: "hireDate", title: "Hire Date" },
-        //         { data: "salary", title: "Salary" },
-        //     ],
-        // });
 
         this.dataTable = $(`${this.wrapSelector} .js-data-table`).DataTable({
             processing: true,
@@ -68,7 +46,8 @@ export class FilteredDataTable {
                         badgeSpan.innerText = statusText;
                         badgeSpan.className = "badge bg-warning";
 
-                        return badgeSpan;
+                        // return `<span class="badge bg-warning">${statusText}</span>`;
+                        return badgeSpan.outerHTML;
                     },
                 },
                 {
@@ -80,7 +59,7 @@ export class FilteredDataTable {
                         badgeSpan.innerText = typeText;
                         badgeSpan.className = "badge bg-warning";
 
-                        return badgeSpan;
+                        return badgeSpan.outerHTML;
                     },
                 },
                 {
@@ -114,11 +93,7 @@ export class FilteredDataTable {
         $(`${this.wrapSelector} ${MULTIPLE_SELECT_SELECTOR}`).on(
             "change",
             function (event) {
-                console.log(
-                    "%cevent object",
-                    "padding: 5px; background: #3dd; color: #333333;",
-                    event
-                );
+    
                 self.updateFilters(event.target);
                 self.dataTable?.ajax.reload();
             }
@@ -126,20 +101,10 @@ export class FilteredDataTable {
     }
 
     private updateFilters(filterSelect) {
-        console.log('%cfilterSelect', 'padding: 5px; background: hotpink; color: black;');
-        console.dir(filterSelect);
-
         const filterValues = $(filterSelect).val();
         const filterName = filterSelect.dataset.filterName;
 
         this.tableFilters[filterName] = filterValues;
-
-        
-        console.log(
-            "%cфильтры",
-            "padding: 5px; background: #3dd; color: #333333;",
-            this.tableFilters
-        );
     }
 
     private async fetchData(data: any, callback: Function): Promise<void> {
