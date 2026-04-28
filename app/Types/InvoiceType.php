@@ -73,4 +73,19 @@ class InvoiceType implements \Stringable
     {
         return $this->getType();
     }
+
+    /**
+     * Get human-readable label for the invoice type.
+     *
+     * @param string $type The type to format.
+     * @return string The formatted label.
+     */
+    public static function getLabel(string $type): string
+    {
+        return match ($type) {
+            self::ORIGINAL => 'Оригинал',
+            self::CORRECTED => 'Исправленный',
+            default => 'Неизвестный тип',
+        };
+    }
 }

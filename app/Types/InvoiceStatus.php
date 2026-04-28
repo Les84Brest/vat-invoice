@@ -109,4 +109,44 @@ class InvoiceStatus implements \Stringable
     {
         return $this->getStatus();
     }
+
+    /**
+     * Get human-readable label for the invoice status.
+     *
+     * @param string $status The status to format.
+     * @return string The formatted label.
+     */
+    public static function getLabel(string $status): string
+    {
+        return match ($status) {
+            self::IN_PROGRESS => 'В разработке',
+            self::IN_PROGRESS_ERROR => 'В разработке с ошибкой',
+            self::COMPLETED => 'Выставлен',
+            self::ON_AGREEMENT => 'На согласовании',
+            self::COMPLETED_SIGNED => 'Выставлен. Подписан получателем',
+            self::CANCELLED => 'Аннулирован',
+            self::ON_AGREEMENT_CANCEL => 'Выставлен. Аннулирован поставщиком',
+            default => 'Неизвестный статус',
+        };
+    }
+
+    /**
+     * Get Bootstrap badge class for the invoice status.
+     *
+     * @param string $status The status to format.
+     * @return string The Bootstrap badge class.
+     */
+    public static function getBadgeClass(string $status): string
+    {
+        return match ($status) {
+            self::IN_PROGRESS => 'badge-warning',
+            self::IN_PROGRESS_ERROR => 'badge-danger',
+            self::COMPLETED => 'badge-success',
+            self::ON_AGREEMENT => 'badge-info',
+            self::COMPLETED_SIGNED => 'badge-success',
+            self::CANCELLED => 'badge-secondary',
+            self::ON_AGREEMENT_CANCEL => 'badge-dark',
+            default => 'badge-light',
+        };
+    }
 }
