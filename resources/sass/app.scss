@@ -1,5 +1,5 @@
 // Fonts
-@import url("https://fonts.bunny.net/css?family=Nunito");
+//@import url("https://fonts.bunny.net/css?family=Nunito");
 @import "node_modules/reset-css/sass/reset";
 // Variables
 @import "variables";
@@ -83,6 +83,7 @@ body {
                     line-height: 60px;
                     text-align: center;
                 }
+
                 .title {
                     line-height: 60px;
                     position: relative;
