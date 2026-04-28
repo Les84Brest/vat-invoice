@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Invoice;
 use App\Types\InvoiceStatus;
 use App\Types\InvoiceType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -15,7 +16,9 @@ class InvoiceService implements InvoiceServiceContract
 {
     public function getInvoices(array $data)
     {
-
+        $page = $data['page'] ?? null;
+        $orderColumn = $data['orderColumn'] ?? null;
+        $orderDir = $data['orderDir'] ?? null;
 
         if (isset($data['limit'])) {
             $limit = $data['limit'];
@@ -24,25 +27,81 @@ class InvoiceService implements InvoiceServiceContract
             $limit = 10;
         }
 
-        if (empty($data)) {
+        unset($data['page'], $data['orderColumn'], $data['orderDir']);
+
+        $filterData = array_filter($data, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        if (empty($filterData) && $orderColumn === null && $orderDir === null) {
             return Invoice::query()->paginate($limit);
         }
-        /** @var InvoiceFilter $invoiceFilter */
-        $invoiceFilter = app()->make(InvoiceFilter::class, ['queryParams' => array_filter($data)]);
 
-        $curInvoices = null;
-        if (isset($data['page'])) {
-            $curInvoices = Invoice::query()
-                ->filter($invoiceFilter)
-                ->paginate($limit, ['*'], 'page', $data['page']);
-        } else {
-            $curInvoices =  Invoice::query()
-                ->filter($invoiceFilter)
-                ->paginate($limit);
+        /** @var InvoiceFilter $invoiceFilter */
+        $invoiceFilter = app()->make(InvoiceFilter::class, ['queryParams' => $filterData]);
+        $query = Invoice::query()
+            ->filter($invoiceFilter)
+            ->with(['sender_company', 'recipient_company', 'author']);
+
+        if ($orderColumn !== null && $orderDir !== null) {
+            $this->applySorting($query, $orderColumn, $orderDir);
         }
 
+        if ($page) {
+            return $query->paginate($limit, ['*'], 'page', $page);
+        }
 
-        return $curInvoices;
+        return $query->paginate($limit);
+    }
+
+    private function applySorting(Builder $query, int|string $orderColumn, string $orderDir): void
+    {
+        $orderDir = strtolower($orderDir) === 'desc' ? 'desc' : 'asc';
+        $column = $this->normalizeOrderColumn($orderColumn);
+
+        if ($column === 'sender_company.title') {
+            $query->leftJoin('companies as sender_companies', 'sender_companies.id', '=', 'invoices.sender_company_id')
+                ->select('invoices.*')
+                ->orderBy('sender_companies.title', $orderDir);
+
+            return;
+        }
+
+        if ($column === 'recipient_company.title') {
+            $query->leftJoin('companies as recipient_companies', 'recipient_companies.id', '=', 'invoices.recipient_company_id')
+                ->select('invoices.*')
+                ->orderBy('recipient_companies.title', $orderDir);
+
+            return;
+        }
+
+        if ($column === 'author.full_name') {
+            $query->leftJoin('users as authors', 'authors.id', '=', 'invoices.author_id')
+                ->select('invoices.*')
+                ->orderBy('authors.full_name', $orderDir);
+
+            return;
+        }
+
+        $query->orderBy($column, $orderDir);
+    }
+
+    private function normalizeOrderColumn(int|string $orderColumn): string
+    {
+        $columnIndex = (int) $orderColumn;
+
+        return match ($columnIndex) {
+            0 => 'number',
+            1 => 'sender_company.title',
+            2 => 'recipient_company.title',
+            3 => 'author.full_name',
+            4 => 'status',
+            5 => 'type',
+            6 => 'total_wo_vat',
+            7 => 'total_vat',
+            8 => 'total',
+            default => 'number',
+        };
     }
 
     public function createInvoice(array $data)

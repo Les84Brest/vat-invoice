@@ -30,6 +30,8 @@ class ShowInvoiceRequest extends FormRequest
             'recipient_company_id.*' => 'nullable|numeric',
             'signatory_id' => 'nullable|array',
             'signatory_id.*' => 'nullable|numeric',
+            'orderColumn' => 'nullable|numeric',
+            'orderDir' => 'nullable|string|in:asc,desc',
             'limit' => 'nullable|numeric',
             'page' => 'nullable|numeric',
             'status' => 'nullable|array',
