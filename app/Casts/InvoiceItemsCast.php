@@ -15,7 +15,7 @@ class InvoiceItemsCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $castedItems = json_decode($value, true);
+        $castedItems = json_decode($value, true) ?? [];
         return  new InvoiceItemsList($castedItems);
     }
 
@@ -26,8 +26,18 @@ class InvoiceItemsCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $castedItems = new InvoiceItemsList($value);
+        // If already an InvoiceItemsList instance, just return JSON
+        if ($value instanceof InvoiceItemsList) {
+            return $value->toJson();
+        }
 
-        return $castedItems->toJson();
+        // If it's an array, create a new instance
+        if (is_array($value)) {
+            $castedItems = new InvoiceItemsList($value);
+            return $castedItems->toJson();
+        }
+
+        // If it's already a JSON string, return as-is
+        return $value;
     }
 }

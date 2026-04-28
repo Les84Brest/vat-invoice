@@ -30,8 +30,19 @@ class InvoiceDocumentsCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $castedDocuments = new InvoiceDocumentsList($value);
+        // If already an InvoiceDocumentsList instance, just return JSON
+        if ($value instanceof InvoiceDocumentsList) {
+            return $value->toJson();
+        }
 
-        return $castedDocuments->toJson();
+        // If it's an array, create a new instance
+        if (is_array($value)) {
+            $castedDocuments = new InvoiceDocumentsList($value);
+            return $castedDocuments->toJson();
+        }
+
+        // If it's already a JSON string, return as-is
+        return $value;
     }
 }
+
