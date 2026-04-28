@@ -47,7 +47,7 @@
                                 <div class="select2-purple">
                                     <select class="js-select-multiple" multiple="multiple"
                                         data-placeholder="Выберите компанию" data-dropdown-css-class="select2-purple"
-                                        style="width: 100%;" data-filter-name="resc_company_id">
+                                        style="width: 100%;" data-filter-name="recipient_company_id">
                                         @foreach ($companies as $company)
                                             <option value="{{ $company->id }}">{{ $company->short_title }}</option>
                                         @endforeach
@@ -83,6 +83,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-end mb-2">
+                        <button type="button" class="btn btn-secondary js-reset-filters">Сбросить фильтры</button>
                     </div>
                     <div class="mb-2">
                         <table class="table table-bordered table-hover js-data-table">

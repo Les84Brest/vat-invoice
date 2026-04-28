@@ -12,7 +12,6 @@ export default defineConfig({
                 'resources/js/app.ts',
                 'resources/css/app.css',
                 'resources/js/admin/login.ts',
-
             ],
             refresh: true,
         }),
@@ -37,10 +36,14 @@ export default defineConfig({
         },
     },
     server: {
+        host: '0.0.0.0', // Важно: слушаем все интерфейсы
+        port: 5173,
         hmr: {
-            host: 'localhost',
-        }
+            host: 'vat-invoice.loc', // Домен, который вы используете
+            port: 5173,
+            protocol: 'ws', // WebSocket protocol
+        },
+        cors: true, // Разрешаем CORS для разработки
+        strictPort: true, // Используем только указанный порт
     },
 });
-
-
