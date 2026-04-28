@@ -68,6 +68,11 @@ class InvoiceFilter extends AbstractFilter
      */
     public function author_id(Builder $builder, $value): void
     {
+        if (is_array($value)) {
+            $builder->whereIn('author_id', $value);
+            return;
+        }
+
         $builder->where('author_id', $value);
     }
 
@@ -92,6 +97,11 @@ class InvoiceFilter extends AbstractFilter
      */
     public function signatory_id(Builder $builder, $value): void
     {
+        if (is_array($value)) {
+            $builder->whereIn('signatory_id', $value);
+            return;
+        }
+
         $builder->where('signatory_id', $value);
     }
 }

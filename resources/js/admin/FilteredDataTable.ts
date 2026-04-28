@@ -81,36 +81,59 @@ export class FilteredDataTable {
         });
     };
 
-    private initializeFilters() {
-        const self = this;
+    private handleFilterChange = (event: Event): void => {
+        const target = event.target as HTMLSelectElement;
 
-        $(`${this.wrapSelector} ${MULTIPLE_SELECT_SELECTOR}`).each(function () {
+        this.updateFilters(target);
+        this.dataTable?.ajax.reload();
+    };
+
+    private initializeFilters() {
+        const multipleSelect = $(`${this.wrapSelector} ${MULTIPLE_SELECT_SELECTOR}`);
+
+        multipleSelect.each(function () {
             $(this).select2();
         });
 
-        //initializing change event
+        multipleSelect.on("change", this.handleFilterChange);
 
-        $(`${this.wrapSelector} ${MULTIPLE_SELECT_SELECTOR}`).on(
-            "change",
-            function (event) {
-    
-                self.updateFilters(event.target);
-                self.dataTable?.ajax.reload();
-            }
-        );
+        $(`${this.wrapSelector} .js-reset-filters`).on("click", () => {
+            this.resetFilters();
+        });
     }
 
-    private updateFilters(filterSelect) {
+    private resetFilters(): void {
+        this.tableFilters = {};
+
+        const multipleSelect = $(`${this.wrapSelector} ${MULTIPLE_SELECT_SELECTOR}`);
+        multipleSelect.off("change", this.handleFilterChange);
+        multipleSelect.val([]).trigger("change");
+        multipleSelect.on("change", this.handleFilterChange);
+
+        this.dataTable?.ajax.reload();
+    }
+
+    private updateFilters(filterSelect: HTMLSelectElement): void {
         const filterValues = $(filterSelect).val();
         const filterName = filterSelect.dataset.filterName;
+
+        if (!filterName) {
+            return;
+        }
+
+        if (!filterValues || (Array.isArray(filterValues) && filterValues.length === 0)) {
+            delete this.tableFilters[filterName];
+            return;
+        }
 
         this.tableFilters[filterName] = filterValues;
     }
 
     private async fetchData(data: any, callback: Function): Promise<void> {
         try {
-            const requestPage = data.start / data.length;
+            const requestPage = Math.floor(data.start / data.length) + 1;
             const params = {
+                ...this.tableFilters,
                 start: data.start,
                 limit: data.length,
                 search: data.search.value,
