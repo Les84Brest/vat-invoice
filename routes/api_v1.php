@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthDataController;
+use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\PasswordConfirmController;
 use App\Http\Controllers\Api\V1\RecieverCompanyController;
@@ -11,7 +12,12 @@ Route::apiResource('posts', PostController::class);
 Route::get("/invoice/{id}", [App\Http\Controllers\Api\V1\InvoiceController::class, 'show']);
 Route::apiResource('invoice', App\Http\Controllers\Api\V1\InvoiceController::class);/* ->middleware('auth:sanctum');
  */
-Route::middleware('auth:sanctum')->get('/auth_user', [AuthDataController::class, 'getAuthUser']);
+
+// Authentication routes
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::middleware('auth')->get('/auth_user', [AuthDataController::class, 'getAuthUser']);
 Route::middleware('auth:sanctum')->get('/reciever_tax_ids', [RecieverCompanyController::class, 'getRecieverIds']);
 Route::middleware('auth:sanctum')->get('/reciever_company', [RecieverCompanyController::class, 'getRecieverCompany']);
 

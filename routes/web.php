@@ -13,7 +13,7 @@ Route::get('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'l
 Route::post('/admin/login', [App\Http\Controllers\Admin\AuthController::class, 'loginUser']);
 Route::get('/admin/register', [App\Http\Controllers\Admin\AuthController::class, 'register'])->name('admin.register')->middleware('guest');
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum', 'verified'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'verified']], function () {
     Route::get('/', App\Http\Controllers\Admin\MainController::class)->name('admin.dashboard');
     Route::resource('/user', App\Http\Controllers\Admin\UserController::class);
     Route::resource('/company', App\Http\Controllers\Admin\CompanyController::class);

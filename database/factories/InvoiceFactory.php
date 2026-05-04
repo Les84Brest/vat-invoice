@@ -34,6 +34,7 @@ class InvoiceFactory extends Factory
 
         $sumWoVat  = 1 + mt_rand() / mt_getrandmax() * 10000;
         $sumVat = $sumWoVat * 0.2;
+        $invoiceItems = $this->generateInvoiceItems($sumWoVat);
 
 
         return [
@@ -54,6 +55,7 @@ class InvoiceFactory extends Factory
 
             'contract_number' => $this->faker->word(),
             'contract_date' => $this->getRandomDate()->format('Y-m-d'),
+            'invoice_items' => $invoiceItems,
         ];
     }
 
@@ -96,6 +98,36 @@ class InvoiceFactory extends Factory
     {
         $randomNumber = $this->generateFormattedRandomNumber();
         return $randomNumber . '-' . $invDate . '-' . $taxId;
+    }
+
+    private function generateInvoiceItems(float $totalCost): array
+    {
+        $items = [];
+        $costPerItem = round($totalCost / 3, 2);
+        $vatRate = 20;
+        $dimensions = ['шт.', 'м', 'л', 'кг', 'упак.'];
+
+        for ($i = 1; $i <= 3; $i++) {
+            $cost = $i === 3 ? round($totalCost - ($costPerItem * 2), 2) : $costPerItem;
+            $count = mt_rand(1, 10);
+            $price = round($cost / $count, 2);
+            $vatSum = round($cost * $vatRate / 100, 2);
+            $costVat = $cost + $vatSum;
+
+            $items[] = [
+                'id' => (string)$i,
+                'name' => $this->faker->word() . ' - позиция ' . $i,
+                'dimension' => $dimensions[array_rand($dimensions)],
+                'count' => $count,
+                'price' => $price,
+                'cost' => $cost,
+                'vat_rate' => $vatRate,
+                'vat_sum' => $vatSum,
+                'cost_vat' => $costVat,
+            ];
+        }
+
+        return $items;
     }
 
     private function generateFormattedRandomNumber(): string

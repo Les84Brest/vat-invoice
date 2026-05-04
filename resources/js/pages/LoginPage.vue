@@ -12,11 +12,21 @@
                 <el-input type="password" v-model="loginData.password" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="submitLogin(loginFormRef)">
-                    Войти
+                <el-button type="primary" @click="submitLogin(loginFormRef)" :loading="isLoading">
+                    {{ isLoading ? 'Загрузка...' : 'Войти' }}
                 </el-button>
             </el-form-item>
         </el-form>
+        
+        <el-alert
+            v-if="errorMessage"
+            :title="errorMessage"
+            type="error"
+            closable
+            @close="errorMessage = ''"
+            style="margin-top: 16px;"
+        />
+
         <el-text>Для создания учетной записи перейдите на <RouterLink to="/register">страницу регистрации</RouterLink>
         </el-text>
 
@@ -25,60 +35,57 @@
 
 <script setup lang="ts">
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import { ref, reactive } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus';
-import { ILoginForm } from "../types/user";
-import { useAuthStore } from "../store/auth";
-import { useRouter, RouterLink } from 'vue-router';
-
-const loginFormRef = ref<FormInstance>();
-const authStore = useAuthStore();
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/store/auth';
+import type { FormInstance } from 'element-plus';
+import { ElMessage } from 'element-plus';
+import type { ILoginForm } from '@/types/user';
 
 const router = useRouter();
+const authStore = useAuthStore();
+const loginFormRef = ref<FormInstance>();
 
-
-const loginData = reactive<ILoginForm>(
-    {
-        email: '',
-        password: ''
-    }
-);
-
-const rules = reactive<FormRules<ILoginForm>>({
-    email: [
-        { required: true, message: 'Поле email не должно быть пустым', trigger: 'blur' },
-        {
-            pattern: /^\S+@\S+\.\S+$/,
-            message: 'Введите корректный email',
-            trigger: 'blur',
-        }
-    ],
-    password: [
-        {
-            required: true,
-            message: 'пароль не должен быть пустым',
-            trigger: 'change',
-        },
-        {
-            min: 6,
-            message: "Длина пароля должна быть больше шести знаков",
-            trigger: 'blur'
-        }
-    ]
+const loginData = reactive<ILoginForm>({
+    email: '',
+    password: '',
 });
 
+const isLoading = ref(false);
+const errorMessage = ref('');
 
-async function submitLogin(formEl: FormInstance | undefined) {
+const rules = {
+    email: [
+        { required: true, message: 'Email обязателен', trigger: 'blur' },
+        { type: 'email', message: 'Введите корректный email', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: 'Пароль обязателен', trigger: 'blur' },
+        { min: 6, message: 'Пароль должен быть не менее 6 символов', trigger: 'blur' },
+    ],
+};
+
+const submitLogin = async (formEl: FormInstance | undefined) => {
     if (!formEl) return;
 
-    await formEl.validate(async (valid) => {
-        if (valid) {
-            await authStore.loginIn(loginData);
-            router.push('/vat');
-        } else {
-            console.log('error submit!')
-        }
-    })
-}
+    errorMessage.value = '';
+    isLoading.value = true;
 
+    try {
+        await formEl.validate();
+
+        const success = await authStore.loginIn(loginData);
+
+        if (success) {
+            ElMessage.success('Успешный вход');
+            // Redirect to main dashboard
+            await router.push({ name: 'vat.dashboard' });
+        }
+    } catch (error: any) {
+        errorMessage.value = error.message || 'Ошибка входа. Попробуйте еще раз.';
+        console.error('Login error:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 </script>

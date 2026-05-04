@@ -8,7 +8,9 @@ import axios from "axios";
  */
 export async function fetchCsrfTocken(): Promise<boolean> {
     const xcrfTokenUrl = "/sanctum/csrf-cookie";
-    const response = await axios.get(xcrfTokenUrl);
+    const response = await axios.get(xcrfTokenUrl, {
+        withCredentials: true,
+    });
 
     return response.status == 204 ? true : false;
 }

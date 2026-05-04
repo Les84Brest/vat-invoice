@@ -30,12 +30,12 @@ window.axios.interceptors.response.use(
         const { status } = error.response;
 
         // Handle specific status codes
-        if (status === 401 || err.response.status === 419) {
+        if (status === 401 || status === 419) {
             const auth = localStorage.getItem('auth');
             if (auth) {
                 localStorage.removeItem('auth');
             }
-            router.push({ name: 'welcome.login' });
+            router.push({ name: 'login' });
         }
 
         return Promise.reject(error);

@@ -30,9 +30,8 @@ class InvoiceItemsList implements \Stringable, Jsonable, Arrayable
         $invoices = [];
         for ($i = 0; $i < count($invoiceItems); $i++) {
             $invoices[] = InvoiceItem::fromArray($invoiceItems[$i]);
-
-            $this->invoiceItems = $invoices;
         }
+        $this->invoiceItems = $invoices;
     }
 
 

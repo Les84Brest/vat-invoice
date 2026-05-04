@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\Invoice;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -41,9 +42,11 @@ class InvoiceAdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Invoice $invoice)
     {
-        //
+        $invoice->load(['author', 'signatory', 'sender_company', 'recipient_company', 'parent_invoice']);
+
+        return view('admin.invoice.show', compact('invoice'));
     }
 
     /**
