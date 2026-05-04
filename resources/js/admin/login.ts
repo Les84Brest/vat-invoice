@@ -41,18 +41,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     email,
                     password,
-                    _token: csrfToken,
                 },
                 {
                     headers: {
                         "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
                     },
+                    withCredentials: true,
                 }
             );
 
             if (resp.status === 200) {
                 const userData = resp.data.user;
-                window.localStorage.setItem("adminAuthUser", userData);
+                window.localStorage.setItem(
+                    "adminAuthUser",
+                    JSON.stringify(userData)
+                );
                 window.location.href = "/admin";
             }
         } catch (error: unknown) {

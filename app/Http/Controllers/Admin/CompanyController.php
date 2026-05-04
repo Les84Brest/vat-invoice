@@ -14,7 +14,7 @@ class CompanyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:sanctum', 'verified']);
+        $this->middleware(['auth', 'verified']);
     }
     /**
      * Display a listing of the resource.
