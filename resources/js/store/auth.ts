@@ -44,19 +44,30 @@ export const useAuthStore = defineStore("auth", {
                 const isTokenFetched = await fetchCsrfTocken();
 
                 if (isTokenFetched) {
-                    const response = await axios.post("/login", loginData);
+                    const response = await axios.post("/api/v1/login", loginData, {
+                        withCredentials: true,
+                    });
 
-                    if (response.status == 204) {
+                    if (response.status === 200) {
                         window.localStorage.setItem("auth", "true");
                         this.isLogined = true;
-                        this.fetchAuthUser();
+                        
+                        // Handle both wrapped (via Resource) and unwrapped user data
+                        this.user = response.data.user || response.data;
+                        
+                        // Assign company status if user has company
+                        if (this.user?.company) {
+                            setCompanyAssigned();
+                        }
+                        
                         return true;
                     }
 
                     return false;
                 }
-            } catch (error) {
-                throw new Error("Ошибка входа. Попробуйте еще раз.");
+            } catch (error: any) {
+                const message = error.response?.data?.message || "Ошибка входа. Попробуйте еще раз.";
+                throw new Error(message);
             }
 
             return false;
@@ -66,8 +77,8 @@ export const useAuthStore = defineStore("auth", {
             try {
                 setAuthStatus(false);
 
-                const response = await axios.post(
-                    "/logout",
+                await axios.post(
+                    "/api/v1/logout",
                     {},
                     {
                         withCredentials: true,
