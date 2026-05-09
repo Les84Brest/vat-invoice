@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/app.ts',
                 'resources/css/app.css',
                 'resources/js/admin/login.ts',
+                'resources/js/admin/invoice.ts',
             ],
             refresh: true,
         }),
