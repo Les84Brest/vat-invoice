@@ -1,9 +1,6 @@
 @extends('admin.layouts.admin')
 
 @section('page-styles')
-    <!-- jsGrid -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid-theme.min.css') }}">
 @endsection
 
 @section('content')
@@ -43,10 +40,82 @@
                             <div class="tab-pane active" id="tab_invoices">
                                 @if ($user->company)
                                     <h3>Выставленные счета</h3>
-                                    <div class="jsgrid js-table-outbox">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>№ счета</th>
+                                                    <th>Дата совершения</th>
+                                                    <th>Дата выставления</th>
+                                                    <th>Получатель</th>
+                                                    <th>Статус</th>
+                                                    <th>Сумма без НДС</th>
+                                                    <th>Сумма НДС</th>
+                                                    <th>Сумма с НДС</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($sentInvoices as $invoice)
+                                                    <tr>
+                                                        <td>{{ $invoice->number }}</td>
+                                                        <td>{{ $invoice->action_date ? \Carbon\Carbon::parse($invoice->action_date)->format('d.m.Y') : '' }}</td>
+                                                        <td>{{ $invoice->creation_date ? \Carbon\Carbon::parse($invoice->creation_date)->format('d.m.Y') : '' }}</td>
+                                                        <td>{{ $invoice->recipient_company?->title }}</td>
+                                                        <td>
+                                                            <span class="badge {{ \App\Types\InvoiceStatus::getBadgeClass($invoice->status) }}">
+                                                                {{ \App\Types\InvoiceStatus::getLabel($invoice->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{ number_format($invoice->total_wo_vat, 2, '.', ' ') }}</td>
+                                                        <td>{{ number_format($invoice->total_vat, 2, '.', ' ') }}</td>
+                                                        <td>{{ number_format($invoice->total, 2, '.', ' ') }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="8" class="text-center">Нет выставленных счетов</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <h3>Полученные счета</h3>
-                                    <div class="jsgrid js-table-inbox">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>№ счета</th>
+                                                    <th>Дата совершения</th>
+                                                    <th>Дата выставления</th>
+                                                    <th>Отправитель</th>
+                                                    <th>Статус</th>
+                                                    <th>Сумма без НДС</th>
+                                                    <th>Сумма НДС</th>
+                                                    <th>Сумма с НДС</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($receivedInvoices as $invoice)
+                                                    <tr>
+                                                        <td>{{ $invoice->number }}</td>
+                                                        <td>{{ $invoice->action_date ? \Carbon\Carbon::parse($invoice->action_date)->format('d.m.Y') : '' }}</td>
+                                                        <td>{{ $invoice->creation_date ? \Carbon\Carbon::parse($invoice->creation_date)->format('d.m.Y') : '' }}</td>
+                                                        <td>{{ $invoice->sender_company?->title }}</td>
+                                                        <td>
+                                                            <span class="badge {{ \App\Types\InvoiceStatus::getBadgeClass($invoice->status) }}">
+                                                                {{ \App\Types\InvoiceStatus::getLabel($invoice->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td>{{ number_format($invoice->total_wo_vat, 2, '.', ' ') }}</td>
+                                                        <td>{{ number_format($invoice->total_vat, 2, '.', ' ') }}</td>
+                                                        <td>{{ number_format($invoice->total, 2, '.', ' ') }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="8" class="text-center">Нет полученных счетов</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
                                     </div>
                                 @else
                                     <span class="h2">Нет счетов для показа</span>
@@ -130,187 +199,7 @@
 @endsection
 
 @section('page-scripts')
-    <script src="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.js') }}"></script>
-
     <script>
-        const commonConfig = {
-            height: "100%",
-            width: "100%",
-            sorting: true,
-            paging: true,
-
-            //     fields: [{
-            //             name: "№ счета",
-            //             type: "text",
-            //             width: 150
-            //         },
-
-            //         {
-            //             name: "Дата совершения",
-            //             type: "number",
-            //             width: 50
-            //         },
-            //         {
-            //             name: "Дата выставления",
-            //             type: "number",
-            //             width: 50
-            //         },
-            //         {
-            //             name: "Получатель",
-            //             type: "number",
-            //             width: 100
-            //         },
-            //         {
-            //             name: "Сумма без НДС",
-            //             type: "text",
-            //             width: 200
-            //         },
-            //         {
-            //             name: "Сумма НДС",
-            //             type: "text",
-            //             width: 200
-            //         },
-            //         {
-            //             name: "Сумма с НДС",
-            //             type: "text",
-            //             width: 200
-            //         },
-            //         {
-            //             name: "Статус",
-            //             type: "text",
-            //             width: 200
-            //         },
-            //     ]
-            // }
-            fields: [{
-                    name: "№ счета",
-                    type: "text",
-                    width: 150
-                },
-
-                {
-                    name: "Дата совершения",
-                    type: "number",
-                    width: 100
-                },
-                {
-                    name: "Дата выставления",
-                    type: "number",
-                    width: 100
-                },
-                {
-                    name: "Получатель",
-                    type: "number",
-                },
-                {
-                    name: "Сумма без НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Сумма НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Сумма с НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Статус",
-                    type: "text",
-                },
-            ]
-        }
-
-        const outcomeData = [{
-                "№ счета": '291555555-03092024-0000001',
-                "Получатель": "ОДО Техимпорт",
-                "Дата совершения": "08.06.2024",
-                "Дата выставления": "10.07.2024",
-                "Сумма с НДС": 1440.00,
-                "Сумма НДС": 240.00,
-                "Сумма без НДС": 1200.00,
-                "Статус": "Выставлен"
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-            }
-        ];
-
-        $(".js-table-outbox").jsGrid({
-            ...commonConfig,
-            data: outcomeData
-        });
-        $(".js-table-inbox").jsGrid({
-            ...commonConfig,
-            data: outcomeData
-        });
-
-
         $(document).ready(function() {
             // update user
             $('.js-user-edit-form').on('submit', function(event) {

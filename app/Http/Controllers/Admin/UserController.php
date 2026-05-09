@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Filters\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Company;
+use App\Models\Invoice;
 use App\Models\User;
 use App\Services\Users\UserServiceContract;
 use Illuminate\Http\Request;
@@ -29,11 +31,19 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): \Illuminate\View\View
     {
         $companies = Company::all();
 
-        return view('admin.user.show-edit', compact('companies', 'user'));
+        $sentInvoices = Invoice::filter(new InvoiceFilter([
+            InvoiceFilter::AUTHOR_FILTER => $user->id,
+        ]))->with('recipient_company')->get();
+
+        $receivedInvoices = Invoice::filter(new InvoiceFilter([
+            InvoiceFilter::SIGNATORY_FILTER => $user->id,
+        ]))->with('sender_company')->get();
+
+        return view('admin.user.show-edit', compact('companies', 'user', 'sentInvoices', 'receivedInvoices'));
     }
 
     /**
