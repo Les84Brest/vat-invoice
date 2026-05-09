@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Filters\InvoiceFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCompanyRequest;
 use App\Http\Requests\Admin\UpdateCompanyRequest;
 use App\Models\Company;
+use App\Models\Invoice;
 use App\Models\User;
 use App\Services\Companies\CompanyServiceContract;
 use Illuminate\Http\Request;
@@ -50,11 +52,19 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show(Company $company): \Illuminate\View\View
     {
         $users = User::where('role', User::ROLE_USER)->get();
 
-        return view('admin.company.show-edit', compact('company', 'users'));
+        $sentInvoices = Invoice::filter(new InvoiceFilter([
+            InvoiceFilter::SENDER_COMPANY_FILTER => [$company->id],
+        ]))->with('recipient_company')->get();
+
+        $receivedInvoices = Invoice::filter(new InvoiceFilter([
+            InvoiceFilter::RECIPIENT_COMPANY_FILTER => [$company->id],
+        ]))->with('sender_company')->get();
+
+        return view('admin.company.show-edit', compact('company', 'users', 'sentInvoices', 'receivedInvoices'));
     }
 
 

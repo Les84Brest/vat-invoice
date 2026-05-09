@@ -1,9 +1,6 @@
 @extends('admin.layouts.admin')
 
 @section('page-styles')
-    <!-- jsGrid -->
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/jsgrid/jsgrid-theme.min.css') }}">
 @endsection
 
 @section('content')
@@ -72,8 +69,8 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill"
-                                    href="#custom-tabs-four-settings" role="tab"
-                                    aria-controls="custom-tabs-four-profile" aria-selected="false">Настройки</a>
+                                    href="#custom-tabs-four-settings" role="tab" aria-controls="custom-tabs-four-profile"
+                                    aria-selected="false">Настройки</a>
                             </li>
 
                         </ul>
@@ -116,11 +113,107 @@
                                     @endif
                                 </div>
                                 <h3>ЭСЧФ</h3>
-                                <h3>Выставленные</h3>
-                                <div class="jsgrid js-table-outbox">
+                                <h3>Выставленные счета</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>№ счета</th>
+                                                <th>Дата совершения</th>
+                                                <th>Дата выставления</th>
+                                                <th>Получатель</th>
+                                                <th>Статус</th>
+                                                <th>Сумма без НДС</th>
+                                                <th>Сумма НДС</th>
+                                                <th>Сумма с НДС</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($sentInvoices as $invoice)
+                                                <tr>
+                                                    <td>
+                                                        <a href="{{ route('invoice.show', ['invoice' => $invoice->id]) }}">
+                                                            {{ $invoice->number }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $invoice->action_date ? \Carbon\Carbon::parse($invoice->action_date)->format('d.m.Y') : '' }}
+                                                    </td>
+                                                    <td>{{ $invoice->creation_date ? \Carbon\Carbon::parse($invoice->creation_date)->format('d.m.Y') : '' }}
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            href="{{ route('company.show', ['company' => $invoice->recipient_company?->id]) }}">
+                                                            {{ $invoice->recipient_company?->title }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge {{ \App\Types\InvoiceStatus::getBadgeClass($invoice->status) }}">
+                                                            {{ \App\Types\InvoiceStatus::getLabel($invoice->status) }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ number_format($invoice->total_wo_vat, 2, '.', ' ') }}</td>
+                                                    <td>{{ number_format($invoice->total_vat, 2, '.', ' ') }}</td>
+                                                    <td>{{ number_format($invoice->total, 2, '.', ' ') }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="8" class="text-center">Нет выставленных счетов</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <h3>Полученные</h3>
-                                <div class="jsgrid js-table-inbox">
+                                <h3>Полученные счета</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>№ счета</th>
+                                                <th>Дата совершения</th>
+                                                <th>Дата выставления</th>
+                                                <th>Отправитель</th>
+                                                <th>Статус</th>
+                                                <th>Сумма без НДС</th>
+                                                <th>Сумма НДС</th>
+                                                <th>Сумма с НДС</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($receivedInvoices as $invoice)
+                                                <tr>
+                                                    <td>
+                                                        <a href="{{ route('invoice.show', ['invoice' => $invoice->id]) }}">
+                                                            {{ $invoice->number }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $invoice->action_date ? \Carbon\Carbon::parse($invoice->action_date)->format('d.m.Y') : '' }}
+                                                    </td>
+                                                    <td>{{ $invoice->creation_date ? \Carbon\Carbon::parse($invoice->creation_date)->format('d.m.Y') : '' }}
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            href="{{ route('company.show', ['company' => $invoice->sender_company->id]) }}">
+                                                            {{ $invoice->sender_company?->title }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge {{ \App\Types\InvoiceStatus::getBadgeClass($invoice->status) }}">
+                                                            {{ \App\Types\InvoiceStatus::getLabel($invoice->status) }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ number_format($invoice->total_wo_vat, 2, '.', ' ') }}</td>
+                                                    <td>{{ number_format($invoice->total_vat, 2, '.', ' ') }}</td>
+                                                    <td>{{ number_format($invoice->total, 2, '.', ' ') }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="8" class="text-center">Нет полученных счетов</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel"
@@ -140,8 +233,7 @@
                                     <div class="form-group">
                                         <label for="shortnameid">Сокращенное название</label>
                                         <input type="text" name="short_title" class="form-control" id="shortnameid"
-                                            placeholder="Введите сокращенное название"
-                                            value="{{ $company->short_title }}">
+                                            placeholder="Введите сокращенное название" value="{{ $company->short_title }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="taxidid">УНП</label>
@@ -159,14 +251,13 @@
                                             data-placeholder="Пользователи" style="width: 100%;">
                                             @foreach ($users as $user)
                                                 @php
-                                                    $found = array_filter($company->users->toArray(), function (
-                                                        $person,
-                                                    ) use ($user) {
+                                                    $found = array_filter($company->users->toArray(), function ($person, ) use ($user) {
                                                         return $user['id'] == $person['id'];
                                                     });
                                                 @endphp
                                                 <option value="{{ $user->id }}" @selected(!empty($found))>
-                                                    {{ $user->last_name }} {{ $user->name }}</option>
+                                                    {{ $user->last_name }} {{ $user->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -204,22 +295,17 @@
 @endsection
 
 @section('page-scripts')
-    <script src="{{ asset('assets/admin/plugins/jsgrid/jsgrid.min.js') }}"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.select2').select2();
 
             //submit update form
-            $('.js-updatecompany-form').on('submit', async function(event) {
+            $('.js-updatecompany-form').on('submit', async function (event) {
                 event.preventDefault(); // Prevent the default form submission
 
                 const formData = new FormData($(this)[0]);
                 const csrfTokenInput = $('input[name="_token"]');
                 const csrfToken = csrfTokenInput.val();
-                formData.entries().forEach(element => {
-                    console.log('%celem', 'padding: 5px; background: #3dd; color: #333333;', element);
-                });
-              
 
                 try {
                     const response = await fetch('/admin/company/{{ $company->id }}', {
@@ -245,7 +331,7 @@
             });
 
             //delete company
-            $('.js-btn-delete-company').click(function() {
+            $('.js-btn-delete-company').click(function () {
                 const csrfTokenInput = $('input[name="_token"]');
                 const csrfToken = csrfTokenInput.val();
 
@@ -259,12 +345,12 @@
                         'X-CSRF-TOKEN': csrfToken,
                         'Content-type': 'application/json',
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         toastr["danger"]("Произошла ошибка");
                         modal.classList.remove('show');
                         modal.style.display = 'none';
                     },
-                    success: function(response) {
+                    success: function (response) {
                         modal.classList.remove('show');
                         modal.style.display = 'none';
 
@@ -275,141 +361,6 @@
                     },
                 });
             });
-        });
-
-        // invoice tables
-        const commonConfig = {
-            height: "100%",
-            width: "100%",
-            sorting: true,
-            paging: true,
-
-            fields: [{
-                    name: "№ счета",
-                    type: "text",
-                    width: 150
-                },
-
-                {
-                    name: "Дата совершения",
-                    type: "number",
-                    width: 100
-                },
-                {
-                    name: "Дата выставления",
-                    type: "number",
-                    width: 100
-                },
-                {
-                    name: "Получатель",
-                    type: "number",
-                },
-                {
-                    name: "Сумма без НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Сумма НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Сумма с НДС",
-                    type: "text",
-                    width: 100
-                },
-                {
-                    name: "Статус",
-                    type: "text",
-                },
-            ]
-        }
-
-        const outcomeData = [{
-                "№ счета": '291555555-03092024-0000001',
-                "Получатель": "ОДО Техимпорт",
-                "Дата совершения": "08.06.2024",
-                "Дата выставления": "10.07.2024",
-                "Сумма с НДС": 1440.00,
-                "Сумма НДС": 240.00,
-                "Сумма без НДС": 1200.00,
-                "Статус": "Выставлен"
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан получателем"
-
-            },
-            {
-                "№ счета": '291555555-03092024-0000015',
-                "Получатель": "ОДО Санта-Рест",
-                "Дата выставления": "05.07.2024",
-                "Дата совершения": "15.06.2024",
-                "Сумма с НДС": 1176.00,
-                "Сумма НДС": 196.00,
-                "Сумма без НДС": 980.00,
-                "Статус": "Подписан отправителем"
-            }
-        ];
-
-        $(".js-table-outbox").jsGrid({
-            ...commonConfig,
-            data: outcomeData
-        });
-        $(".js-table-inbox").jsGrid({
-            ...commonConfig,
-            data: outcomeData
         });
     </script>
 @endsection
